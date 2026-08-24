@@ -34,9 +34,8 @@
             {{-- FORMULARIO --}}
             <form
                 class="login-form"
-                action="#"
-                method="POST"
-                onsubmit="return false;"
+                action="{{ route('inicio') }}"
+                method="GET"
             >
 
                 {{-- USUARIO --}}
