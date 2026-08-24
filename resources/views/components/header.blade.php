@@ -3,7 +3,7 @@
 
         <div class="site-header__branding">
             <img
-                src="{{ asset('images/logos/utm_logo.jpeg') }}"
+                src="{{ asset('images/logos/utm_logo2.png') }}"
                 alt="Universidad Tecnológica de la Mixteca"
                 class="site-header__logo site-header__logo--utm"
             >
@@ -11,7 +11,7 @@
             <div class="site-header__divider"></div>
 
             <img
-                src="{{ asset('images/logos/usalab_logo.jpeg') }}"
+                src="{{ asset('images/logos/usalab_logo2.png') }}"
                 alt="UsaLab"
                 class="site-header__logo site-header__logo--usalab"
             >
