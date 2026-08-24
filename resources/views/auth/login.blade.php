@@ -255,7 +255,7 @@
                 <div class="steps-card__media">
 
                     <img
-                        src="{{ asset('images/logos/inicio.jpeg') }}"
+                        src="{{ asset('images/logos/inicio2.png') }}"
                         alt="Proceso para gestionar evidencias"
                         class="steps-card__image"
                     >
