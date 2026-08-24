@@ -3,7 +3,7 @@
 
         <div class="site-header__branding">
             <img
-                src="{{ asset('images/logos/utm_logo2.png') }}"
+                src="{{ asset('images/logos/utm_logo3.png') }}"
                 alt="Universidad Tecnológica de la Mixteca"
                 class="site-header__logo site-header__logo--utm"
             >
