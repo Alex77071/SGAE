@@ -1,13 +1,15 @@
-<header class="main-header">
-    <div class="header-left">
-        <img src="{{ asset('images/logos/logo1.png') }}" alt="Logo 1" class="logo">
-        <img src="{{ asset('images/logos/logo2.png') }}" alt="Logo 2" class="logo">
-        <h1>Sistema de Gestión y Análisis de Evidencias</h1>
-    </div>
+<header class="site-header">
+    <div class="site-header__container">
+        <div class="site-header__logos" aria-hidden="true">
+            <div class="site-header__logo-slot"></div>
+            <div class="site-header__divider"></div>
+            <div class="site-header__logo-slot site-header__logo-slot--wide"></div>
+        </div>
 
-    <div class="header-right">
-        @isset($usuario)
-            <span>{{ $usuario }}</span>
-        @endisset
+        <h1 class="site-header__title">
+            Sistema de Gestión y Análisis de Evidencias
+        </h1>
+
+        <div class="site-header__spacer" aria-hidden="true"></div>
     </div>
 </header>

@@ -1,86 +1,840 @@
+:root {
+    --bg-main: #f3f1f2;
+    --bg-header: #ecebeb;
+    --bg-card: #efeded;
+    --bg-white: #ffffff;
+
+    --primary: #823233;
+    --primary-dark: #742c2d;
+
+    --text-main: #343747;
+    --text-soft: #4e5160;
+    --text-link: #18a8da;
+
+    --border-light: #d7d4d4;
+    --shadow-soft: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+/* =========================
+   CONFIGURACIÓN GENERAL
+========================= */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html,
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f7f4f4;
-    color: #333;
+    padding: 0;
+    width: 100%;
+    height: 100%;
 }
 
-.main-header {
+html {
+    overflow: hidden;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--bg-main);
+    color: var(--text-main);
+}
+
+body.guest-body {
+    height: 100vh;
+    overflow: hidden;
+}
+
+.guest-page {
+    width: 100%;
+    height: 100vh;
+
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #ffffff;
-    padding: 15px 30px;
-    border-bottom: 1px solid #ddd;
+    flex-direction: column;
+
+    overflow: hidden;
 }
 
-.header-left {
+/* =========================
+   HEADER
+========================= */
+
+.site-header {
+    flex-shrink: 0;
+
+    background: var(--bg-header);
+
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.site-header__container {
+    width: 100%;
+    max-width: 1480px;
+
+    margin: 0 auto;
+
+    /*
+       Antes era más alto.
+       Reducimos la altura para ganar
+       espacio vertical.
+    */
+    min-height: 118px;
+
+    padding: 12px 28px;
+
+    display: grid;
+    grid-template-columns: 250px 1fr 250px;
+
+    align-items: center;
+
+    gap: 20px;
+}
+
+.site-header__logos {
     display: flex;
     align-items: center;
-    gap: 15px;
+
+    gap: 18px;
+
+    /*
+       Reservamos el lugar de los logos,
+       aunque todavía no los tenemos.
+    */
+    min-height: 80px;
 }
 
-.logo {
-    height: 45px;
+.site-header__logo-slot {
+    width: 82px;
+    height: 80px;
+
+    flex-shrink: 0;
 }
 
-.header-left h1 {
-    font-size: 20px;
-    color: #7a2d2d;
+.site-header__logo-slot--wide {
+    width: 115px;
+    height: 80px;
+}
+
+.site-header__divider {
+    width: 1px;
+    height: 72px;
+
+    background: rgba(0, 0, 0, 0.35);
+
+    flex-shrink: 0;
+}
+
+.site-header__title {
     margin: 0;
+
+    text-align: center;
+
+    color: var(--primary);
+
+    font-size: 31px;
+    line-height: 1.15;
+
+    font-weight: 700;
 }
 
-.main-footer {
-    background: #7a2d2d;
-    color: white;
+.site-header__spacer {
+    width: 100%;
+    min-height: 1px;
+}
+
+/* =========================
+   ÁREA PRINCIPAL
+========================= */
+
+.guest-main {
+    flex: 1;
+
+    min-height: 0;
+
     display: flex;
-    justify-content: space-between;
-    padding: 10px 25px;
-    font-size: 14px;
+    align-items: center;
+    justify-content: center;
+
+    /*
+       Reducimos el margen superior
+       e inferior.
+    */
+    padding: 18px 24px 20px;
+
+    overflow: hidden;
 }
 
-.main-footer a {
-    color: white;
+/* =========================
+   LOGIN
+========================= */
+
+.login-screen {
+    width: 100%;
+}
+
+.login-screen__grid {
+    width: 100%;
+    max-width: 1180px;
+
+    margin: 0 auto;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(360px, 390px)
+        minmax(420px, 660px);
+
+    justify-content: center;
+    align-items: center;
+
+    gap: 110px;
+}
+
+/* =========================
+   COLUMNA IZQUIERDA
+========================= */
+
+.login-screen__left {
+    width: 100%;
+}
+
+/* =========================
+   TEXTO INTRODUCTORIO
+========================= */
+
+.login-copy {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 10px;
+
+    /*
+       Antes era 46px.
+       Reducimos el espacio.
+    */
+    margin-bottom: 30px;
+}
+
+.login-copy__line {
+    width: 4px;
+    min-width: 4px;
+
+    height: 95px;
+
+    background: var(--primary);
+
+    border-radius: 2px;
+
+    margin-top: 2px;
+}
+
+.login-copy__content {
+    width: 100%;
+}
+
+.login-copy__title {
+    margin: 0 0 8px;
+
+    color: var(--primary);
+
+    font-size: 28px;
+    line-height: 1.1;
+
+    font-weight: 700;
+}
+
+.login-copy__text {
+    margin: 0;
+
+    max-width: 390px;
+
+    color: var(--text-soft);
+
+    font-size: 18px;
+    line-height: 1.24;
+
+    text-align: left;
+}
+
+/* =========================
+   FORMULARIO
+========================= */
+
+.login-form {
+    width: 100%;
+    max-width: 360px;
+}
+
+.form-field {
+    /*
+       Reducimos un poco el espacio
+       entre Usuario y Contraseña.
+    */
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: inline-block;
+
+    margin-bottom: 9px;
+
+    color: var(--text-main);
+
+    font-size: 18px;
+    font-weight: 400;
+}
+
+/* =========================
+   INPUTS
+========================= */
+
+.input-group {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+}
+
+.input-group__icon {
+    position: absolute;
+
+    left: 0;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    width: 22px;
+    height: 22px;
+
+    color: #1f1f1f;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.input-group__icon svg,
+.input-group__action svg,
+.action-btn__icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.form-input {
+    width: 100%;
+
+    height: 36px;
+
+    border: 1px solid var(--border-light);
+    border-radius: 2px;
+
+    background: var(--bg-white);
+
+    padding: 0 14px 0 24px;
+
+    color: var(--text-main);
+
+    font-size: 16px;
+
+    outline: none;
+}
+
+.form-input:focus {
+    border-color: var(--primary);
+}
+
+.form-input::placeholder {
+    color: #727585;
+}
+
+.input-group .form-input {
+    margin-left: 24px;
+
+    width: calc(100% - 24px);
+}
+
+.input-group--password .form-input {
+    padding-right: 42px;
+}
+
+/* =========================
+   BOTÓN MOSTRAR CONTRASEÑA
+========================= */
+
+.input-group__action {
+    position: absolute;
+
+    right: 10px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    width: 18px;
+    height: 18px;
+
+    border: none;
+
+    background: transparent;
+
+    color: #585b67;
+
+    padding: 0;
+
+    cursor: pointer;
+}
+
+/* =========================
+   BOTONES
+========================= */
+
+.action-btn {
+    width: 100%;
+
+    min-height: 42px;
+
+    border-radius: 12px;
+
+    font-size: 16px;
+    font-weight: 700;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.action-btn__icon {
+    width: 18px;
+    height: 18px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.action-btn--primary {
+    margin-bottom: 12px;
+
+    background: var(--primary);
+
+    border: 1px solid var(--primary);
+
+    color: #ffffff;
+}
+
+.action-btn--primary:hover {
+    background: var(--primary-dark);
+
+    border-color: var(--primary-dark);
+}
+
+.action-btn--secondary {
+    margin-bottom: 10px;
+
+    background: transparent;
+
+    border: 1px solid var(--primary);
+
+    color: var(--primary);
+}
+
+.action-btn--secondary:hover {
+    background: rgba(130, 50, 51, 0.06);
+}
+
+/* =========================
+   ¿OLVIDASTE TU CONTRASEÑA?
+========================= */
+
+.forgot-link {
+    display: inline-block;
+
+    margin-left: 10px;
+
+    color: var(--text-link);
+
+    font-size: 15px;
+
     text-decoration: none;
 }
 
-.content {
-    min-height: calc(100vh - 140px);
-    padding: 30px;
+.forgot-link:hover {
+    text-decoration: underline;
 }
 
-.login-container {
+/* =========================
+   COLUMNA DERECHA
+========================= */
+
+.login-screen__right {
+    width: 100%;
+}
+
+/* =========================
+   TARJETA DE LOS 3 PASOS
+========================= */
+
+.steps-card {
+    width: 100%;
+    max-width: 660px;
+
+    /*
+       Bajamos ligeramente la altura.
+       Después, cuando pongamos la imagen,
+       podemos ajustarla nuevamente.
+    */
+    min-height: 290px;
+
+    padding: 26px 34px;
+
+    background: var(--bg-card);
+
+    border-radius: 34px;
+
     display: flex;
-    justify-content: space-between;
-    gap: 30px;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.steps-card__title {
+    margin: 0;
+
+    text-align: center;
+
+    color: var(--text-main);
+
+    font-size: 18px;
+    line-height: 1.3;
+}
+
+.steps-card__media {
+    flex: 1;
+
+    min-height: 180px;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.site-footer {
+    flex-shrink: 0;
+
+    background: var(--primary);
+
+    margin-top: auto;
+}
+
+.site-footer__container {
+    width: 100%;
+    max-width: 1480px;
+
+    margin: 0 auto;
+
+    /*
+       Footer más delgado para que
+       permanezca visible sin scroll.
+    */
+    min-height: 58px;
+
+    padding: 0 28px;
+
+    display: flex;
     align-items: center;
+    justify-content: center;
+
+    position: relative;
 }
 
-.login-box,
-.info-box {
-    background: white;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    width: 45%;
+.site-footer__copy {
+    margin: 0;
+
+    display: inline-flex;
+    align-items: center;
+
+    gap: 10px;
+
+    color: #ffffff;
+
+    font-size: 14px;
+
+    text-align: center;
 }
 
-.login-box input {
-    width: 100%;
-    padding: 10px;
-    margin-top: 6px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
+.site-footer__copy-icon {
+    font-size: 21px;
+    line-height: 1;
 }
 
-.login-box button {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: none;
-    border-radius: 6px;
-    background: #7a2d2d;
-    color: white;
-    cursor: pointer;
+.site-footer__help {
+    position: absolute;
+
+    right: 28px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    padding-left: 24px;
+
+    border-left: 1px solid rgba(255, 255, 255, 0.7);
+
+    display: inline-flex;
+    align-items: center;
+
+    gap: 12px;
+
+    color: #ffffff;
+
+    font-size: 18px;
+    font-weight: 400;
+
+    text-decoration: none;
+}
+
+.site-footer__help-icon {
+    width: 26px;
+    height: 26px;
+
+    border-radius: 50%;
+
+    background: #ffffff;
+
+    color: var(--primary);
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 17px;
+    font-weight: 700;
+
+    line-height: 1;
+}
+
+/* ==========================================================
+   RESPONSIVE - LAPTOPS PEQUEÑAS
+========================================================== */
+
+@media (max-width: 1200px) {
+
+    .site-header__container {
+        grid-template-columns: 200px 1fr 200px;
+
+        min-height: 105px;
+    }
+
+    .site-header__title {
+        font-size: 27px;
+    }
+
+    .guest-main {
+        padding: 16px 20px 18px;
+    }
+
+    .login-screen__grid {
+        grid-template-columns:
+            minmax(320px, 380px)
+            minmax(360px, 560px);
+
+        gap: 55px;
+    }
+
+    .steps-card {
+        min-height: 270px;
+    }
+}
+
+/* ==========================================================
+   RESPONSIVE - TABLET
+========================================================== */
+
+@media (max-width: 992px) {
+
+    /*
+       En tablet y celular sí permitimos
+       scroll porque las columnas pasan
+       una debajo de otra.
+    */
+
+    html {
+        overflow-y: auto;
+    }
+
+    body.guest-body {
+        height: auto;
+        min-height: 100vh;
+
+        overflow-y: auto;
+    }
+
+    .guest-page {
+        height: auto;
+        min-height: 100vh;
+
+        overflow: visible;
+    }
+
+    .site-header__container {
+        grid-template-columns: 1fr;
+
+        min-height: auto;
+
+        padding: 18px 20px;
+
+        justify-items: center;
+
+        text-align: center;
+
+        gap: 10px;
+    }
+
+    .site-header__logos,
+    .site-header__spacer {
+        display: none;
+    }
+
+    .site-header__title {
+        max-width: 700px;
+
+        font-size: 26px;
+    }
+
+    .guest-main {
+        overflow: visible;
+
+        padding: 30px 20px 40px;
+    }
+
+    .login-screen__grid {
+        max-width: 760px;
+
+        grid-template-columns: 1fr;
+
+        gap: 40px;
+    }
+
+    .login-screen__left {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .login-copy {
+        width: 100%;
+        max-width: 420px;
+    }
+
+    .login-form {
+        max-width: 420px;
+    }
+
+    .login-screen__right {
+        display: flex;
+        justify-content: center;
+    }
+
+    .steps-card {
+        max-width: 680px;
+
+        min-height: 240px;
+    }
+
+    .site-footer__container {
+        min-height: auto;
+
+        padding-top: 14px;
+        padding-bottom: 14px;
+
+        flex-direction: column;
+
+        gap: 12px;
+    }
+
+    .site-footer__help {
+        position: static;
+
+        transform: none;
+
+        border-left: none;
+
+        padding-left: 0;
+    }
+}
+
+/* ==========================================================
+   RESPONSIVE - CELULAR
+========================================================== */
+
+@media (max-width: 576px) {
+
+    .site-header__container {
+        padding: 16px;
+    }
+
+    .site-header__title {
+        font-size: 21px;
+        line-height: 1.25;
+    }
+
+    .guest-main {
+        padding: 24px 16px 32px;
+    }
+
+    .login-copy {
+        gap: 8px;
+
+        margin-bottom: 28px;
+    }
+
+    .login-copy__line {
+        height: 84px;
+    }
+
+    .login-copy__title {
+        font-size: 24px;
+    }
+
+    .login-copy__text {
+        font-size: 16px;
+    }
+
+    .form-label {
+        font-size: 17px;
+    }
+
+    .action-btn {
+        min-height: 44px;
+
+        font-size: 15px;
+    }
+
+    .steps-card {
+        min-height: 220px;
+
+        padding: 24px 20px;
+
+        border-radius: 24px;
+    }
+
+    .steps-card__title {
+        font-size: 17px;
+    }
+
+    .site-footer__copy {
+        font-size: 13px;
+    }
+
+    .site-footer__help {
+        font-size: 16px;
+    }
 }
