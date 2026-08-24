@@ -2,6 +2,7 @@
 
 /**
  * Laravel - A PHP Framework For Web Artisans
+ * SGAE
  *
  * @package  Laravel
  * @author   Taylor Otwell <taylor@laravel.com>
