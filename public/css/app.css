@@ -64,9 +64,7 @@ body.guest-body {
 
 .site-header {
     flex-shrink: 0;
-
     background: var(--bg-header);
-
     border-bottom: 1px solid rgba(0, 0, 0, 0.04);
 }
 
@@ -76,40 +74,26 @@ body.guest-body {
 
     margin: 0 auto;
 
-    /*
-       Antes era más alto.
-       Reducimos la altura para ganar
-       espacio vertical.
-    */
     min-height: 118px;
-
     padding: 12px 28px;
 
     display: grid;
     grid-template-columns: 250px 1fr 250px;
 
     align-items: center;
-
     gap: 20px;
 }
 
 .site-header__logos {
     display: flex;
     align-items: center;
-
     gap: 18px;
-
-    /*
-       Reservamos el lugar de los logos,
-       aunque todavía no los tenemos.
-    */
     min-height: 80px;
 }
 
 .site-header__logo-slot {
     width: 82px;
     height: 80px;
-
     flex-shrink: 0;
 }
 
@@ -121,9 +105,7 @@ body.guest-body {
 .site-header__divider {
     width: 1px;
     height: 72px;
-
     background: rgba(0, 0, 0, 0.35);
-
     flex-shrink: 0;
 }
 
@@ -131,12 +113,10 @@ body.guest-body {
     margin: 0;
 
     text-align: center;
-
     color: var(--primary);
 
     font-size: 31px;
     line-height: 1.15;
-
     font-weight: 700;
 }
 
@@ -151,17 +131,12 @@ body.guest-body {
 
 .guest-main {
     flex: 1;
-
     min-height: 0;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    /*
-       Reducimos el margen superior
-       e inferior.
-    */
     padding: 18px 24px 20px;
 
     overflow: hidden;
@@ -202,33 +177,49 @@ body.guest-body {
 }
 
 /* =========================
-   TEXTO INTRODUCTORIO
+   TÍTULO Y DESCRIPCIÓN
 ========================= */
 
 .login-copy {
     display: flex;
-    align-items: flex-start;
-
-    gap: 10px;
 
     /*
-       Antes era 46px.
-       Reducimos el espacio.
+       IMPORTANTE:
+       stretch hace que la línea mida
+       exactamente lo mismo que todo
+       el bloque de texto.
     */
+    align-items: stretch;
+
+    gap: 10px;
     margin-bottom: 30px;
 }
 
+/*
+   Línea vertical
+*/
 .login-copy__line {
     width: 4px;
     min-width: 4px;
 
-    height: 95px;
+    /*
+       Ya NO usamos height fija.
+       La altura se adapta automáticamente
+       al título + descripción.
+    */
+    height: auto;
 
     background: var(--primary);
 
     border-radius: 2px;
 
-    margin-top: 2px;
+    /*
+       Sin margen arriba ni abajo para
+       quedar perfectamente alineada.
+    */
+    margin: 0;
+
+    align-self: stretch;
 }
 
 .login-copy__content {
@@ -269,10 +260,6 @@ body.guest-body {
 }
 
 .form-field {
-    /*
-       Reducimos un poco el espacio
-       entre Usuario y Contraseña.
-    */
     margin-bottom: 20px;
 }
 
@@ -352,7 +339,6 @@ body.guest-body {
 
 .input-group .form-input {
     margin-left: 24px;
-
     width: calc(100% - 24px);
 }
 
@@ -376,7 +362,6 @@ body.guest-body {
     height: 18px;
 
     border: none;
-
     background: transparent;
 
     color: #585b67;
@@ -434,7 +419,6 @@ body.guest-body {
 
 .action-btn--primary:hover {
     background: var(--primary-dark);
-
     border-color: var(--primary-dark);
 }
 
@@ -453,7 +437,7 @@ body.guest-body {
 }
 
 /* =========================
-   ¿OLVIDASTE TU CONTRASEÑA?
+   OLVIDASTE CONTRASEÑA
 ========================= */
 
 .forgot-link {
@@ -481,18 +465,13 @@ body.guest-body {
 }
 
 /* =========================
-   TARJETA DE LOS 3 PASOS
+   TARJETA DERECHA
 ========================= */
 
 .steps-card {
     width: 100%;
     max-width: 660px;
 
-    /*
-       Bajamos ligeramente la altura.
-       Después, cuando pongamos la imagen,
-       podemos ajustarla nuevamente.
-    */
     min-height: 290px;
 
     padding: 26px 34px;
@@ -519,7 +498,6 @@ body.guest-body {
 
 .steps-card__media {
     flex: 1;
-
     min-height: 180px;
 }
 
@@ -541,10 +519,6 @@ body.guest-body {
 
     margin: 0 auto;
 
-    /*
-       Footer más delgado para que
-       permanezca visible sin scroll.
-    */
     min-height: 58px;
 
     padding: 0 28px;
@@ -621,15 +595,14 @@ body.guest-body {
     line-height: 1;
 }
 
-/* ==========================================================
-   RESPONSIVE - LAPTOPS PEQUEÑAS
-========================================================== */
+/* =========================
+   LAPTOP
+========================= */
 
 @media (max-width: 1200px) {
 
     .site-header__container {
         grid-template-columns: 200px 1fr 200px;
-
         min-height: 105px;
     }
 
@@ -654,17 +627,11 @@ body.guest-body {
     }
 }
 
-/* ==========================================================
-   RESPONSIVE - TABLET
-========================================================== */
+/* =========================
+   TABLET
+========================= */
 
 @media (max-width: 992px) {
-
-    /*
-       En tablet y celular sí permitimos
-       scroll porque las columnas pasan
-       una debajo de otra.
-    */
 
     html {
         overflow-y: auto;
@@ -705,13 +672,11 @@ body.guest-body {
 
     .site-header__title {
         max-width: 700px;
-
         font-size: 26px;
     }
 
     .guest-main {
         overflow: visible;
-
         padding: 30px 20px 40px;
     }
 
@@ -745,7 +710,6 @@ body.guest-body {
 
     .steps-card {
         max-width: 680px;
-
         min-height: 240px;
     }
 
@@ -771,9 +735,9 @@ body.guest-body {
     }
 }
 
-/* ==========================================================
-   RESPONSIVE - CELULAR
-========================================================== */
+/* =========================
+   CELULAR
+========================= */
 
 @media (max-width: 576px) {
 
@@ -792,13 +756,14 @@ body.guest-body {
 
     .login-copy {
         gap: 8px;
-
         margin-bottom: 28px;
     }
 
-    .login-copy__line {
-        height: 84px;
-    }
+    /*
+       Ya NO establecemos altura
+       para la línea en móvil.
+       Sigue creciendo junto con el texto.
+    */
 
     .login-copy__title {
         font-size: 24px;
@@ -814,7 +779,6 @@ body.guest-body {
 
     .action-btn {
         min-height: 44px;
-
         font-size: 15px;
     }
 
