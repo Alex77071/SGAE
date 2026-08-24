@@ -191,42 +191,40 @@
                 </button>
 
 
-                {{-- BOTÓN REGISTRO --}}
-                <button
-                    type="button"
-                    class="action-btn action-btn--secondary"
-                >
+{{-- BOTÓN REGISTRO --}}
+<a 
+    href="https://cv.utm.mx/" 
+    class="action-btn action-btn--secondary"
+>
 
-                    <span
-                        class="action-btn__icon"
-                        aria-hidden="true"
-                    >
-                        <svg
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="1.9"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                        >
-                            <path
-                                d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"
-                            ></path>
+    <span 
+        class="action-btn__icon" 
+        aria-hidden="true"
+    >
+        <svg 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            stroke-width="1.9" 
+            stroke-linecap="round" 
+            stroke-linejoin="round"
+        >
+            <path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"></path>
 
-                            <circle
-                                cx="9.5"
-                                cy="7"
-                                r="3.5"
-                            ></circle>
+            <circle 
+                cx="9.5" 
+                cy="7" 
+                r="3.5"
+            ></circle>
 
-                            <path d="M19 8v6"></path>
-                            <path d="M16 11h6"></path>
-                        </svg>
-                    </span>
+            <path d="M19 8v6"></path>
+            <path d="M16 11h6"></path>
+        </svg>
+    </span>
 
-                    <span>Registrarme</span>
+    <span>Registrarme</span>
 
-                </button>
+</a>
 
 
                 {{-- RECUPERAR CONTRASEÑA --}}
