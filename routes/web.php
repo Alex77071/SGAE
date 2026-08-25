@@ -105,6 +105,22 @@ Route::get('/evidencias/descargar', function () {
 
 /*
 |--------------------------------------------------------------------------
+| PROCESO DE DESCARGA DE EVIDENCIAS
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/evidencias/descarga', function () {
+
+    if (!session()->has('usuario')) {
+        return redirect()->route('login');
+    }
+
+    return view('evidencias.descarga');
+
+})->name('evidencias.descarga');
+
+/*
+|--------------------------------------------------------------------------
 | CERRAR SESIÓN
 |--------------------------------------------------------------------------
 */
