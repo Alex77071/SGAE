@@ -1988,6 +1988,7 @@ body.app-body {
 
 @media (min-width: 993px) {
 
+
     /*
     |--------------------------------------------------------------------------
     | HEADER
@@ -2900,6 +2901,66 @@ body.app-body {
     }
 }
 
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 1200px) {
+
+    .diagram-grid {
+        grid-template-columns:
+            330px
+            minmax(0, 1fr);
+
+        gap: 20px;
+    }
+
+    .diagram-back-button {
+        width: 280px;
+    }
+
+    .diagram-card-divider {
+        margin: 18px 0;
+    }
+}
+
+
+/* ==========================================================
+   LAPTOPS CON POCA ALTURA
+========================================================== */
+
+@media (min-width: 993px) and (max-height: 800px) {
+
+    .diagram-breadcrumb {
+        margin-bottom: 14px;
+    }
+
+    .diagram-page__header {
+        margin-bottom: 18px;
+    }
+
+    .diagram-viewer {
+        margin-top: 14px;
+    }
+
+    .diagram-notice {
+        margin-top: 10px;
+    }
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 992px) {
+
+    .diagram-page {
+        height: auto;
+    }
+
+    /* aquí continúa todo lo que ya tienes */
+}
 
 @media (max-width: 992px) {
 
@@ -2932,10 +2993,6 @@ body.app-body {
         min-height: 500px;
     }
 
-    .diagram-viewer,
-    .diagram-viewer__pdf {
-        min-height: 420px;
-    }
 
     .diagram-notice {
         width: 100%;
