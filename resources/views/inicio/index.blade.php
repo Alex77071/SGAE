@@ -385,50 +385,54 @@
             </div>
 
 
-            <div class="resources-actions">
+<div class="resources-actions">
+
+    <a
+        href="{{ route('recursos.diagrama') }}"
+        class="outline-action resources-action resources-action--link"
+    >
+
+        <span
+            class="outline-action__icon"
+            aria-hidden="true"
+        >
+
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            >
+
+                <rect
+                    x="3"
+                    y="4"
+                    width="18"
+                    height="16"
+                    rx="2"
+                ></rect>
+
+                <path
+                    d="M9.5 9a2.5 2.5 0 1 1 3.8 2.1c-.8.5-1.3 1-1.3 2"
+                ></path>
+
+                <path d="M12 16h.01"></path>
+
+            </svg>
+
+        </span>
+
+        Conoce el flujo del proceso
+
+    </a>
 
 
-                <button
-                    type="button"
-                    class="outline-action resources-action"
-                >
-
-                        <span class="outline-action__icon" aria-hidden="true">
-
-                            <svg
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="1.6"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                            >
-
-                                <rect
-                                    x="3"
-                                    y="4"
-                                    width="18"
-                                    height="16"
-                                    rx="2"
-                                ></rect>
-
-                                <path d="M9.5 9a2.5 2.5 0 1 1 3.8 2.1c-.8.5-1.3 1-1.3 2"></path>
-
-                                <path d="M12 16h.01"></path>
-
-                            </svg>
-
-                        </span>
-
-                            Conoce el flujo del proceso
-
-                        </button>
-
-
-                        <button
-                            type="button"
-                            class="outline-action resources-action"
-                        >
+    <button
+        type="button"
+        class="outline-action resources-action"
+    >
 
         <span class="outline-action__icon" aria-hidden="true">
 

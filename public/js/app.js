@@ -123,3 +123,52 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
 });
+
+/*
+|--------------------------------------------------------------------------
+| DIAGRAMA DEL PROCESO
+| Pantalla completa
+|--------------------------------------------------------------------------
+*/
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const diagramViewer =
+        document.getElementById('diagramViewer');
+
+    const fullscreenButton =
+        document.getElementById('diagramFullscreenButton');
+
+
+    /*
+     * Este código solo se ejecuta
+     * si estamos en la pantalla del diagrama.
+     */
+    if (!diagramViewer || !fullscreenButton) {
+        return;
+    }
+
+
+    fullscreenButton.addEventListener('click', function () {
+
+        if (!document.fullscreenElement) {
+
+            if (diagramViewer.requestFullscreen) {
+
+                diagramViewer.requestFullscreen();
+
+            }
+
+        } else {
+
+            if (document.exitFullscreen) {
+
+                document.exitFullscreen();
+
+            }
+
+        }
+
+    });
+
+});

@@ -69,6 +69,23 @@ Route::get('/inicio', function () {
 
 })->name('inicio');
 
+/*
+|--------------------------------------------------------------------------
+| DIAGRAMA DEL PROCESO
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/recursos/diagrama', function () {
+
+    if (!session()->has('usuario')) {
+
+        return redirect()->route('login');
+
+    }
+
+    return view('recursos.diagrama');
+
+})->name('recursos.diagrama');
 
 /*
 |--------------------------------------------------------------------------
