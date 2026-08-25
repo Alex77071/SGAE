@@ -2287,14 +2287,14 @@ body.app-body {
 .diagram-page {
     width: 100%;
     max-width: 1420px;
-    height: 100%;
 
     margin: 0 auto;
 
     display: flex;
     flex-direction: column;
-}
 
+    box-sizing: border-box;
+}
 
 /* ==========================================================
    MIGAS DE PAN
@@ -2451,9 +2451,7 @@ body.app-body {
 ========================================================== */
 
 .diagram-grid {
-    flex: 1;
-
-    min-height: 0;
+    width: 100%;
 
     display: grid;
 
@@ -2462,6 +2460,8 @@ body.app-body {
         minmax(0, 1fr);
 
     gap: 30px;
+
+    align-items: stretch;
 }
 
 
