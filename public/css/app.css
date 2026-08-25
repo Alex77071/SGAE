@@ -1976,3 +1976,157 @@ body.app-body {
     }
 
 }
+/* ==========================================================
+   AJUSTE RESPONSIVO PARA PANTALLAS GRANDES Y ZOOM REDUCIDO
+========================================================== */
+
+@media (min-width: 993px) {
+
+    /*
+    |--------------------------------------------------------------------------
+    | HEADER
+    |--------------------------------------------------------------------------
+    | Eliminamos el ancho máximo fijo para que el encabezado
+    | aproveche todo el ancho disponible.
+    */
+
+    .site-header__container {
+        width: 100%;
+        max-width: none;
+
+        padding-left: clamp(28px, 4vw, 70px);
+        padding-right: clamp(28px, 4vw, 70px);
+
+        grid-template-columns:
+            minmax(230px, 0.28fr)
+            minmax(500px, 1fr)
+            minmax(230px, 0.28fr);
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | CONTENIDO GENERAL
+    |--------------------------------------------------------------------------
+    */
+
+    .app-main {
+        width: 100%;
+
+        padding-left: clamp(30px, 3vw, 60px);
+        padding-right: clamp(30px, 3vw, 60px);
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | DASHBOARD
+    |--------------------------------------------------------------------------
+    | IMPORTANTE:
+    | Quitamos max-width: 1420px y height: 100%.
+    |
+    | Así ya no se convierte en una columna pequeña al bajar el zoom
+    | y tampoco se estira verticalmente.
+    */
+
+    .dashboard {
+        width: 100%;
+        max-width: none;
+
+        height: auto;
+
+        margin-left: 0;
+        margin-right: 0;
+
+        gap: clamp(14px, 1.2vw, 20px);
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | TARJETA DE EVIDENCIAS
+    |--------------------------------------------------------------------------
+    | Antes tenía flex: 1 y por eso crecía muchísimo hacia abajo.
+    */
+
+    .evidence-card {
+        flex: none;
+
+        width: 100%;
+
+        min-height: 250px;
+
+        padding-left: clamp(30px, 3vw, 55px);
+        padding-right: clamp(30px, 3vw, 55px);
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | PASOS DE EVIDENCIAS
+    |--------------------------------------------------------------------------
+    */
+
+    .evidence-steps {
+        width: 100%;
+
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+    }
+
+    .evidence-step {
+        min-width: 0;
+
+        padding-left: clamp(10px, 1.2vw, 18px);
+        padding-right: clamp(10px, 1.2vw, 18px);
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | PARTE INFERIOR
+    |--------------------------------------------------------------------------
+    */
+
+    .dashboard-bottom {
+        width: 100%;
+
+        grid-template-columns:
+            minmax(340px, 0.36fr)
+            minmax(500px, 0.64fr);
+    }
+
+    .status-card,
+    .resources-card {
+        width: 100%;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | BOTONES
+    |--------------------------------------------------------------------------
+    */
+
+    .outline-action {
+        width: 100%;
+
+        white-space: normal;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | FOOTER
+    |--------------------------------------------------------------------------
+    | También ocupa todo el ancho disponible.
+    */
+
+    .site-footer__container {
+        width: 100%;
+        max-width: none;
+
+        padding-left: clamp(28px, 4vw, 70px);
+        padding-right: clamp(28px, 4vw, 70px);
+    }
+}
