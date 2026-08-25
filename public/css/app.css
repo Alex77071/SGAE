@@ -2477,14 +2477,18 @@ body.app-body {
 
 .diagram-info-card,
 .diagram-view-card {
+    width: 100%;
+
+    min-width: 0;
     min-height: 0;
 
     border: 1px solid #969aa3;
     border-radius: 18px;
 
     background: rgba(255, 255, 255, 0.68);
-}
 
+    overflow: hidden;
+}
 .diagram-info-card {
     padding: 16px 18px 18px;
 
@@ -2718,9 +2722,12 @@ body.app-body {
 .diagram-viewer {
     position: relative;
 
-    flex: 1;
+    flex: 1 1 auto;
 
-    min-height: 300px;
+    width: 100%;
+
+    min-width: 0;
+    min-height: 0;
 
     margin-top: 20px;
 
@@ -2731,14 +2738,20 @@ body.app-body {
 
     background: #ffffff;
 }
-
 .diagram-viewer__pdf {
     display: block;
 
     width: 100%;
     height: 100%;
 
-    min-height: 300px;
+    min-width: 0;
+    min-height: 0;
+
+    max-width: 100%;
+    max-height: 100%;
+
+    margin: 0;
+    padding: 0;
 
     border: 0;
 
