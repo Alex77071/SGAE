@@ -263,20 +263,12 @@
 
 
                     {{-- CERRAR SESIÓN --}}
-                    <form
-                        action="{{ route('logout') }}"
-                        method="POST"
-                        class="profile-dropdown__logout-form"
-                    >
-
-                        @csrf
-
                         <button
-                            type="submit"
+                            type="button"
+                            id="openLogoutModal"
                             class="profile-dropdown__item profile-dropdown__item--logout"
                         >
-
-                            <span class="profile-dropdown__icon">
+                            <span class="profile-dropdown__icon" aria-hidden="true">
 
                                 <svg
                                     viewBox="0 0 24 24"
@@ -285,21 +277,10 @@
                                     stroke-width="1.8"
                                     stroke-linecap="round"
                                     stroke-linejoin="round"
-                                    aria-hidden="true"
                                 >
-
-                                    <path
-                                        d="M10 17l5-5-5-5"
-                                    ></path>
-
-                                    <path
-                                        d="M15 12H3"
-                                    ></path>
-
-                                    <path
-                                        d="M21 19V5a2 2 0 0 0-2-2h-6"
-                                    ></path>
-
+                                    <path d="M10 17l5-5-5-5"></path>
+                                    <path d="M15 12H3"></path>
+                                    <path d="M21 19V5a2 2 0 0 0-2-2h-6"></path>
                                 </svg>
 
                             </span>
@@ -307,10 +288,7 @@
                             <span>
                                 Cerrar sesión
                             </span>
-
                         </button>
-
-                    </form>
 
                 </div>
 
@@ -323,5 +301,78 @@
         @endif
 
     </div>
+
+    {{-- =====================================================
+     MODAL CERRAR SESIÓN
+===================================================== --}}
+
+<div
+    class="logout-modal"
+    id="logoutModal"
+    aria-hidden="true"
+>
+
+    <div
+        class="logout-modal__dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="logoutModalTitle"
+    >
+
+        <div class="logout-modal__icon" aria-hidden="true">
+
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            >
+                <path d="M10 17l5-5-5-5"></path>
+                <path d="M15 12H3"></path>
+                <path d="M21 19V5a2 2 0 0 0-2-2h-6"></path>
+            </svg>
+
+        </div>
+
+        <h2
+            class="logout-modal__title"
+            id="logoutModalTitle"
+        >
+            ¿Deseas cerrar sesión?
+        </h2>
+
+        <div class="logout-modal__actions">
+
+            <button
+                type="button"
+                id="cancelLogout"
+                class="logout-modal__button logout-modal__button--cancel"
+            >
+                Cancelar
+            </button>
+
+            <form
+                action="{{ route('logout') }}"
+                method="POST"
+                class="logout-modal__form"
+            >
+                @csrf
+
+                <button
+                    type="submit"
+                    class="logout-modal__button logout-modal__button--confirm"
+                >
+                    Cerrar sesión
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
 
 </header>
