@@ -368,42 +368,42 @@
         </div>
 
 
-        {{-- DESCARGAR SELECCIONADOS --}}
+       {{-- DESCARGAR SELECCIONADOS --}}
 
-        <div class="download-results__action">
+<div class="download-results__action">
 
-            <button
-                type="button"
-                class="download-selected-button"
+    <a
+        href="{{ route('evidencias.descarga') }}"
+        class="download-selected-button"
+    >
+
+        <span
+            class="download-selected-button__icon"
+            aria-hidden="true"
+        >
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.9"
+                stroke-linecap="round"
+                stroke-linejoin="round"
             >
+                <path d="M12 3v12"></path>
+                <path d="m7 10 5 5 5-5"></path>
+                <path d="M5 20h14"></path>
+            </svg>
+        </span>
 
-                <span
-                    class="download-selected-button__icon"
-                    aria-hidden="true"
-                >
-                    <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="1.9"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    >
-                        <path d="M12 3v12"></path>
-                        <path d="m7 10 5 5 5-5"></path>
-                        <path d="M5 20h14"></path>
-                    </svg>
-                </span>
+        <span>
+            Descargar seleccionados
+        </span>
 
-                <span>
-                    Descargar seleccionados
-                </span>
+    </a>
 
-            </button>
+</div>
 
-        </div>
-
-    </section>
+</section>
 
 </section>
 
