@@ -153,8 +153,28 @@
                         class="outline-action"
                     >
 
-                        <span class="outline-action__icon">
-                            ✣
+                       <span class="outline-action__icon" aria-hidden="true">
+
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                stroke-linecap="round"
+                            >
+                                <path d="M12 2v3"></path>
+                                <path d="M12 19v3"></path>
+
+                                <path d="M4.93 4.93l2.12 2.12"></path>
+                                <path d="M16.95 16.95l2.12 2.12"></path>
+
+                                <path d="M2 12h3"></path>
+                                <path d="M19 12h3"></path>
+
+                                <path d="M4.93 19.07l2.12-2.12"></path>
+                                <path d="M16.95 7.05l2.12-2.12"></path>
+                            </svg>
+
                         </span>
 
                         Analizar carpetas
@@ -190,8 +210,32 @@
                         class="outline-action"
                     >
 
-                        <span class="outline-action__icon">
-                            ✣
+                       <span class="outline-action__icon" aria-hidden="true">
+
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.7"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+
+                                <path d="M4 20L15 9"></path>
+
+                                <path d="M13.5 7.5l3 3"></path>
+
+                                <path d="M7 3v4"></path>
+                                <path d="M5 5h4"></path>
+
+                                <path d="M18 3v4"></path>
+                                <path d="M16 5h4"></path>
+
+                                <path d="M19 13v4"></path>
+                                <path d="M17 15h4"></path>
+
+                            </svg>
+
                         </span>
 
                         Historial de análisis
@@ -349,23 +393,65 @@
                     class="outline-action resources-action"
                 >
 
-                    <span>
-                        ?
-                    </span>
+                        <span class="outline-action__icon" aria-hidden="true">
 
-                    Conoce el flujo del proceso
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.6"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
 
-                </button>
+                                <rect
+                                    x="3"
+                                    y="4"
+                                    width="18"
+                                    height="16"
+                                    rx="2"
+                                ></rect>
+
+                                <path d="M9.5 9a2.5 2.5 0 1 1 3.8 2.1c-.8.5-1.3 1-1.3 2"></path>
+
+                                <path d="M12 16h.01"></path>
+
+                            </svg>
+
+                        </span>
+
+                            Conoce el flujo del proceso
+
+                        </button>
 
 
-                <button
-                    type="button"
-                    class="outline-action resources-action"
-                >
+                        <button
+                            type="button"
+                            class="outline-action resources-action"
+                        >
 
-                    <span>
-                        ♧
-                    </span>
+        <span class="outline-action__icon" aria-hidden="true">
+
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            >
+
+                <path
+                    d="M3 5.5A3.5 3.5 0 0 1 6.5 2H11v17H6.5A3.5 3.5 0 0 0 3 22Z"
+                ></path>
+
+                <path
+                    d="M21 5.5A3.5 3.5 0 0 0 17.5 2H13v17h4.5A3.5 3.5 0 0 1 21 22Z"
+                ></path>
+
+            </svg>
+
+        </span>
 
                     Manuales de usuario
 
