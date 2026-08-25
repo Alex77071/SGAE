@@ -391,6 +391,12 @@ body.guest-body {
     padding-right: 42px;
 }
 
+/* Ocultar el botón nativo para mostrar contraseña de Edge */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none;
+}
+
 
 /* =====================================================
    BOTÓN MOSTRAR CONTRASEÑA
