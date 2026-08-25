@@ -56,6 +56,37 @@ Route::get('/inicio', function () {
 
 /*
 |--------------------------------------------------------------------------
+| DESCARGAR EVIDENCIAS
+|--------------------------------------------------------------------------
+|
+| Esta ruta se agrega porque inicio/index.blade.php utiliza:
+|
+| route('evidencias.descargar')
+|
+| Por ahora devuelve una pantalla de prueba.
+| Después aquí conectaremos la descarga real desde Moodle.
+|
+*/
+
+Route::get('/evidencias/descargar', function () {
+
+    /*
+     * Solo usuarios autenticados con Moodle pueden acceder.
+     */
+
+    if (!session('moodle_authenticated')) {
+
+        return redirect()->route('login');
+
+    }
+
+    return 'Pantalla de descarga de evidencias';
+
+})->name('evidencias.descargar');
+
+
+/*
+|--------------------------------------------------------------------------
 | DIAGRAMA DEL PROCESO
 |--------------------------------------------------------------------------
 */
@@ -79,38 +110,6 @@ Route::get('/recursos/diagrama', function () {
 
 /*
 |--------------------------------------------------------------------------
-| DESCARGAR EVIDENCIAS
-|--------------------------------------------------------------------------
-*/
-
-Route::get('/evidencias/descargar', function () {
-
-    if (!session()->has('usuario')) {
-        return redirect()->route('login');
-    }
-
-    return view('evidencias.descargar');
-
-})->name('evidencias.descargar');
-
-/*
-|--------------------------------------------------------------------------
-| PROCESO DE DESCARGA DE EVIDENCIAS
-|--------------------------------------------------------------------------
-*/
-
-Route::get('/evidencias/descarga', function () {
-
-    if (!session()->has('usuario')) {
-        return redirect()->route('login');
-    }
-
-    return view('evidencias.descarga');
-
-})->name('evidencias.descarga');
-
-/*
-|--------------------------------------------------------------------------
 | CERRAR SESIÓN
 |--------------------------------------------------------------------------
 */
@@ -119,3 +118,19 @@ Route::post(
     '/logout',
     [MoodleAuthController::class, 'logout']
 )->name('logout');
+
+/*
+|--------------------------------------------------------------------------
+| MANUALES DE USUARIO
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/recursos/manuales', function () {
+
+    if (!session('moodle_authenticated')) {
+        return redirect()->route('login');
+    }
+
+    return 'Pantalla de manuales de usuario';
+
+})->name('manuales');
