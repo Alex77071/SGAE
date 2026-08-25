@@ -237,3 +237,96 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
 });
+
+/*
+|--------------------------------------------------------------------------
+| SIMULACIÓN DE DESCARGA DE EVIDENCIAS
+|--------------------------------------------------------------------------
+*/
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const progressState =
+        document.getElementById('downloadProgressState');
+
+    const completeState =
+        document.getElementById('downloadCompleteState');
+
+    const progressBar =
+        document.getElementById('downloadProgressBar');
+
+    const progressPercentage =
+        document.getElementById('downloadProgressPercentage');
+
+
+    /*
+     * Si no estamos en la pantalla de descarga,
+     * no hacemos nada.
+     */
+    if (
+        !progressState ||
+        !completeState ||
+        !progressBar ||
+        !progressPercentage
+    ) {
+        return;
+    }
+
+
+    let progress = 0;
+
+
+    /*
+     * Simulación temporal.
+     *
+     * Más adelante este valor podrá sustituirse
+     * por el progreso real de la descarga.
+     */
+    const downloadInterval = setInterval(function () {
+
+        /*
+         * Incrementos ligeramente variables para
+         * dar una sensación más natural.
+         */
+        const increment =
+            Math.floor(Math.random() * 6) + 2;
+
+        progress += increment;
+
+
+        if (progress >= 100) {
+            progress = 100;
+        }
+
+
+        progressBar.style.width =
+            progress + '%';
+
+        progressPercentage.textContent =
+            progress + '%';
+
+
+        /*
+         * Descarga terminada.
+         */
+        if (progress === 100) {
+
+            clearInterval(downloadInterval);
+
+
+            /*
+             * Pequeña pausa para que pueda verse el 100%.
+             */
+            setTimeout(function () {
+
+                progressState.hidden = true;
+
+                completeState.hidden = false;
+
+            }, 500);
+
+        }
+
+    }, 180);
+
+});

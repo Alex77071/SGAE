@@ -1,5 +1,27 @@
 @php
+
     $showUser = $showUser ?? false;
+
+    $nombreCompleto = session(
+        'moodle_fullname',
+        session('moodle_username', 'Usuario')
+    );
+
+    // Quitar títulos académicos al inicio del nombre.
+    $nombreSinTitulo = preg_replace(
+        '/^(M\.?C\.?|Dr\.?|Dra\.?|Ing\.?|Lic\.?|Mtro\.?|Mtra\.?)\s+/iu',
+        '',
+        trim($nombreCompleto)
+    );
+
+    // Obtener únicamente el primer nombre.
+    $partesNombre = preg_split(
+        '/\s+/',
+        trim($nombreSinTitulo)
+    );
+
+    $usuario = $partesNombre[0] ?? 'Usuario';
+
 @endphp
 
 <header class="site-header">

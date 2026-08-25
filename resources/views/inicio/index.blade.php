@@ -20,7 +20,7 @@
 
             <h2 class="dashboard-welcome__title">
 
-                ¡Bienvenido, {{ session('usuario') }}!
+                ¡Bienvenido, {{ session('moodle_fullname') }}!
 
             </h2>
 
@@ -87,54 +87,54 @@
 
             {{-- PASO 1 --}}
 
-            <article class="evidence-step">
+<article class="evidence-step">
 
-                <span class="evidence-step__number">
-                    1
-                </span>
-
-
-                <div class="evidence-step__content">
-
-                    <button
-                        type="button"
-                        class="outline-action"
-                    >
-
-                        <span class="outline-action__icon">
-
-                            <svg
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="1.6"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                            >
-
-                                <path
-                                    d="M3 6.5A2.5 2.5 0 0 1 5.5 4H9l2 2h7.5A2.5 2.5 0 0 1 21 8.5v8A2.5 2.5 0 0 1 18.5 19h-13A2.5 2.5 0 0 1 3 16.5Z"
-                                ></path>
-
-                            </svg>
-
-                        </span>
-
-                        Descargar carpetas
-
-                    </button>
+    <span class="evidence-step__number">
+        1
+    </span>
 
 
-                    <p>
+    <div class="evidence-step__content">
 
-                        Obtenga las carpetas con las imágenes
-                        descargadas
+        <a
+            href="{{ route('evidencias.descargar') }}"
+            class="outline-action"
+        >
 
-                    </p>
+            <span class="outline-action__icon">
 
-                </div>
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
 
-            </article>
+                    <path
+                        d="M3 6.5A2.5 2.5 0 0 1 5.5 4H9l2 2h7.5A2.5 2.5 0 0 1 21 8.5v8A2.5 2.5 0 0 1 18.5 19h-13A2.5 2.5 0 0 1 3 16.5Z"
+                    ></path>
+
+                </svg>
+
+            </span>
+
+            Descargar carpetas
+
+        </a>
+
+
+        <p>
+
+            Obtenga las carpetas con las imágenes
+            descargadas
+
+        </p>
+
+    </div>
+
+</article>
 
 
             {{-- PASO 2 --}}
