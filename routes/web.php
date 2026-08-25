@@ -135,10 +135,10 @@ Route::post(
 
 Route::get('/recursos/manuales', function () {
 
-    if (!session('moodle_authenticated')) {
+    if (!session()->has('usuario')) {
         return redirect()->route('login');
     }
 
-    return 'Pantalla de manuales de usuario';
+    return view('recursos.manuales');
 
 })->name('manuales');
