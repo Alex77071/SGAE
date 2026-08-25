@@ -172,3 +172,68 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
 });
+
+/* ==========================================================
+   MANUALES - CAMBIO DE VISTA PREVIA
+========================================================== */
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const manualItems = document.querySelectorAll('[data-manual]');
+    const manualPreview = document.getElementById('manualPreview');
+    const manualDownload = document.getElementById('manualDownload');
+
+    if (
+        !manualItems.length ||
+        !manualPreview ||
+        !manualDownload
+    ) {
+        return;
+    }
+
+
+    manualItems.forEach(function (item) {
+
+        item.addEventListener('click', function () {
+
+            const pdf = item.dataset.pdf;
+
+            if (!pdf) {
+                return;
+            }
+
+
+            /*
+             * Quitar selección anterior.
+             */
+            manualItems.forEach(function (manual) {
+
+                manual.classList.remove('manual-item--active');
+
+            });
+
+
+            /*
+             * Seleccionar nuevo manual.
+             */
+            item.classList.add('manual-item--active');
+
+
+            /*
+             * Actualizar vista previa.
+             */
+            manualPreview.src =
+                pdf +
+                '#page=1&zoom=page-width&toolbar=0&navpanes=0';
+
+
+            /*
+             * Actualizar descarga.
+             */
+            manualDownload.href = pdf;
+
+        });
+
+    });
+
+});

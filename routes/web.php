@@ -113,3 +113,13 @@ Route::post('/logout', function (Request $request) {
     return redirect()->route('login');
 
 })->name('logout');
+
+Route::get('/recursos/manuales', function () {
+
+    if (!session()->has('usuario')) {
+        return redirect()->route('login');
+    }
+
+    return view('recursos.manuales');
+
+})->name('manuales');
