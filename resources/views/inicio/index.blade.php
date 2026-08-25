@@ -20,7 +20,7 @@
 
             <h2 class="dashboard-welcome__title">
 
-                ¡Bienvenido, {{ session('usuario') }}!
+                ¡Bienvenido, {{ session('moodle_fullname') }}!
 
             </h2>
 

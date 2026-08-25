@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MoodleAuthController;
 
 
 /*
@@ -23,31 +24,10 @@ Route::get('/', function () {
 |--------------------------------------------------------------------------
 */
 
-Route::post('/login', function (Request $request) {
-
-    $request->validate([
-
-        'usuario' => 'required|string|max:100',
-        'password' => 'required|string',
-
-    ]);
-
-
-    /*
-     * Por ahora guardamos el usuario escrito.
-     *
-     * Más adelante este dato vendrá de Moodle.
-     */
-    session([
-
-        'usuario' => $request->usuario
-
-    ]);
-
-
-    return redirect()->route('inicio');
-
-})->name('login.submit');
+Route::post(
+    '/login',
+    [MoodleAuthController::class, 'login']
+)->name('login.submit');
 
 
 /*
@@ -58,16 +38,21 @@ Route::post('/login', function (Request $request) {
 
 Route::get('/inicio', function () {
 
-    if (!session()->has('usuario')) {
+    /*
+     * Verificamos que el usuario haya iniciado sesión
+     * correctamente mediante Moodle.
+     */
+
+    if (!session('moodle_authenticated')) {
 
         return redirect()->route('login');
 
     }
 
-
     return view('inicio.index');
 
 })->name('inicio');
+
 
 /*
 |--------------------------------------------------------------------------
@@ -77,7 +62,11 @@ Route::get('/inicio', function () {
 
 Route::get('/recursos/diagrama', function () {
 
-    if (!session()->has('usuario')) {
+    /*
+     * Esta pantalla también está protegida.
+     */
+
+    if (!session('moodle_authenticated')) {
 
         return redirect()->route('login');
 
@@ -86,6 +75,7 @@ Route::get('/recursos/diagrama', function () {
     return view('recursos.diagrama');
 
 })->name('recursos.diagrama');
+
 
 /*
 |--------------------------------------------------------------------------
@@ -125,23 +115,7 @@ Route::get('/evidencias/descarga', function () {
 |--------------------------------------------------------------------------
 */
 
-Route::post('/logout', function (Request $request) {
-
-    /*
-     * Eliminamos todos los datos de la sesión.
-     */
-    $request->session()->flush();
-
-
-    /*
-     * Regeneramos el token de sesión.
-     */
-    $request->session()->regenerateToken();
-
-
-    /*
-     * Regresamos al login.
-     */
-    return redirect()->route('login');
-
-})->name('logout');
+Route::post(
+    '/logout',
+    [MoodleAuthController::class, 'logout']
+)->name('logout');
