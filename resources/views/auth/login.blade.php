@@ -211,10 +211,11 @@
 
 
                 {{-- REGISTRO --}}
-                <button
-                    type="button"
-                    class="action-btn action-btn--secondary"
-                >
+                <a
+    href="https://cv.utm.mx/"
+    class="action-btn action-btn--secondary"
+>
+                
 
                     <span
                         class="action-btn__icon"
