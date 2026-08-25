@@ -426,42 +426,33 @@
 
         Conoce el flujo del proceso
 
-    </a>
+        </a>
 
 
-    <button
-        type="button"
-        class="outline-action resources-action"
-    >
+        <a
+            href="{{ route('manuales') }}"
+            class="outline-action resources-action"
+        >
 
-        <span class="outline-action__icon" aria-hidden="true">
+            <span class="outline-action__icon" aria-hidden="true">
 
-            <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.6"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-            >
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <path d="M3 5.5A3.5 3.5 0 0 1 6.5 2H11v17H6.5A3.5 3.5 0 0 0 3 22Z"></path>
+                    <path d="M21 5.5A3.5 3.5 0 0 0 17.5 2H13v17h4.5A3.5 3.5 0 0 1 21 22Z"></path>
+                </svg>
 
-                <path
-                    d="M3 5.5A3.5 3.5 0 0 1 6.5 2H11v17H6.5A3.5 3.5 0 0 0 3 22Z"
-                ></path>
+            </span>
 
-                <path
-                    d="M21 5.5A3.5 3.5 0 0 0 17.5 2H13v17h4.5A3.5 3.5 0 0 1 21 22Z"
-                ></path>
+            Manuales de usuario
 
-            </svg>
-
-        </span>
-
-                    Manuales de usuario
-
-                </button>
-
-
+        </a>
             </div>
 
         </section>

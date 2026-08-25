@@ -4058,19 +4058,710 @@ body.app-body {
 
         margin-top: 25px;
     }
+}
 
-    .profile-photo {
+/* ==========================================================
+   PANTALLA DE MANUALES
+========================================================== */
+
+.manuals-page {
     width: 100%;
     height: 100%;
 
-    display: block;
+    display: flex;
+    flex-direction: column;
 
-    object-fit: cover;
-
-    border-radius: 50%;
+    gap: 22px;
 }
-.profile-icon {
-    overflow: hidden;
+
+
+/* ==========================================================
+   PARTE SUPERIOR
+========================================================== */
+
+.manuals-top {
+    width: 100%;
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    gap: 30px;
+
     flex-shrink: 0;
 }
+
+.manuals-top__left {
+    display: flex;
+    flex-direction: column;
+
+    gap: 22px;
+}
+
+
+/* ==========================================================
+   BREADCRUMB
+========================================================== */
+
+.manuals-breadcrumb {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    color: var(--text-main);
+
+    font-size: 18px;
+    line-height: 1;
+}
+
+.manuals-breadcrumb__separator {
+    color: #202020;
+}
+
+.manuals-breadcrumb__current {
+    color: var(--primary);
+
+    font-weight: 600;
+}
+
+
+/* ==========================================================
+   TÍTULO DE MANUALES
+========================================================== */
+
+.manuals-heading {
+    display: flex;
+    align-items: stretch;
+
+    gap: 12px;
+}
+
+.manuals-heading__line {
+    width: 4px;
+    min-width: 4px;
+
+    background: var(--primary);
+
+    border-radius: 2px;
+}
+
+.manuals-heading__title {
+    margin: 0 0 4px;
+
+    color: var(--primary);
+
+    font-size: 27px;
+    line-height: 1.1;
+
+    font-weight: 700;
+}
+
+.manuals-heading__description {
+    margin: 0;
+
+    color: var(--text-soft);
+
+    font-size: 16px;
+    line-height: 1.2;
+}
+
+
+/* ==========================================================
+   VOLVER AL INICIO
+========================================================== */
+
+.manuals-home-button {
+    width: 315px;
+    min-height: 44px;
+
+    margin-bottom: 14px;
+
+    border: 1px solid #a44d4d;
+    border-radius: 11px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 12px;
+
+    color: var(--primary);
+
+    font-size: 17px;
+    font-weight: 600;
+
+    text-decoration: none;
+
+    background: transparent;
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.manuals-home-button:hover {
+    background: rgba(130, 50, 51, 0.06);
+}
+
+.manuals-home-button__icon {
+    width: 23px;
+    height: 23px;
+
+    display: inline-flex;
+}
+
+.manuals-home-button__icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+
+/* ==========================================================
+   CONTENIDO PRINCIPAL
+========================================================== */
+
+.manuals-content {
+    flex: 1;
+
+    min-height: 0;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(550px, 1.65fr)
+        minmax(360px, 0.95fr);
+
+    gap: 28px;
+}
+
+
+/* ==========================================================
+   COLUMNA IZQUIERDA
+========================================================== */
+
+.manuals-left {
+    min-width: 0;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+
+/* ==========================================================
+   LISTA
+========================================================== */
+
+.manuals-list {
+    flex: 1;
+
+    min-height: 0;
+
+    padding: 8px 15px;
+
+    border: 1px solid #9ea1a8;
+    border-radius: 18px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 9px;
+
+    background: rgba(255, 255, 255, 0.35);
+}
+
+
+/* ==========================================================
+   CADA MANUAL
+========================================================== */
+
+.manual-item {
+    flex: 1;
+
+    width: 100%;
+    min-height: 68px;
+
+    padding: 8px 18px;
+
+    border: 1px solid #d5d5d5;
+    border-radius: 17px;
+
+    background: rgba(255, 255, 255, 0.68);
+
+    display: flex;
+    align-items: center;
+
+    gap: 16px;
+
+    color: var(--text-main);
+
+    font-family: inherit;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.18s ease,
+        border-color 0.18s ease;
+}
+
+
+/* ==========================================================
+   MANUAL SELECCIONADO
+========================================================== */
+
+.manual-item--active {
+    background: #d6c2c2;
+
+    border-color: transparent;
+}
+
+
+/* ==========================================================
+   ICONOS
+========================================================== */
+
+.manual-item__icon {
+    width: 48px;
+    min-width: 48px;
+    height: 48px;
+
+    border-radius: 50%;
+
+    background: #e0cccc;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 12px;
+
+    color: #111111;
+}
+
+.manual-item--active .manual-item__icon {
+    background: #cfaeaf;
+}
+
+.manual-item__icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+
+/* ==========================================================
+   TEXTO DE CADA MANUAL
+========================================================== */
+
+.manual-item__content {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 2px;
+}
+
+.manual-item__title {
+    color: var(--primary);
+
+    font-size: 19px;
+    line-height: 1.1;
+
+    font-weight: 500;
+}
+
+.manual-item__description {
+    color: var(--text-main);
+
+    font-size: 16px;
+    line-height: 1.17;
+}
+
+
+/* ==========================================================
+   MENSAJE INFORMATIVO
+========================================================== */
+
+.manuals-info {
+    width: 78%;
+
+    min-height: 42px;
+
+    padding: 8px 16px;
+
+    border-radius: 9px;
+
+    background: #dadada;
+
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    color: var(--text-main);
+
+    font-size: 16px;
+}
+
+.manuals-info__icon {
+    width: 19px;
+    min-width: 19px;
+    height: 19px;
+
+    display: inline-flex;
+}
+
+.manuals-info__icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+
+/* ==========================================================
+   COLUMNA DERECHA
+========================================================== */
+
+.manuals-right {
+    min-width: 0;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 12px;
+}
+
+
+/* ==========================================================
+   TARJETA VISTA PREVIA
+========================================================== */
+
+.manual-preview-card {
+    flex: 1;
+
+    min-height: 0;
+
+    padding: 14px 16px 18px;
+
+    border: 1px solid #9ea1a8;
+    border-radius: 18px;
+
+    display: flex;
+    flex-direction: column;
+
+    background: rgba(255, 255, 255, 0.35);
+}
+
+
+/* ==========================================================
+   ENCABEZADO VISTA PREVIA
+========================================================== */
+
+.manual-preview-card__header {
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 12px;
+}
+
+.manual-preview-card__header h3 {
+    margin: 0;
+
+    color: var(--text-main);
+
+    font-size: 20px;
+    line-height: 1;
+
+    font-weight: 500;
+}
+
+.manual-version {
+    padding: 2px 10px;
+
+    border: 1px solid #a44d4d;
+    border-radius: 15px;
+
+    color: var(--primary);
+
+    font-size: 15px;
+    line-height: 1.1;
+}
+
+
+/* ==========================================================
+   PDF
+========================================================== */
+
+.manual-preview-card__viewer {
+    flex: 1;
+
+    min-height: 0;
+
+    border: 1px solid #9ea1a8;
+    border-radius: 17px;
+
+    overflow: hidden;
+
+    background: #ffffff;
+}
+
+.manual-preview-card__viewer iframe {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    min-height: 100%;
+
+    border: none;
+
+    background: #ffffff;
+}
+
+
+/* ==========================================================
+   DESCARGAR
+========================================================== */
+
+.manual-download {
+    width: 70%;
+
+    min-height: 44px;
+
+    margin: 0 auto;
+
+    border-radius: 10px;
+
+    background: var(--primary);
+
+    color: #ffffff;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    font-size: 17px;
+    font-weight: 600;
+
+    text-decoration: none;
+
+    transition: background-color 0.2s ease;
+}
+
+.manual-download:hover {
+    background: var(--primary-dark);
+}
+
+.manual-download__icon {
+    width: 22px;
+    height: 22px;
+
+    display: inline-flex;
+}
+
+.manual-download__icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+
+/* ==========================================================
+   RESPONSIVE - LAPTOP
+========================================================== */
+
+@media (max-width: 1200px) {
+
+    .manuals-page {
+        gap: 16px;
+    }
+
+    .manuals-top__left {
+        gap: 15px;
+    }
+
+    .manuals-heading__title {
+        font-size: 24px;
+    }
+
+    .manuals-breadcrumb {
+        font-size: 16px;
+    }
+
+    .manuals-home-button {
+        width: 270px;
+
+        font-size: 15px;
+    }
+
+    .manuals-content {
+        grid-template-columns:
+            minmax(500px, 1.55fr)
+            minmax(330px, 0.9fr);
+
+        gap: 20px;
+    }
+
+    .manual-item__title {
+        font-size: 17px;
+    }
+
+    .manual-item__description {
+        font-size: 14px;
+    }
+
+    .manual-item__icon {
+        width: 43px;
+        min-width: 43px;
+        height: 43px;
+
+        padding: 10px;
+    }
+
+}
+
+
+/* ==========================================================
+   RESPONSIVE - TABLET
+========================================================== */
+
+@media (max-width: 992px) {
+
+    .manuals-page {
+        height: auto;
+    }
+
+    .manuals-top {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .manuals-home-button {
+        width: 100%;
+
+        margin-bottom: 0;
+    }
+
+    .manuals-content {
+        grid-template-columns: 1fr;
+
+        gap: 22px;
+    }
+
+    .manuals-list {
+        min-height: 500px;
+    }
+
+    .manuals-info {
+        width: 100%;
+    }
+
+    .manual-preview-card {
+        min-height: 650px;
+    }
+
+}
+
+
+/* ==========================================================
+   RESPONSIVE - CELULAR
+========================================================== */
+
+@media (max-width: 576px) {
+
+    .manuals-heading__title {
+        font-size: 22px;
+    }
+
+    .manuals-heading__description {
+        font-size: 14px;
+    }
+
+    .manual-item {
+        padding: 10px;
+
+        gap: 10px;
+    }
+
+    .manual-item__icon {
+        width: 40px;
+        min-width: 40px;
+        height: 40px;
+    }
+
+    .manual-item__title {
+        font-size: 15px;
+    }
+
+    .manual-item__description {
+        font-size: 13px;
+    }
+
+    .manual-preview-card__header h3 {
+        font-size: 17px;
+    }
+
+    .manual-version {
+        font-size: 13px;
+    }
+
+    .manual-preview-card {
+        min-height: 520px;
+    }
+
+    .manual-download {
+        width: 100%;
+    }
+
+}
+/* ==========================================================
+   CORRECCIÓN - LISTA DE MANUALES
+========================================================== */
+
+.manuals-list {
+    display: grid;
+
+    /*
+     * Los 5 manuales se reparten exactamente
+     * dentro de la altura disponible.
+     */
+    grid-template-rows: repeat(5, minmax(0, 1fr));
+
+    gap: 9px;
+
+    overflow: hidden;
+}
+
+.manual-item {
+    /*
+     * Quitamos la altura mínima anterior de 68px
+     * que provocaba que el quinto manual
+     * saliera del contenedor.
+     */
+    min-height: 0;
+    height: 100%;
+
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+
+
+/* ==========================================================
+   VOLVER AL INICIO - TEXTO NORMAL
+========================================================== */
+
+.manuals-home-button {
+    font-weight: 400;
 }
