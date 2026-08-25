@@ -93,6 +93,19 @@ Route::get('/evidencias/descarga', function () {
     return view('evidencias.descarga');
 
 })->name('evidencias.descarga');
+
+Route::get('/recursos/manuales', function () {
+
+    /*
+     * Solo usuarios autenticados con Moodle pueden acceder.
+     */
+    if (!session('moodle_authenticated')) {
+        return redirect()->route('login');
+    }
+
+    return view('recursos.manuales');
+
+})->name('manuales');
 /*
 |--------------------------------------------------------------------------
 | DIAGRAMA DEL PROCESO
@@ -127,18 +140,3 @@ Route::post(
     [MoodleAuthController::class, 'logout']
 )->name('logout');
 
-/*
-|--------------------------------------------------------------------------
-| MANUALES DE USUARIO
-|--------------------------------------------------------------------------
-*/
-
-Route::get('/recursos/manuales', function () {
-
-    if (!session()->has('usuario')) {
-        return redirect()->route('login');
-    }
-
-    return view('recursos.manuales');
-
-})->name('manuales');
