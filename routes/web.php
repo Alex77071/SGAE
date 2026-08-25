@@ -80,11 +80,19 @@ Route::get('/evidencias/descargar', function () {
 
     }
 
-    return 'Pantalla de descarga de evidencias';
+    return view('evidencias.descargar');
 
 })->name('evidencias.descargar');
 
+Route::get('/evidencias/descarga', function () {
 
+    if (!session('moodle_authenticated')) {
+        return redirect()->route('login');
+    }
+
+    return view('evidencias.descarga');
+
+})->name('evidencias.descarga');
 /*
 |--------------------------------------------------------------------------
 | DIAGRAMA DEL PROCESO
@@ -127,10 +135,10 @@ Route::post(
 
 Route::get('/recursos/manuales', function () {
 
-    if (!session('moodle_authenticated')) {
+    if (!session()->has('usuario')) {
         return redirect()->route('login');
     }
 
-    return 'Pantalla de manuales de usuario';
+    return view('recursos.manuales');
 
 })->name('manuales');
