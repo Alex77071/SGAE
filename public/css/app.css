@@ -3050,3 +3050,555 @@ body.app-body {
         font-size: 14px;
     }
 }
+
+/* ==========================================================
+   DESCARGAR EVIDENCIAS
+========================================================== */
+
+.download-evidence-page {
+    width: 100%;
+    max-width: 1420px;
+
+    min-height: 100%;
+
+    margin: 0 auto;
+
+    padding-bottom: 10px;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+
+/* ==========================================================
+   MIGAS DE PAN
+========================================================== */
+
+.download-evidence-breadcrumb {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    margin-bottom: 24px;
+
+    font-size: 17px;
+    line-height: 1;
+}
+
+.download-evidence-breadcrumb__link {
+    color: var(--text-main);
+
+    text-decoration: none;
+}
+
+.download-evidence-breadcrumb__link:hover {
+    color: var(--primary);
+}
+
+.download-evidence-breadcrumb__separator {
+    color: #282828;
+
+    font-size: 23px;
+}
+
+.download-evidence-breadcrumb__current {
+    color: var(--primary);
+
+    font-weight: 600;
+}
+
+
+/* ==========================================================
+   ENCABEZADO
+========================================================== */
+
+.download-evidence-heading {
+    display: flex;
+    align-items: stretch;
+
+    gap: 10px;
+
+    margin-bottom: 32px;
+}
+
+.download-evidence-heading__line {
+    width: 4px;
+    min-width: 4px;
+
+    background: var(--primary);
+
+    border-radius: 2px;
+}
+
+.download-evidence-heading__title {
+    margin: 0;
+
+    color: var(--primary);
+
+    font-size: 27px;
+    line-height: 1.1;
+
+    font-weight: 700;
+}
+
+
+/* ==========================================================
+   TÍTULOS DE SECCIÓN
+========================================================== */
+
+.download-section-title {
+    margin: 0;
+
+    color: var(--primary);
+
+    font-size: 25px;
+    line-height: 1.1;
+
+    font-weight: 700;
+}
+
+
+/* ==========================================================
+   TARJETA DE FILTROS
+========================================================== */
+
+.download-filter-card {
+    width: 100%;
+
+    padding: 16px 24px 24px;
+
+    border: 1px solid #9a9da4;
+    border-radius: 16px;
+
+    background: rgba(255, 255, 255, 0.55);
+}
+
+.download-filter-grid {
+    width: 100%;
+
+    margin-top: 11px;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: clamp(25px, 4vw, 55px);
+}
+
+
+/* ==========================================================
+   CAMPOS DE FILTRO
+========================================================== */
+
+.download-filter-field {
+    min-width: 0;
+}
+
+.download-filter-label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: var(--text-main);
+
+    font-size: 16px;
+}
+
+
+/* ==========================================================
+   SELECTS
+========================================================== */
+
+.download-select {
+    position: relative;
+
+    width: 100%;
+}
+
+.download-select__icon {
+    position: absolute;
+
+    left: 12px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    z-index: 2;
+
+    width: 27px;
+    height: 27px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: var(--text-main);
+
+    pointer-events: none;
+}
+
+.download-select__icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.download-select__control {
+    width: 100%;
+    height: 45px;
+
+    padding:
+        0
+        42px
+        0
+        50px;
+
+    border: 1px solid #25262a;
+    border-radius: 11px;
+
+    background: #ffffff;
+
+    color: var(--text-main);
+
+    font-family: inherit;
+    font-size: 16px;
+
+    outline: none;
+
+    cursor: pointer;
+}
+
+.download-select__control:focus {
+    border-color: var(--primary);
+
+    box-shadow:
+        0 0 0 1px
+        rgba(130, 50, 51, 0.15);
+}
+
+
+/* ==========================================================
+   RESULTADOS
+========================================================== */
+
+.download-results {
+    margin-top: 48px;
+}
+
+.download-table-wrapper {
+    width: 100%;
+
+    margin-top: 38px;
+
+    border: 1px solid #969aa3;
+    border-radius: 15px;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    background: #ffffff;
+}
+
+
+/* ==========================================================
+   TABLA
+========================================================== */
+
+.download-table {
+    width: 100%;
+
+    min-width: 1000px;
+
+    border-collapse: separate;
+    border-spacing: 0;
+
+    color: var(--text-main);
+
+    font-size: 15px;
+}
+
+.download-table th,
+.download-table td {
+    padding: 14px 18px;
+
+    text-align: center;
+    vertical-align: middle;
+}
+
+.download-table thead th {
+    height: 62px;
+
+    background: #d1c1c1;
+
+    color: #30303b;
+
+    font-weight: 600;
+}
+
+.download-table thead th:first-child {
+    border-top-left-radius: 14px;
+}
+
+.download-table thead th:last-child {
+    border-top-right-radius: 14px;
+}
+
+.download-table tbody td {
+    height: 60px;
+
+    border-top: 1px solid #c5c5c8;
+
+    background: #ffffff;
+}
+
+.download-table__exam {
+    font-weight: 600;
+}
+
+.download-table__date {
+    margin-right: 18px;
+}
+
+.download-table__time {
+    white-space: nowrap;
+}
+
+
+/* ==========================================================
+   BOTÓN DETALLES
+========================================================== */
+
+.download-details-button {
+    min-width: 145px;
+    min-height: 42px;
+
+    padding: 7px 18px;
+
+    border: 1px solid #9f4949;
+    border-radius: 10px;
+
+    background: transparent;
+
+    color: var(--primary);
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    font-family: inherit;
+    font-size: 15px;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease;
+}
+
+.download-details-button:hover {
+    background: rgba(130, 50, 51, 0.06);
+}
+
+.download-details-button__icon {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+
+/* ==========================================================
+   DESCARGAR SELECCIONADOS
+========================================================== */
+
+.download-results__action {
+    width: 100%;
+
+    margin-top: 70px;
+
+    display: flex;
+    justify-content: center;
+}
+
+.download-selected-button {
+    width: 330px;
+    min-height: 44px;
+
+    padding: 8px 20px;
+
+    border: 1px solid var(--primary);
+    border-radius: 10px;
+
+    background: var(--primary);
+
+    color: #ffffff;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 11px;
+
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease;
+}
+
+.download-selected-button:hover {
+    background: var(--primary-dark);
+}
+
+.download-selected-button__icon {
+    width: 22px;
+    height: 22px;
+
+    display: inline-flex;
+}
+
+.download-selected-button__icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+
+/* ==========================================================
+   PANTALLAS CON POCA ALTURA
+========================================================== */
+
+@media (min-width: 993px) and (max-height: 850px) {
+
+    .download-evidence-breadcrumb {
+        margin-bottom: 15px;
+    }
+
+    .download-evidence-heading {
+        margin-bottom: 20px;
+    }
+
+    .download-filter-card {
+        padding-top: 12px;
+        padding-bottom: 16px;
+    }
+
+    .download-results {
+        margin-top: 28px;
+    }
+
+    .download-table-wrapper {
+        margin-top: 24px;
+    }
+
+    .download-results__action {
+        margin-top: 35px;
+    }
+}
+
+
+/* ==========================================================
+   LAPTOP
+========================================================== */
+
+@media (max-width: 1200px) {
+
+    .download-filter-grid {
+        gap: 22px;
+    }
+
+    .download-table th,
+    .download-table td {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 992px) {
+
+    .download-evidence-page {
+        min-height: auto;
+
+        overflow: visible;
+    }
+
+    .download-filter-grid {
+        grid-template-columns: 1fr;
+
+        gap: 18px;
+    }
+
+    .download-results {
+        margin-top: 35px;
+    }
+
+    .download-table-wrapper {
+        margin-top: 25px;
+    }
+
+    .download-results__action {
+        margin-top: 35px;
+    }
+}
+
+
+/* ==========================================================
+   CELULAR
+========================================================== */
+
+@media (max-width: 576px) {
+
+    .download-evidence-breadcrumb {
+        gap: 8px;
+
+        margin-bottom: 18px;
+
+        font-size: 15px;
+    }
+
+    .download-evidence-heading {
+        margin-bottom: 24px;
+    }
+
+    .download-evidence-heading__title {
+        font-size: 23px;
+    }
+
+    .download-filter-card {
+        padding: 15px;
+
+        border-radius: 14px;
+    }
+
+    .download-section-title {
+        font-size: 22px;
+    }
+
+    .download-filter-label {
+        font-size: 15px;
+    }
+
+    .download-select__control {
+        height: 44px;
+
+        font-size: 15px;
+    }
+
+    .download-results {
+        margin-top: 30px;
+    }
+
+    .download-selected-button {
+        width: 100%;
+
+        font-size: 15px;
+    }
+}

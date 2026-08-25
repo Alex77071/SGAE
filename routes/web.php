@@ -89,6 +89,22 @@ Route::get('/recursos/diagrama', function () {
 
 /*
 |--------------------------------------------------------------------------
+| DESCARGAR EVIDENCIAS
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/evidencias/descargar', function () {
+
+    if (!session()->has('usuario')) {
+        return redirect()->route('login');
+    }
+
+    return view('evidencias.descargar');
+
+})->name('evidencias.descargar');
+
+/*
+|--------------------------------------------------------------------------
 | CERRAR SESIÓN
 |--------------------------------------------------------------------------
 */
