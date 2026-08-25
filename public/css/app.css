@@ -2457,8 +2457,7 @@ body.app-body {
 .diagram-grid {
     width: 100%;
 
-    flex: 1;
-    min-height: 0;
+    flex: 0 0 auto;
 
     display: grid;
 
@@ -2479,6 +2478,16 @@ body.app-body {
 .diagram-info-card,
 .diagram-view-card {
     width: 100%;
+
+    /*
+     * Se adapta automáticamente a la altura
+     * disponible de la pantalla.
+     */
+    height: clamp(
+        340px,
+        48dvh,
+        440px
+    );
 
     min-width: 0;
     min-height: 0;
@@ -2822,7 +2831,6 @@ body.app-body {
 /* ==========================================================
    MENSAJE INFORMATIVO
 ========================================================== */
-
 .diagram-notice {
     flex-shrink: 0;
 
@@ -2831,7 +2839,7 @@ body.app-body {
 
     min-height: 40px;
 
-    margin-top: 22px;
+    margin-top: 10px;
 
     padding: 8px 16px;
 
