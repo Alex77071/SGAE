@@ -2136,3 +2136,146 @@ body.app-body {
         padding-right: clamp(28px, 4vw, 70px);
     }
 }
+/* ==========================================================
+   AJUSTE DE ALINEACIÓN - PANTALLA DE INICIO
+========================================================== */
+
+@media (min-width: 993px) {
+
+    /* ------------------------------------------
+       TARJETA DE EVIDENCIAS
+    ------------------------------------------ */
+
+    .evidence-card {
+        flex: none;
+
+        width: 100%;
+        min-height: 235px;
+
+        /*
+         * El contenido de Evidencias queda
+         * alineado con Estado del sistema
+         * y Recursos.
+         */
+        padding: 14px 20px;
+    }
+
+
+    /* ------------------------------------------
+       PASOS DE EVIDENCIAS
+    ------------------------------------------ */
+
+    .evidence-steps {
+        flex: 0 0 auto;
+
+        width: 100%;
+
+        margin-top: 22px;
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+
+        align-items: stretch;
+    }
+
+
+    /*
+     * Espacio interno de cada paso.
+     */
+    .evidence-step {
+        min-width: 0;
+
+        padding: 0 18px;
+
+        gap: 10px;
+
+        border-right: 1px solid #a6a8ad;
+    }
+
+
+    /*
+     * El número 1 comienza exactamente
+     * en la misma línea que el icono de
+     * Evidencias.
+     */
+    .evidence-step:first-child {
+        padding-left: 0;
+    }
+
+
+    /*
+     * El último elemento no lleva línea.
+     */
+    .evidence-step--last {
+        padding-right: 0;
+        border-right: none;
+    }
+
+
+    /* ------------------------------------------
+       NÚMEROS 1, 2 Y 3
+    ------------------------------------------ */
+
+    .evidence-step__number {
+        flex-shrink: 0;
+
+        width: 50px;
+        min-width: 50px;
+        height: 50px;
+
+        font-size: 27px;
+    }
+
+
+    /* ------------------------------------------
+       PARTE INFERIOR
+    ------------------------------------------
+       El primer corte queda alineado con
+       la primera división de Evidencias.
+    */
+
+    .dashboard-bottom {
+        width: 100%;
+
+        grid-template-columns:
+            calc(33.333% + 1px)
+            minmax(0, 1fr);
+
+        gap: 12px;
+    }
+
+
+    /*
+     * Mismo margen interno que Evidencias.
+     */
+    .status-card,
+    .resources-card {
+        min-height: 165px;
+
+        padding: 16px 20px;
+    }
+
+
+    /* ------------------------------------------
+       ICONOS DE LOS BOTONES
+    ------------------------------------------ */
+
+    .evidence-step .outline-action__icon {
+        width: 24px;
+        min-width: 24px;
+        height: 24px;
+
+        flex-shrink: 0;
+    }
+
+    .resources-action .outline-action__icon {
+        width: 21px;
+        min-width: 21px;
+        height: 21px;
+
+        flex-shrink: 0;
+    }
+
+}
