@@ -260,32 +260,46 @@
 
         </div>
 
+{{-- COLUMNA DERECHA --}}
+<div class="login-screen__right">
 
-        {{-- COLUMNA DERECHA --}}
-        <div class="login-screen__right">
+    <div class="steps-card">
 
-            <div class="steps-card">
+        {{-- TÍTULO PRINCIPAL --}}
+        <p class="steps-card__title">
+            Gestiona las evidencias de tus exámenes en tres simples pasos.
+        </p>
 
-                <p class="steps-card__title">
-                    Gestiona las evidencias de tus exámenes en tres simples pasos.
-                </p>
+        {{-- IMAGEN CON LOS 3 ICONOS --}}
+        <div class="steps-card__media">
 
-                <div class="steps-card__media">
+            <img
+                src="{{ asset('images/logos/inicio2.png') }}"
+                alt="Proceso para gestionar evidencias"
+                class="steps-card__image"
+            >
 
-                    <img
-                        src="{{ asset('images/logos/inicio2.png') }}"
-                        alt="Proceso para gestionar evidencias"
-                        class="steps-card__image"
-                    >
+        </div>
 
-                </div>
+        {{-- TEXTOS DE CADA PASO --}}
+        <div class="steps-card__labels">
 
-            </div>
+            <p class="steps-card__label">
+                Descarga evidencias
+            </p>
+
+            <p class="steps-card__label">
+                Analizar con IA
+            </p>
+
+            <p class="steps-card__label">
+                Descargar resultados
+            </p>
 
         </div>
 
     </div>
 
-</section>
+</div>
 
 @endsection
