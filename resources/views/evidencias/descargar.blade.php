@@ -6,10 +6,6 @@
 
 <section class="download-evidence-page">
 
-    {{-- =====================================================
-         MIGAS DE PAN
-    ====================================================== --}}
-
     <nav
         class="download-evidence-breadcrumb"
         aria-label="Navegación"
