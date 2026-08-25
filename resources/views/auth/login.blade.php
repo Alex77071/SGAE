@@ -34,9 +34,11 @@
             {{-- FORMULARIO --}}
             <form
                 class="login-form"
-                action="{{ route('inicio') }}"
-                method="GET"
+                action="{{ route('login.submit') }}"
+                method="POST"
             >
+
+                @csrf
 
                 {{-- USUARIO --}}
                 <div class="form-field">
@@ -73,10 +75,18 @@
                             name="usuario"
                             class="form-input"
                             placeholder="Ingresa tu usuario"
+                            value="{{ old('usuario') }}"
                             autocomplete="username"
+                            required
                         >
 
                     </div>
+
+                    @error('usuario')
+                        <small style="color: #823233;">
+                            {{ $message }}
+                        </small>
+                    @enderror
 
                 </div>
 
@@ -126,6 +136,7 @@
                             class="form-input"
                             placeholder="Ingresa tu contraseña"
                             autocomplete="current-password"
+                            required
                         >
 
                         <button
@@ -159,10 +170,16 @@
 
                     </div>
 
+                    @error('password')
+                        <small style="color: #823233;">
+                            {{ $message }}
+                        </small>
+                    @enderror
+
                 </div>
 
 
-                {{-- BOTÓN INICIAR SESIÓN --}}
+                {{-- INICIAR SESIÓN --}}
                 <button
                     type="submit"
                     class="action-btn action-btn--primary"
@@ -186,48 +203,51 @@
                         </svg>
                     </span>
 
-                    <span>Iniciar sesión</span>
+                    <span>
+                        Iniciar sesión
+                    </span>
 
                 </button>
 
 
-{{-- BOTÓN REGISTRO --}}
-<a 
-    href="https://cv.utm.mx/" 
-    class="action-btn action-btn--secondary"
->
+                {{-- REGISTRO --}}
+                <button
+                    type="button"
+                    class="action-btn action-btn--secondary"
+                >
 
-    <span 
-        class="action-btn__icon" 
-        aria-hidden="true"
-    >
-        <svg 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="currentColor" 
-            stroke-width="1.9" 
-            stroke-linecap="round" 
-            stroke-linejoin="round"
-        >
-            <path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"></path>
+                    <span
+                        class="action-btn__icon"
+                        aria-hidden="true"
+                    >
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.9"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"></path>
 
-            <circle 
-                cx="9.5" 
-                cy="7" 
-                r="3.5"
-            ></circle>
+                            <circle
+                                cx="9.5"
+                                cy="7"
+                                r="3.5"
+                            ></circle>
 
-            <path d="M19 8v6"></path>
-            <path d="M16 11h6"></path>
-        </svg>
-    </span>
+                            <path d="M19 8v6"></path>
+                            <path d="M16 11h6"></path>
+                        </svg>
+                    </span>
 
-    <span>Registrarme</span>
+                    <span>
+                        Registrarme
+                    </span>
 
-</a>
+                </button>
 
 
-                {{-- RECUPERAR CONTRASEÑA --}}
                 <a
                     href="#"
                     class="forgot-link"
@@ -241,46 +261,29 @@
 
 
         {{-- COLUMNA DERECHA --}}
-<div class="login-screen__right">
+        <div class="login-screen__right">
 
-    <div class="steps-card">
+            <div class="steps-card">
 
-        {{-- TÍTULO PRINCIPAL --}}
-        <p class="steps-card__title">
-            Gestiona las evidencias de tus exámenes en tres simples pasos.
-        </p>
+                <p class="steps-card__title">
+                    Gestiona las evidencias de tus exámenes en tres simples pasos.
+                </p>
 
-        {{-- IMAGEN CON LOS 3 ICONOS --}}
-        <div class="steps-card__media">
+                <div class="steps-card__media">
 
-            <img
-                src="{{ asset('images/logos/inicio2.png') }}"
-                alt="Proceso para gestionar evidencias"
-                class="steps-card__image"
-            >
+                    <img
+                        src="{{ asset('images/logos/inicio2.png') }}"
+                        alt="Proceso para gestionar evidencias"
+                        class="steps-card__image"
+                    >
 
-        </div>
+                </div>
 
-        {{-- TEXTOS DE CADA PASO --}}
-        <div class="steps-card__labels">
-
-            <p class="steps-card__label">
-                Descarga evidencias
-            </p>
-
-            <p class="steps-card__label">
-                Analizar con IA
-            </p>
-
-            <p class="steps-card__label">
-                Descargar resultados
-            </p>
+            </div>
 
         </div>
 
     </div>
-
-</div>
 
 </section>
 

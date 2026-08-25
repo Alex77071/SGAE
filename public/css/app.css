@@ -1671,3 +1671,308 @@ body.app-body {
         grid-template-columns: 1fr;
     }
 }
+/* ==========================================================
+   MENÚ DEL PERFIL DE USUARIO
+========================================================== */
+
+/*
+   El perfil será el punto de referencia
+   para posicionar el menú desplegable.
+*/
+
+.site-header__profile {
+    position: relative;
+
+    justify-self: end;
+
+    display: flex;
+    align-items: center;
+
+    color: var(--primary);
+}
+
+
+/* ==========================================================
+   USUARIO + FLECHA
+========================================================== */
+
+.profile-user {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+}
+
+
+/* ==========================================================
+   FLECHA
+========================================================== */
+
+.profile-arrow {
+    width: 26px;
+    height: 26px;
+
+    padding: 3px;
+
+    border: none;
+
+    background: transparent;
+
+    color: #202020;
+
+    cursor: pointer;
+
+    transition: transform 0.2s ease;
+}
+
+.profile-arrow svg {
+    width: 100%;
+    height: 100%;
+}
+
+
+/*
+   Cuando el menú está abierto,
+   la flecha gira hacia arriba.
+*/
+
+.profile-arrow--open {
+    transform: rotate(180deg);
+}
+
+
+/* ==========================================================
+   CONTENEDOR DEL MENÚ
+========================================================== */
+
+.profile-dropdown {
+    position: absolute;
+
+    /*
+       Se coloca debajo del nombre
+       y de la flecha.
+    */
+    top: calc(100% + 16px);
+    right: 0;
+
+    width: 270px;
+
+    padding: 10px 16px 12px;
+
+    background: #ffffff;
+
+    border: 1px solid #a7a9ae;
+    border-radius: 18px;
+
+    /*
+       Mantiene el menú sobre las tarjetas.
+    */
+    z-index: 1000;
+
+    /*
+       Inicialmente está oculto.
+    */
+    opacity: 0;
+    visibility: hidden;
+
+    transform: translateY(-8px);
+
+    pointer-events: none;
+
+    transition:
+        opacity 0.18s ease,
+        transform 0.18s ease,
+        visibility 0.18s ease;
+
+    box-shadow:
+        0 5px 14px rgba(0, 0, 0, 0.04);
+}
+
+
+/* ==========================================================
+   MENÚ ABIERTO
+========================================================== */
+
+.profile-dropdown--open {
+    opacity: 1;
+    visibility: visible;
+
+    transform: translateY(0);
+
+    pointer-events: auto;
+}
+
+
+/* ==========================================================
+   OPCIONES
+========================================================== */
+
+.profile-dropdown__item {
+    width: 100%;
+
+    min-height: 39px;
+
+    padding: 6px 0;
+
+    border: none;
+
+    background: transparent;
+
+    display: flex;
+    align-items: center;
+
+    gap: 11px;
+
+    /*
+       MISMA TIPOGRAFÍA Y TAMAÑO QUE:
+       "Obtenga las carpetas con las imágenes descargadas"
+    */
+    font-family: Arial, Helvetica, sans-serif;
+
+    font-size: 16px;
+    line-height: 1.17;
+
+    font-weight: 400;
+
+    color: var(--text-main);
+
+    text-align: left;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition:
+        color 0.18s ease,
+        background-color 0.18s ease;
+}
+
+
+/* ==========================================================
+   HOVER
+========================================================== */
+
+.profile-dropdown__item:hover {
+    color: var(--primary);
+}
+
+
+/* ==========================================================
+   ICONOS
+========================================================== */
+
+.profile-dropdown__icon {
+    width: 22px;
+    min-width: 22px;
+    height: 22px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    color: currentColor;
+}
+
+.profile-dropdown__icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+
+/* ==========================================================
+   SEPARADOR
+========================================================== */
+
+.profile-dropdown__separator {
+    width: 100%;
+    height: 1px;
+
+    margin: 4px 0 6px;
+
+    background: #a8aaad;
+}
+
+
+/* ==========================================================
+   FORM DE CERRAR SESIÓN
+========================================================== */
+
+.profile-dropdown__logout-form {
+    width: 100%;
+
+    margin: 0;
+    padding: 0;
+}
+
+
+/* ==========================================================
+   CERRAR SESIÓN
+========================================================== */
+
+.profile-dropdown__item--logout {
+    color: #ef3d3d;
+}
+
+.profile-dropdown__item--logout:hover {
+    color: #d42c2c;
+}
+
+
+/* ==========================================================
+   RESPONSIVE - TABLET
+========================================================== */
+
+@media (max-width: 992px) {
+
+    .profile-dropdown {
+        /*
+           Al estar el perfil centrado en tablet,
+           centramos también el menú.
+        */
+
+        right: 50%;
+
+        transform:
+            translateX(50%)
+            translateY(-8px);
+    }
+
+    .profile-dropdown--open {
+        transform:
+            translateX(50%)
+            translateY(0);
+    }
+
+}
+
+
+/* ==========================================================
+   RESPONSIVE - CELULAR
+========================================================== */
+
+@media (max-width: 576px) {
+
+    .profile-dropdown {
+        width: 245px;
+
+        padding:
+            9px
+            14px
+            11px;
+
+        border-radius: 15px;
+    }
+
+    .profile-dropdown__item {
+        min-height: 38px;
+
+        font-size: 15px;
+    }
+
+    .profile-dropdown__icon {
+        width: 21px;
+        min-width: 21px;
+        height: 21px;
+    }
+
+}

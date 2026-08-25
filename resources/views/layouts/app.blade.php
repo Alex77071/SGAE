@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="es">
 
 <head>
@@ -21,22 +22,31 @@
 
 </head>
 
+
 <body class="app-body">
 
     <div class="app-page">
 
         @include('components.header', [
             'showUser' => true,
-            'usuario' => $usuario ?? 'Carlos'
+            'usuario' => session('usuario')
         ])
 
+
         <main class="app-main">
+
             @yield('content')
+
         </main>
+
 
         @include('components.footer')
 
     </div>
+
+
+    {{-- JavaScript general --}}
+    <script src="{{ asset('js/app.js') }}"></script>
 
 </body>
 
