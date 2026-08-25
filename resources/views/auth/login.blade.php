@@ -91,92 +91,102 @@
                 </div>
 
 
-                {{-- CONTRASEÑA --}}
-                <div class="form-field">
+{{-- CONTRASEÑA --}}
+<div class="form-field">
 
-                    <label
-                        for="password"
-                        class="form-label"
-                    >
-                        Contraseña
-                    </label>
+    <label
+        for="password"
+        class="form-label"
+    >
+        Contraseña
+    </label>
 
-                    <div class="input-group input-group--password">
+    <div class="input-group input-group--password">
 
-                        <span
-                            class="input-group__icon"
-                            aria-hidden="true"
-                        >
-                            <svg
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="1.8"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                            >
-                                <rect
-                                    x="4"
-                                    y="11"
-                                    width="16"
-                                    height="9"
-                                    rx="2"
-                                ></rect>
+        <span
+            class="input-group__icon"
+            aria-hidden="true"
+        >
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            >
+                <rect
+                    x="4"
+                    y="11"
+                    width="16"
+                    height="9"
+                    rx="2"
+                ></rect>
 
-                                <path
-                                    d="M8 11V8a4 4 0 1 1 8 0v3"
-                                ></path>
-                            </svg>
-                        </span>
+                <path d="M8 11V8a4 4 0 1 1 8 0v3"></path>
+            </svg>
+        </span>
 
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            class="form-input"
-                            placeholder="Ingresa tu contraseña"
-                            autocomplete="current-password"
-                            required
-                        >
+        <input
+            type="password"
+            id="password"
+            name="password"
+            class="form-input"
+            placeholder="Ingresa tu contraseña"
+            autocomplete="current-password"
+            required
+        >
 
-                        <button
-                            type="button"
-                            class="input-group__action"
-                            aria-label="Mostrar contraseña"
-                        >
-                            <svg
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="1.7"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                            >
-                                <path
-                                    d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"
-                                ></path>
+        {{-- BOTÓN MOSTRAR / OCULTAR --}}
+        <button
+            type="button"
+            class="input-group__action"
+            id="togglePassword"
+            aria-label="Mostrar contraseña"
+        >
 
-                                <circle
-                                    cx="12"
-                                    cy="12"
-                                    r="3"
-                                ></circle>
+            {{-- OJO ABIERTO --}}
+            <svg
+                id="eyeOpen"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            >
+                <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+            </svg>
 
-                                <path
-                                    d="M4 20 20 4"
-                                ></path>
-                            </svg>
-                        </button>
+            {{-- OJO TACHADO --}}
+            <svg
+                id="eyeClosed"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                style="display: none;"
+            >
+                <path d="M3 3l18 18"></path>
+                <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"></path>
+                <path d="M9.9 4.2A10.8 10.8 0 0 1 12 4c6.5 0 10 8 10 8a16.8 16.8 0 0 1-2.1 3.2"></path>
+                <path d="M6.6 6.6C3.7 8.5 2 12 2 12s3.5 8 10 8a10.3 10.3 0 0 0 4.1-.8"></path>
+            </svg>
 
-                    </div>
+        </button>
 
-                    @error('password')
-                        <small style="color: #823233;">
-                            {{ $message }}
-                        </small>
-                    @enderror
+    </div>
 
-                </div>
+    @error('password')
+        <small style="color: #823233;">
+            {{ $message }}
+        </small>
+    @enderror
+
+</div>
 
 
                 {{-- INICIAR SESIÓN --}}
@@ -301,5 +311,51 @@
     </div>
 
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const password = document.getElementById('password');
+    const togglePassword = document.getElementById('togglePassword');
+
+    const eyeOpen = document.getElementById('eyeOpen');
+    const eyeClosed = document.getElementById('eyeClosed');
+
+    togglePassword.addEventListener('click', function () {
+
+        if (password.type === 'password') {
+
+            // Mostrar contraseña
+            password.type = 'text';
+
+            // Cambiar icono
+            eyeOpen.style.display = 'none';
+            eyeClosed.style.display = 'block';
+
+            togglePassword.setAttribute(
+                'aria-label',
+                'Ocultar contraseña'
+            );
+
+        } else {
+
+            // Ocultar contraseña
+            password.type = 'password';
+
+            // Cambiar icono
+            eyeOpen.style.display = 'block';
+            eyeClosed.style.display = 'none';
+
+            togglePassword.setAttribute(
+                'aria-label',
+                'Mostrar contraseña'
+            );
+
+        }
+
+    });
+
+});
+</script>
 
 @endsection
