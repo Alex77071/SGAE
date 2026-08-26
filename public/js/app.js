@@ -175,6 +175,102 @@ document.addEventListener('DOMContentLoaded', function () {
 
 /*
 |--------------------------------------------------------------------------
+| PROGRESO DE DESCARGA DE EVIDENCIAS
+|--------------------------------------------------------------------------
+*/
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const progressState =
+        document.getElementById('downloadProgressState');
+
+    const completeState =
+        document.getElementById('downloadCompleteState');
+
+    const progressBar =
+        document.getElementById('downloadProgressBar');
+
+    const progressPercentage =
+        document.getElementById('downloadProgressPercentage');
+
+
+    /*
+     * Este código solo se ejecuta
+     * en la pantalla de descarga.
+     */
+    if (
+        !progressState ||
+        !completeState ||
+        !progressBar ||
+        !progressPercentage
+    ) {
+        return;
+    }
+
+
+    let progress = 0;
+
+
+    const downloadInterval = setInterval(function () {
+
+        /*
+         * Incremento temporal para simular
+         * la descarga.
+         */
+        const increment =
+            Math.floor(Math.random() * 4) + 1;
+
+
+        progress += increment;
+
+
+        if (progress >= 100) {
+            progress = 100;
+        }
+
+
+        /*
+         * Actualizar barra.
+         */
+        progressBar.style.width =
+            progress + '%';
+
+
+        /*
+         * Actualizar porcentaje.
+         */
+        progressPercentage.textContent =
+            progress + '%';
+
+
+        /*
+         * Cuando termina.
+         */
+        if (progress >= 100) {
+
+            clearInterval(downloadInterval);
+
+
+            /*
+             * Esperar un momento para que
+             * se alcance a ver el 100 %.
+             */
+            setTimeout(function () {
+
+                progressState.hidden = true;
+
+                completeState.hidden = false;
+
+            }, 450);
+
+        }
+
+    }, 180);
+
+});
+
+/*
+|--------------------------------------------------------------------------
 | SIMULACIÓN DEL ANÁLISIS DE EVIDENCIAS
 |--------------------------------------------------------------------------
 */
@@ -916,6 +1012,36 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     
+
+});
+
+/*
+|--------------------------------------------------------------------------
+| IR A ANALIZAR EVIDENCIAS DESPUÉS DE LA DESCARGA
+|--------------------------------------------------------------------------
+*/
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const analyzeButton =
+        document.getElementById('goToAnalyzeButton');
+
+    if (!analyzeButton) {
+        return;
+    }
+
+    analyzeButton.addEventListener('click', function () {
+
+        const analyzeUrl =
+            analyzeButton.dataset.url;
+
+        if (!analyzeUrl) {
+            return;
+        }
+
+        window.location.href = analyzeUrl;
+
+    });
 
 });
 
