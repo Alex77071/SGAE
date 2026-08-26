@@ -498,48 +498,39 @@
                     </a>
 
 
-                    {{-- CONTACTAR SOPORTE --}}
-                    <button
-                        type="button"
-                        class="faq-help-button"
-                        id="faqContactSupport"
-                    >
+                   {{-- CONTACTAR SOPORTE --}}
+<a
+    href="{{ route('contacto.soporte') }}"
+    class="faq-help-button"
+>
+    <span
+        class="faq-help-button__icon"
+        aria-hidden="true"
+    >
+        <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        >
+            <path d="M4 14v-2a8 8 0 0 1 16 0v2"></path>
 
-                        <span
-                            class="faq-help-button__icon"
-                            aria-hidden="true"
-                        >
+            <path
+                d="M18 19h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2h-1v7Z"
+            ></path>
 
-                            <svg
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="1.8"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                            >
+            <path
+                d="M6 19H5a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h1v7Z"
+            ></path>
+        </svg>
+    </span>
 
-                                <path
-                                    d="M4 14v-2a8 8 0 0 1 16 0v2"
-                                ></path>
-
-                                <path
-                                    d="M18 19h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2h-1v7Z"
-                                ></path>
-
-                                <path
-                                    d="M6 19H5a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h1v7Z"
-                                ></path>
-
-                            </svg>
-
-                        </span>
-
-                        <span>
-                            Contactar soporte
-                        </span>
-
-                    </button>
+    <span>
+        Contactar soporte
+    </span>
+</a>
 
                 </div>
 
@@ -548,11 +539,28 @@
         </div>
 
 
-        
+        {{-- =====================================================
+             BARRA INFORMATIVA
+        ====================================================== --}}
+
+        <div class="faq-info-bar">
+
+            <span
+                class="faq-info-icon"
+                aria-hidden="true"
+            >
+                i
+            </span>
+
+            <span>
+                Selecciona una pregunta para ver su respuesta.
+            </span>
+
+        </div>
+
+    </div>
 
 </section>
-
-
 {{-- =====================================================
      FUNCIONAMIENTO DEL ACORDEÓN
 ====================================================== --}}

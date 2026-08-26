@@ -396,9 +396,6 @@ Route::post(
 
 Route::get('/recursos/manuales', function () {
 
-    /*
-     * Solo usuarios autenticados con Moodle pueden acceder.
-     */
     if (!session('moodle_authenticated')) {
         return redirect()->route('login');
     }
@@ -407,7 +404,9 @@ Route::get('/recursos/manuales', function () {
 
 })->name('manuales');
 
-/*=======
+
+/*
+|--------------------------------------------------------------------------
 | PREGUNTAS FRECUENTES
 |--------------------------------------------------------------------------
 */
@@ -417,16 +416,42 @@ Route::get(
     function () {
 
         if (!session('moodle_authenticated')) {
-
-            return redirect()
-                ->route('login');
-
+            return redirect()->route('login');
         }
 
-        return view(
-            'ayuda.preguntas'
-        );
+        return view('ayuda.preguntas');
 
     }
 )->name('preguntas.frecuentes');
 
+
+/*
+|--------------------------------------------------------------------------
+| CONTACTO Y SOPORTE
+|--------------------------------------------------------------------------
+*/
+
+Route::get(
+    '/ayuda/contacto',
+    function () {
+
+        if (!session('moodle_authenticated')) {
+            return redirect()->route('login');
+        }
+
+        return view('ayuda.contacto');
+
+    }
+)->name('contacto.soporte');
+
+
+/*
+|--------------------------------------------------------------------------
+| CERRAR SESIÓN
+|--------------------------------------------------------------------------
+*/
+
+Route::post(
+    '/logout',
+    [MoodleAuthController::class, 'logout']
+)->name('logout');

@@ -7907,5 +7907,488 @@ body.app-body {
     .analysis-history-view {
         width: 100%;
     }
+/* ==========================================================
+   CONTACTO Y SOPORTE
+========================================================== */
 
+.support-page {
+    width: 100%;
+    max-width: 1420px;
+
+    height: 100%;
+
+    margin: 0 auto;
+
+    padding: 24px 28px 30px;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+
+/* ==========================================================
+   ENCABEZADO
+========================================================== */
+
+.support-header {
+    width: 100%;
+
+    margin-bottom: 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 30px;
+
+    flex-shrink: 0;
+}
+
+.support-heading {
+    display: flex;
+    align-items: stretch;
+
+    gap: 12px;
+}
+
+.support-heading__line {
+    width: 4px;
+    min-width: 4px;
+
+    align-self: stretch;
+
+    background: var(--primary);
+
+    border-radius: 3px;
+}
+
+.support-heading__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.support-heading__title {
+    margin: 0 0 6px;
+
+    color: var(--primary);
+
+    font-size: 28px;
+    line-height: 1.1;
+
+    font-weight: 700;
+}
+
+.support-heading__description {
+    margin: 0;
+
+    color: var(--text-soft);
+
+    font-size: 17px;
+    line-height: 1.3;
+}
+
+
+/* ==========================================================
+   BOTÓN VOLVER AL INICIO
+========================================================== */
+
+.support-back-button {
+    width: 335px;
+    min-height: 46px;
+
+    padding: 8px 20px;
+
+    border: 1px solid #9f4949;
+    border-radius: 10px;
+
+    background: transparent;
+
+    color: var(--primary) !important;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 12px;
+
+    flex-shrink: 0;
+
+    font-family: inherit;
+    font-size: 17px;
+    font-weight: 500;
+
+    text-decoration: none !important;
+}
+
+.support-back-button:hover {
+    background: rgba(130, 50, 51, 0.06);
+}
+
+.support-back-button__icon {
+    width: 24px !important;
+    min-width: 24px;
+    max-width: 24px;
+
+    height: 24px !important;
+    min-height: 24px;
+    max-height: 24px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 24px;
+}
+
+.support-back-button__icon svg {
+    width: 24px !important;
+    height: 24px !important;
+
+    min-width: 24px;
+    max-width: 24px;
+
+    display: block;
+}
+
+
+/* ==========================================================
+   CONTENIDO PRINCIPAL
+========================================================== */
+
+.support-grid {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(360px, 0.9fr)
+        minmax(520px, 1.2fr);
+
+    gap: 28px;
+
+    align-items: stretch;
+}
+
+
+/* ==========================================================
+   TARJETAS
+========================================================== */
+
+.support-card {
+    width: 100%;
+
+    padding: 24px 28px;
+
+    border: 1px solid #d7d4d4;
+    border-radius: 20px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 3px 10px
+        rgba(0, 0, 0, 0.04);
+}
+
+.support-card__title {
+    margin: 0 0 20px;
+
+    color: var(--primary);
+
+    font-size: 22px;
+    line-height: 1.15;
+
+    font-weight: 700;
+}
+
+
+/* ==========================================================
+   INFORMACIÓN DE SOPORTE
+========================================================== */
+
+.support-info-item {
+    width: 100%;
+
+    padding: 13px 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 18px;
+
+    border-bottom: 1px solid #dedede;
+}
+
+.support-info-item--last {
+    border-bottom: none;
+}
+
+.support-info-item__icon {
+    width: 56px;
+    min-width: 56px;
+    height: 56px;
+
+    padding: 13px;
+
+    border-radius: 50%;
+
+    background: #f3e7e7;
+
+    color: var(--primary);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.support-info-item__icon svg {
+    width: 100% !important;
+    height: 100% !important;
+
+    display: block;
+}
+
+.support-info-item__content {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+
+    color: var(--text-main);
+
+    font-size: 16px;
+    line-height: 1.25;
+}
+
+.support-info-item__content strong {
+    font-size: 17px;
+    font-weight: 700;
+}
+
+
+/* ==========================================================
+   FORMULARIO
+========================================================== */
+
+.support-form {
+    width: 100%;
+}
+
+.support-form__field {
+    width: 100%;
+
+    margin-bottom: 15px;
+}
+
+.support-form__label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: var(--text-main);
+
+    font-size: 16px;
+    line-height: 1.2;
+
+    font-weight: 600;
+}
+
+.support-form__input,
+.support-form__textarea {
+    width: 100%;
+
+    border: 1px solid #cfd0d4;
+    border-radius: 9px;
+
+    background: #ffffff;
+
+    color: var(--text-main);
+
+    font-family: inherit;
+    font-size: 15px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.support-form__input {
+    height: 48px;
+
+    padding: 0 15px;
+}
+
+.support-form__textarea {
+    min-height: 125px;
+
+    padding: 13px 15px;
+
+    resize: vertical;
+}
+
+.support-form__input::placeholder,
+.support-form__textarea::placeholder {
+    color: #8c8e97;
+}
+
+.support-form__input:focus,
+.support-form__textarea:focus {
+    border-color: var(--primary);
+
+    box-shadow:
+        0 0 0 2px
+        rgba(130, 50, 51, 0.08);
+}
+
+
+/* ==========================================================
+   BOTÓN ENVIAR MENSAJE
+========================================================== */
+
+.support-submit-button {
+    width: 65%;
+    min-height: 50px;
+
+    margin: 4px 0 0 auto;
+
+    padding: 9px 24px;
+
+    border: 1px solid var(--primary);
+    border-radius: 10px;
+
+    background: var(--primary);
+
+    color: #ffffff;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 12px;
+
+    font-family: inherit;
+
+    font-size: 17px;
+    font-weight: 500;
+
+    cursor: pointer;
+}
+
+.support-submit-button__icon {
+    width: 23px;
+    min-width: 23px;
+    height: 23px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 23px;
+}
+
+.support-submit-button__icon svg {
+    width: 23px !important;
+    height: 23px !important;
+
+    display: block;
+}
+
+.support-submit-button:not(:disabled):hover {
+    background: var(--primary-dark);
+    border-color: var(--primary-dark);
+}
+
+
+/* ==========================================================
+   BOTÓN DESACTIVADO
+========================================================== */
+
+.support-submit-button:disabled {
+    background: #c7b6b6;
+    border-color: #c7b6b6;
+
+    color: #f5f2f2;
+
+    cursor: not-allowed;
+
+    opacity: 0.72;
+}
+
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 992px) {
+
+    .support-page {
+        height: auto;
+
+        overflow: visible;
+    }
+
+    .support-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .support-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .support-back-button {
+        width: 250px;
+    }
+
+}
+
+
+@media (max-width: 576px) {
+
+    .support-page {
+        padding: 20px 16px 28px;
+    }
+
+    .support-card {
+        padding: 20px 16px;
+
+        border-radius: 16px;
+    }
+
+    .support-heading__title {
+        font-size: 24px;
+    }
+
+    .support-heading__description {
+        font-size: 15px;
+    }
+
+    .support-info-item {
+        align-items: flex-start;
+    }
+
+    .support-info-item__icon {
+        width: 48px;
+        min-width: 48px;
+        height: 48px;
+
+        padding: 11px;
+    }
+
+    .support-submit-button {
+        width: 100%;
+    }
+
+    .support-back-button {
+        width: 100%;
+    }
+
+}
 }
