@@ -93,6 +93,19 @@ Route::get('/evidencias/descarga', function () {
     return view('evidencias.descarga');
 
 })->name('evidencias.descarga');
+
+Route::get('/recursos/manuales', function () {
+
+    /*
+     * Solo usuarios autenticados con Moodle pueden acceder.
+     */
+    if (!session('moodle_authenticated')) {
+        return redirect()->route('login');
+    }
+
+    return view('recursos.manuales');
+
+})->name('manuales');
 /*
 |--------------------------------------------------------------------------
 | DIAGRAMA DEL PROCESO
@@ -257,21 +270,3 @@ Route::get('/recursos/manuales', function () {
     return 'Pantalla de manuales de usuario';
 
 })->name('manuales');
-
-/*
-|--------------------------------------------------------------------------
-| ANALIZAR EVIDENCIAS
-|--------------------------------------------------------------------------
-*/
-
-Route::get('/evidencias/analizar', function () {
-
-    if (!session('moodle_authenticated')) {
-
-        return redirect()->route('login');
-
-    }
-
-    return view('evidencias.analizar');
-
-})->name('evidencias.analizar');

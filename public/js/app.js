@@ -548,3 +548,345 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
 });
+
+/* ==========================================================
+   MANUALES - CAMBIO DE VISTA PREVIA
+========================================================== */
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const manualItems = document.querySelectorAll('[data-manual]');
+    const manualPreview = document.getElementById('manualPreview');
+    const manualDownload = document.getElementById('manualDownload');
+
+    if (
+        !manualItems.length ||
+        !manualPreview ||
+        !manualDownload
+    ) {
+        return;
+    }
+
+
+    manualItems.forEach(function (item) {
+
+        item.addEventListener('click', function () {
+
+            const pdf = item.dataset.pdf;
+
+            if (!pdf) {
+                return;
+            }
+
+
+            /*
+             * Quitar selección anterior.
+             */
+            manualItems.forEach(function (manual) {
+
+                manual.classList.remove('manual-item--active');
+
+            });
+
+
+            /*
+             * Seleccionar nuevo manual.
+             */
+            item.classList.add('manual-item--active');
+
+
+            /*
+             * Actualizar vista previa.
+             */
+            manualPreview.src =
+                pdf +
+                '#page=1&zoom=page-width&toolbar=0&navpanes=0';
+
+
+            /*
+             * Actualizar descarga.
+             */
+            manualDownload.href = pdf;
+
+        });
+
+    });
+
+});
+
+/* ==========================================================
+   MODAL - CERRAR SESIÓN
+========================================================== */
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const openLogoutModal =
+        document.getElementById('openLogoutModal');
+
+    const logoutModal =
+        document.getElementById('logoutModal');
+
+    const cancelLogout =
+        document.getElementById('cancelLogout');
+
+    if (
+        !openLogoutModal ||
+        !logoutModal ||
+        !cancelLogout
+    ) {
+        return;
+    }
+
+
+    function openModal() {
+
+        logoutModal.classList.add('logout-modal--open');
+
+        logoutModal.setAttribute(
+            'aria-hidden',
+            'false'
+        );
+
+
+        /*
+         * Cerramos también el menú del usuario.
+         */
+        const profileDropdown =
+            document.getElementById('profileDropdown');
+
+        const profileButton =
+            document.getElementById('profileMenuButton');
+
+        if (profileDropdown) {
+
+            profileDropdown.classList.remove(
+                'profile-dropdown--open'
+            );
+
+            profileDropdown.setAttribute(
+                'aria-hidden',
+                'true'
+            );
+
+        }
+
+        if (profileButton) {
+
+            profileButton.classList.remove(
+                'profile-arrow--open'
+            );
+
+            profileButton.setAttribute(
+                'aria-expanded',
+                'false'
+            );
+
+        }
+
+    }
+
+
+    function closeModal() {
+
+        logoutModal.classList.remove(
+            'logout-modal--open'
+        );
+
+        logoutModal.setAttribute(
+            'aria-hidden',
+            'true'
+        );
+
+    }
+
+
+    /*
+     * Abrir modal.
+     */
+    openLogoutModal.addEventListener(
+        'click',
+        function (event) {
+
+            event.preventDefault();
+
+            openModal();
+
+        }
+    );
+
+
+    /*
+     * Cancelar.
+     */
+    cancelLogout.addEventListener(
+        'click',
+        closeModal
+    );
+
+
+    /*
+     * Cerrar haciendo clic en el fondo oscuro.
+     */
+    logoutModal.addEventListener(
+        'click',
+        function (event) {
+
+            if (event.target === logoutModal) {
+
+                closeModal();
+
+            }
+
+        }
+    );
+
+
+    /*
+     * Cerrar con ESC.
+     */
+    document.addEventListener(
+        'keydown',
+        function (event) {
+
+            if (
+                event.key === 'Escape' &&
+                logoutModal.classList.contains(
+                    'logout-modal--open'
+                )
+            ) {
+
+                closeModal();
+
+            }
+
+        }
+    );
+
+});
+
+/* ==========================================================
+   MODAL - ACERCA DE
+========================================================== */
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const openAboutModal =
+        document.getElementById('openAboutModal');
+
+    const aboutModal =
+        document.getElementById('aboutModal');
+
+    if (!openAboutModal || !aboutModal) {
+        return;
+    }
+
+
+    function openAbout() {
+
+        aboutModal.classList.add('about-modal--open');
+
+        aboutModal.setAttribute(
+            'aria-hidden',
+            'false'
+        );
+
+
+        /* Cerrar menú del perfil */
+        const profileDropdown =
+            document.getElementById('profileDropdown');
+
+        const profileButton =
+            document.getElementById('profileMenuButton');
+
+
+        if (profileDropdown) {
+
+            profileDropdown.classList.remove(
+                'profile-dropdown--open'
+            );
+
+            profileDropdown.setAttribute(
+                'aria-hidden',
+                'true'
+            );
+
+        }
+
+
+        if (profileButton) {
+
+            profileButton.classList.remove(
+                'profile-arrow--open'
+            );
+
+            profileButton.setAttribute(
+                'aria-expanded',
+                'false'
+            );
+
+        }
+
+    }
+
+
+    function closeAbout() {
+
+        aboutModal.classList.remove(
+            'about-modal--open'
+        );
+
+        aboutModal.setAttribute(
+            'aria-hidden',
+            'true'
+        );
+
+    }
+
+
+    openAboutModal.addEventListener(
+        'click',
+        function (event) {
+
+            event.preventDefault();
+
+            openAbout();
+
+        }
+    );
+
+
+    /* Cerrar al tocar el fondo */
+    aboutModal.addEventListener(
+        'click',
+        function (event) {
+
+            if (event.target === aboutModal) {
+
+                closeAbout();
+
+            }
+
+        }
+    );
+
+
+    /* Cerrar con ESC */
+    document.addEventListener(
+        'keydown',
+        function (event) {
+
+            if (
+                event.key === 'Escape' &&
+                aboutModal.classList.contains(
+                    'about-modal--open'
+                )
+            ) {
+
+                closeAbout();
+
+            }
+
+        }
+    );
+
+});
