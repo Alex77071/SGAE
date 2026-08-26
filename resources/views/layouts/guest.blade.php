@@ -19,7 +19,7 @@
     <link
         rel="icon"
         type="image/png"
-        href="{{ asset('images/logos/logo.png') }}"
+        href="{{ asset('images/logos/logo1.png') }}"
     >
 
     <link
