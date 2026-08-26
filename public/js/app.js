@@ -900,6 +900,8 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!openAboutModal || !aboutModal) {
         return;
     }
+    const closeAboutModal =
+    document.getElementById('closeAboutModal');
 
 
     function openAbout() {
@@ -974,6 +976,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
         }
     );
+    if (closeAboutModal) {
+
+    closeAboutModal.addEventListener(
+        'click',
+        function () {
+
+            closeAbout();
+
+        }
+    );
+
+}
 
 
     /* Cerrar al tocar el fondo */
@@ -1009,6 +1023,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         }
     );
+
+
 
 
     
