@@ -1,10 +1,8 @@
-@ -0,0 +1,239 @@
 @extends('layouts.app')
 
 @section('title', 'SGAE - Descargar evidencias')
 
 @section('content')
-
 <section class="download-process-page">
 
     <div class="download-process-card">
@@ -164,41 +162,43 @@
 
 
             {{-- ACCIONES --}}
-            <div class="download-complete-actions">
+<div class="download-complete-actions">
 
-                <button
-                    type="button"
-                    class="download-complete-button download-complete-button--primary"
-                >
+    <button
+        type="button"
+        class="download-complete-button download-complete-button--primary"
+        id="goToAnalyzeButton"
+        data-url="{{ route('evidencias.analizar') }}"
+    >
 
-                    <span class="download-complete-button__icon">
+        <span class="download-complete-button__icon">
 
-                        <svg
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="1.8"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            aria-hidden="true"
-                        >
-                            <path d="M12 2v4"></path>
-                            <path d="M12 18v4"></path>
-                            <path d="m4.93 4.93 2.83 2.83"></path>
-                            <path d="m16.24 16.24 2.83 2.83"></path>
-                            <path d="M2 12h4"></path>
-                            <path d="M18 12h4"></path>
-                            <path d="m4.93 19.07 2.83-2.83"></path>
-                            <path d="m16.24 7.76 2.83-2.83"></path>
-                        </svg>
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+            >
+                <path d="M12 2v4"></path>
+                <path d="M12 18v4"></path>
+                <path d="m4.93 4.93 2.83 2.83"></path>
+                <path d="m16.24 16.24 2.83 2.83"></path>
+                <path d="M2 12h4"></path>
+                <path d="M18 12h4"></path>
+                <path d="m4.93 19.07 2.83-2.83"></path>
+                <path d="m16.24 7.76 2.83-2.83"></path>
+            </svg>
 
-                    </span>
+        </span>
 
-                    <span>
-                        Analizar evidencia
-                    </span>
+        <span>
+            Analizar evidencia
+        </span>
 
-                </button>
+    </button>
 
 
                 <a
