@@ -280,7 +280,7 @@ Route::get('/recursos/manuales', function () {
     return view('recursos.manuales');
 
 })->name('manuales');
-=======
+/*=======
 | PREGUNTAS FRECUENTES
 |--------------------------------------------------------------------------
 */
@@ -302,4 +302,4 @@ Route::get(
 
     }
 )->name('preguntas.frecuentes');
->>>>>>> Stashed changes
+
