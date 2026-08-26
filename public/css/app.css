@@ -5402,7 +5402,7 @@ body.app-body {
 
     gap: 24px;
 
-    margin-bottom: 20px;
+    margin-bottom: 22px;
 
     flex-shrink: 0;
 }
@@ -6007,4 +6007,36 @@ body.app-body {
         font-size: 13px;
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    .faq-title-block {
+    padding-left: 16px;
+    border-left: 4px solid var(--primary);
+}
 }
