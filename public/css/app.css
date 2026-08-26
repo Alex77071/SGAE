@@ -7397,11 +7397,15 @@ body.app-body {
 
 .analysis-history-card__top {
     width: 100%;
-    height: 58px;
+    min-height: 70px;
 
     display: flex;
     align-items: center;
     justify-content: flex-end;
+
+    padding-top: 14px;
+
+    box-sizing: border-box;
 }
 
 
@@ -7431,9 +7435,16 @@ body.app-body {
     cursor: pointer;
 }
 
+.analysis-history-view:disabled {
+    opacity: 0.45;
 
-.analysis-history-view[hidden] {
-    display: none !important;
+    cursor: not-allowed;
+}
+
+.analysis-history-view:not(:disabled) {
+    opacity: 1;
+
+    cursor: pointer;
 }
 
 

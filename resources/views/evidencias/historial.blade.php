@@ -34,6 +34,7 @@
         </div>
 
 
+        {{-- VOLVER AL INICIO --}}
         <a
             href="{{ route('inicio') }}"
             class="analysis-history-home"
@@ -43,6 +44,7 @@
                 class="analysis-history-home__icon"
                 aria-hidden="true"
             >
+
                 <svg
                     viewBox="0 0 24 24"
                     fill="none"
@@ -51,10 +53,15 @@
                     stroke-linecap="round"
                     stroke-linejoin="round"
                 >
+
                     <path d="M3 11.5L12 4l9 7.5"></path>
+
                     <path d="M5.5 10.5V20h13v-9.5"></path>
+
                     <path d="M9.5 20v-6h5v6"></path>
+
                 </svg>
+
             </span>
 
             <span>
@@ -67,7 +74,7 @@
 
 
     {{-- =====================================================
-         TÍTULO DE LA TABLA
+         TÍTULO DE LA SECCIÓN
     ====================================================== --}}
 
     <div class="analysis-history-section-heading">
@@ -84,55 +91,16 @@
 
 
     {{-- =====================================================
-         CONTENEDOR
+         CONTENEDOR PRINCIPAL
     ====================================================== --}}
 
     <div class="analysis-history-card">
 
-        {{-- BOTÓN VISUALIZAR --}}
-        <div class="analysis-history-card__top">
 
-            <button
-                type="button"
-                class="analysis-history-view"
-                id="historyViewButton"
-                hidden
-            >
+        {{-- =================================================
+             TABLA
+        ================================================== --}}
 
-                <span
-                    class="analysis-history-view__icon"
-                    aria-hidden="true"
-                >
-                    <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="1.8"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    >
-                        <path
-                            d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"
-                        ></path>
-
-                        <circle
-                            cx="12"
-                            cy="12"
-                            r="2.7"
-                        ></circle>
-                    </svg>
-                </span>
-
-                <span>
-                    Visualizar
-                </span>
-
-            </button>
-
-        </div>
-
-
-        {{-- TABLA --}}
         <div class="analysis-history-table-wrapper">
 
             <table class="analysis-history-table">
@@ -176,6 +144,7 @@
                             data-history-row
                         >
 
+                            {{-- RADIO BUTTON --}}
                             <td class="analysis-history-table__radio">
 
                                 <input
@@ -183,16 +152,19 @@
                                     name="analysisHistory"
                                     value="{{ $item['id'] }}"
                                     class="analysis-history-radio"
+
                                     data-report-url="{{ route(
                                         'evidencias.historial.reporte',
                                         $item['id']
                                     ) }}"
+
                                     aria-label="Seleccionar {{ $item['nombre'] }}"
                                 >
 
                             </td>
 
 
+                            {{-- NOMBRE --}}
                             <td>
 
                                 <div class="analysis-history-folder">
@@ -201,6 +173,7 @@
                                         class="analysis-history-folder__icon"
                                         aria-hidden="true"
                                     >
+
                                         <svg
                                             viewBox="0 0 24 24"
                                             fill="none"
@@ -209,10 +182,13 @@
                                             stroke-linecap="round"
                                             stroke-linejoin="round"
                                         >
+
                                             <path
                                                 d="M3 6.5A2.5 2.5 0 0 1 5.5 4H9l2 2h7.5A2.5 2.5 0 0 1 21 8.5v8A2.5 2.5 0 0 1 18.5 19h-13A2.5 2.5 0 0 1 3 16.5Z"
                                             ></path>
+
                                         </svg>
+
                                     </span>
 
                                     <span>
@@ -224,16 +200,19 @@
                             </td>
 
 
+                            {{-- FECHA --}}
                             <td>
                                 {{ $item['fecha'] }}
                             </td>
 
 
+                            {{-- IMÁGENES --}}
                             <td>
                                 {{ $item['imagenes'] }}
                             </td>
 
 
+                            {{-- GRUPO --}}
                             <td>
                                 {{ $item['grupo'] }}
                             </td>
@@ -248,6 +227,57 @@
 
         </div>
 
+
+        {{-- =================================================
+             BOTÓN VISUALIZAR
+             AHORA ESTÁ ABAJO A LA DERECHA
+        ================================================== --}}
+
+        <div class="analysis-history-card__top">
+
+           <button
+    type="button"
+    class="analysis-history-view"
+    id="historyViewButton"
+    disabled
+>
+
+                <span
+                    class="analysis-history-view__icon"
+                    aria-hidden="true"
+                >
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+
+                        <path
+                            d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"
+                        ></path>
+
+                        <circle
+                            cx="12"
+                            cy="12"
+                            r="2.7"
+                        ></circle>
+
+                    </svg>
+
+                </span>
+
+                <span>
+                    Visualizar
+                </span>
+
+            </button>
+
+        </div>
+
     </div>
 
 
@@ -258,10 +288,14 @@
     <div class="analysis-history-bottom">
 
         <p class="analysis-history-count">
-            Mostrando 1 a 6 de 13 resultados
+
+            Mostrando 1 a {{ count($analisis) }}
+            de {{ count($analisis) }} resultados
+
         </p>
 
 
+        {{-- PAGINACIÓN DE EJEMPLO --}}
         <div class="analysis-history-pagination">
 
             <button
@@ -272,6 +306,7 @@
                 &lt;
             </button>
 
+
             <button
                 type="button"
                 class="analysis-history-pagination__active"
@@ -279,12 +314,13 @@
                 1
             </button>
 
-            <button type="button">
-                2
-            </button>
 
-            <button type="button">
-                3
+            <button
+                type="button"
+                disabled
+                aria-label="Página siguiente"
+            >
+                &gt;
             </button>
 
         </div>

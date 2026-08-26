@@ -1143,68 +1143,78 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
     }
 
+
     let selectedReportUrl = '';
 
 
     historyRadios.forEach(function (radio) {
 
-        radio.addEventListener(
-            'change',
-            function () {
+        radio.addEventListener('change', function () {
 
-                document
-                    .querySelectorAll(
-                        '[data-history-row]'
-                    )
-                    .forEach(function (row) {
+            /*
+             * Quitar selección visual anterior.
+             */
+            document
+                .querySelectorAll(
+                    '[data-history-row]'
+                )
+                .forEach(function (row) {
 
-                        row.classList.remove(
-                            'analysis-history-row--selected'
-                        );
-
-                    });
-
-
-                const selectedRow =
-                    radio.closest(
-                        '[data-history-row]'
-                    );
-
-
-                if (selectedRow) {
-
-                    selectedRow.classList.add(
+                    row.classList.remove(
                         'analysis-history-row--selected'
                     );
 
-                }
+                });
 
 
-                selectedReportUrl =
-                    radio.dataset.reportUrl || '';
+            /*
+             * Marcar fila seleccionada.
+             */
+            const selectedRow =
+                radio.closest(
+                    '[data-history-row]'
+                );
 
 
-                viewButton.hidden =
-                    !selectedReportUrl;
+            if (selectedRow) {
+
+                selectedRow.classList.add(
+                    'analysis-history-row--selected'
+                );
 
             }
-        );
+
+
+            /*
+             * Guardar PDF seleccionado.
+             */
+            selectedReportUrl =
+                radio.dataset.reportUrl || '';
+
+
+            /*
+             * Activar botón.
+             */
+            viewButton.disabled =
+                !selectedReportUrl;
+
+        });
 
     });
 
 
-    viewButton.addEventListener(
-        'click',
-        function () {
+    /*
+     * Abrir PDF.
+     */
+    viewButton.addEventListener('click', function () {
 
-            if (!selectedReportUrl) {
-                return;
-            }
-
-            window.location.href =
-                selectedReportUrl;
-
+        if (!selectedReportUrl) {
+            return;
         }
-    );
+
+        window.location.href =
+            selectedReportUrl;
+
+    });
 
 });
