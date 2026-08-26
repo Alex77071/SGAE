@@ -53,13 +53,9 @@
                     stroke-linecap="round"
                     stroke-linejoin="round"
                 >
-
                     <path d="M3 11.5L12 4l9 7.5"></path>
-
                     <path d="M5.5 10.5V20h13v-9.5"></path>
-
                     <path d="M9.5 20v-6h5v6"></path>
-
                 </svg>
 
             </span>
@@ -74,7 +70,7 @@
 
 
     {{-- =====================================================
-         TÍTULO DE LA SECCIÓN
+         TÍTULO DE SECCIÓN
     ====================================================== --}}
 
     <div class="analysis-history-section-heading">
@@ -91,15 +87,10 @@
 
 
     {{-- =====================================================
-         CONTENEDOR PRINCIPAL
+         CONTENEDOR DE LA TABLA
     ====================================================== --}}
 
     <div class="analysis-history-card">
-
-
-        {{-- =================================================
-             TABLA
-        ================================================== --}}
 
         <div class="analysis-history-table-wrapper">
 
@@ -182,11 +173,9 @@
                                             stroke-linecap="round"
                                             stroke-linejoin="round"
                                         >
-
                                             <path
                                                 d="M3 6.5A2.5 2.5 0 0 1 5.5 4H9l2 2h7.5A2.5 2.5 0 0 1 21 8.5v8A2.5 2.5 0 0 1 18.5 19h-13A2.5 2.5 0 0 1 3 16.5Z"
                                             ></path>
-
                                         </svg>
 
                                     </span>
@@ -227,57 +216,6 @@
 
         </div>
 
-
-        {{-- =================================================
-             BOTÓN VISUALIZAR
-             AHORA ESTÁ ABAJO A LA DERECHA
-        ================================================== --}}
-
-        <div class="analysis-history-card__top">
-
-           <button
-    type="button"
-    class="analysis-history-view"
-    id="historyViewButton"
-    disabled
->
-
-                <span
-                    class="analysis-history-view__icon"
-                    aria-hidden="true"
-                >
-
-                    <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="1.8"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    >
-
-                        <path
-                            d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"
-                        ></path>
-
-                        <circle
-                            cx="12"
-                            cy="12"
-                            r="2.7"
-                        ></circle>
-
-                    </svg>
-
-                </span>
-
-                <span>
-                    Visualizar
-                </span>
-
-            </button>
-
-        </div>
-
     </div>
 
 
@@ -287,6 +225,8 @@
 
     <div class="analysis-history-bottom">
 
+
+        {{-- CONTADOR --}}
         <p class="analysis-history-count">
 
             Mostrando 1 a {{ count($analisis) }}
@@ -295,7 +235,7 @@
         </p>
 
 
-        {{-- PAGINACIÓN DE EJEMPLO --}}
+        {{-- PAGINACIÓN --}}
         <div class="analysis-history-pagination">
 
             <button
@@ -324,6 +264,49 @@
             </button>
 
         </div>
+
+
+        {{-- VER REPORTE --}}
+        <button
+            type="button"
+            class="analysis-history-view"
+            id="historyViewButton"
+            disabled
+        >
+
+            <span
+                class="analysis-history-view__icon"
+                aria-hidden="true"
+            >
+
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+
+                    <path
+                        d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"
+                    ></path>
+
+                    <circle
+                        cx="12"
+                        cy="12"
+                        r="2.7"
+                    ></circle>
+
+                </svg>
+
+            </span>
+
+            <span>
+                Ver reporte
+            </span>
+
+        </button>
 
     </div>
 
