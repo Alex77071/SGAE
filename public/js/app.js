@@ -1090,3 +1090,121 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
 });
+
+/*
+|--------------------------------------------------------------------------
+| IR AL HISTORIAL DE ANÁLISIS
+|--------------------------------------------------------------------------
+*/
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const historyButton =
+        document.getElementById('goToHistoryButton');
+
+    if (!historyButton) {
+        return;
+    }
+
+    historyButton.addEventListener('click', function () {
+
+        const historyUrl =
+            historyButton.dataset.url;
+
+        if (!historyUrl) {
+            return;
+        }
+
+        window.location.href = historyUrl;
+
+    });
+
+});
+
+/*
+|--------------------------------------------------------------------------
+| HISTORIAL DE ANÁLISIS
+|--------------------------------------------------------------------------
+*/
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const historyRadios =
+        document.querySelectorAll(
+            '.analysis-history-radio'
+        );
+
+    const viewButton =
+        document.getElementById(
+            'historyViewButton'
+        );
+
+    if (!historyRadios.length || !viewButton) {
+        return;
+    }
+
+    let selectedReportUrl = '';
+
+
+    historyRadios.forEach(function (radio) {
+
+        radio.addEventListener(
+            'change',
+            function () {
+
+                document
+                    .querySelectorAll(
+                        '[data-history-row]'
+                    )
+                    .forEach(function (row) {
+
+                        row.classList.remove(
+                            'analysis-history-row--selected'
+                        );
+
+                    });
+
+
+                const selectedRow =
+                    radio.closest(
+                        '[data-history-row]'
+                    );
+
+
+                if (selectedRow) {
+
+                    selectedRow.classList.add(
+                        'analysis-history-row--selected'
+                    );
+
+                }
+
+
+                selectedReportUrl =
+                    radio.dataset.reportUrl || '';
+
+
+                viewButton.hidden =
+                    !selectedReportUrl;
+
+            }
+        );
+
+    });
+
+
+    viewButton.addEventListener(
+        'click',
+        function () {
+
+            if (!selectedReportUrl) {
+                return;
+            }
+
+            window.location.href =
+                selectedReportUrl;
+
+        }
+    );
+
+});
