@@ -5380,14 +5380,12 @@ body.app-body {
     display: flex;
     flex-direction: column;
 
-    background: rgba(255, 255, 255, 0.78);
+    background: transparent;
 
-    border: 1px solid #d7d4d4;
-    border-radius: 28px;
+    border: none;
+    border-radius: 0;
 
-    box-shadow:
-        0 2px 12px
-        rgba(0, 0, 0, 0.04);
+    box-shadow: none;
 }
 
 
