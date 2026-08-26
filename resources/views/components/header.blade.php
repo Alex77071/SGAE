@@ -378,35 +378,39 @@
     >
 
         {{-- ENCABEZADO --}}
-        <div class="about-modal__header">
+            <div class="about-modal__header">
 
-            <img
-                src="{{ asset('images/logos/utm_logo3.png') }}"
-                alt="Universidad Tecnológica de la Mixteca"
-                class="about-modal__header-logo about-modal__header-logo--utm"
-            >
+                <h2
+                    class="about-modal__header-title"
+                    id="aboutModalTitle"
+                >
+                    Acerca de Sistema de Gestión y Análisis de Evidencias
+                </h2>
 
-            <div class="about-modal__header-divider"></div>
+                <button
+                    type="button"
+                    id="closeAboutModal"
+                    class="about-modal__close"
+                    aria-label="Cerrar ventana"
+                >
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <path d="M18 6L6 18"></path>
+                        <path d="M6 6l12 12"></path>
+                    </svg>
+                </button>
 
-            <img
-                src="{{ asset('images/logos/usalab_logo2.png') }}"
-                alt="UsaLab"
-                class="about-modal__header-logo about-modal__header-logo--usalab"
-            >
-
-        </div>
+            </div>
 
 
         {{-- CONTENIDO --}}
         <div class="about-modal__content">
-
-            <h2
-                class="about-modal__title"
-                id="aboutModalTitle"
-            >
-                Acerca de Sistema de Gestión y Análisis de Evidencias
-            </h2>
-
 
             <div class="about-modal__intro">
 
@@ -446,14 +450,12 @@
                             viewBox="0 0 24 24"
                             fill="none"
                             stroke="currentColor"
-                            stroke-width="1.7"
+                            stroke-width="1.8"
                             stroke-linecap="round"
                             stroke-linejoin="round"
                         >
-                            <path d="M5 5h9a5 5 0 1 1 0 10H8"></path>
-                            <path d="m8 11-4 4 4 4"></path>
-                            <circle cx="17" cy="17" r="4"></circle>
-                            <path d="M17 15v2l1.5 1"></path>
+                            <circle cx="12" cy="12" r="8"></circle>
+                            <path d="M12 8v4l3 2"></path>
                         </svg>
 
                     </span>
