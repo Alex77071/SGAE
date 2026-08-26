@@ -205,10 +205,12 @@
 
                 <div class="evidence-step__content">
 
-                    <button
-                        type="button"
-                        class="outline-action"
-                    >
+                   <button
+    type="button"
+    class="outline-action"
+    id="goToHistoryButton"
+    data-url="{{ route('evidencias.historial') }}"
+>
 
                        <span class="outline-action__icon" aria-hidden="true">
 
