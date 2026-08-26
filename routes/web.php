@@ -252,6 +252,7 @@ Route::get('/evidencias/resultados', function () {
 })->name('evidencias.resultados');
 
 /*
+/*
 |--------------------------------------------------------------------------
 | HISTORIAL DE ANÁLISIS
 |--------------------------------------------------------------------------
@@ -287,38 +288,6 @@ Route::get('/evidencias/historial', function () {
             'grupo' => 'Grupo A',
         ],
 
-        [
-            'id' => 3,
-            'nombre' => 'Práctica 5',
-            'fecha' => '11/05/2026',
-            'imagenes' => 215,
-            'grupo' => 'Grupo C',
-        ],
-
-        [
-            'id' => 4,
-            'nombre' => 'Proyecto final',
-            'fecha' => '10/05/2026',
-            'imagenes' => 167,
-            'grupo' => 'Grupo B',
-        ],
-
-        [
-            'id' => 5,
-            'nombre' => 'Lectura 4',
-            'fecha' => '09/05/2026',
-            'imagenes' => 198,
-            'grupo' => 'Grupo A',
-        ],
-
-        [
-            'id' => 6,
-            'nombre' => 'Práctica 8',
-            'fecha' => '08/05/2026',
-            'imagenes' => 121,
-            'grupo' => 'Grupo B',
-        ],
-
     ];
 
 
@@ -328,6 +297,7 @@ Route::get('/evidencias/historial', function () {
     );
 
 })->name('evidencias.historial');
+
 
 /*
 |--------------------------------------------------------------------------
@@ -357,25 +327,13 @@ Route::get(
                 'documentos/reportes/practica_3.pdf'
             ),
 
-            3 => public_path(
-                'documentos/reportes/practica_5.pdf'
-            ),
-
-            4 => public_path(
-                'documentos/reportes/proyecto_final.pdf'
-            ),
-
-            5 => public_path(
-                'documentos/reportes/lectura_4.pdf'
-            ),
-
-            6 => public_path(
-                'documentos/reportes/practica_8.pdf'
-            ),
-
         ];
 
 
+        /*
+         * Validar que exista un reporte
+         * asociado al ID seleccionado.
+         */
         if (!isset($reportes[$id])) {
 
             abort(
@@ -386,10 +344,12 @@ Route::get(
         }
 
 
-        $archivo =
-            $reportes[$id];
+        $archivo = $reportes[$id];
 
 
+        /*
+         * Validar que el PDF exista físicamente.
+         */
         if (!file_exists($archivo)) {
 
             abort(
@@ -400,20 +360,24 @@ Route::get(
         }
 
 
+        /*
+         * Mostrar el PDF directamente
+         * en el navegador.
+         */
         return response()->file(
             $archivo,
             [
-                'Content-Type' =>
-                    'application/pdf',
+                'Content-Type' => 'application/pdf',
 
                 'Content-Disposition' =>
-                    'inline',
+                    'inline; filename="' .
+                    basename($archivo) .
+                    '"',
             ]
         );
 
     }
 )->name('evidencias.historial.reporte');
-
 /*
 |--------------------------------------------------------------------------
 | CERRAR SESIÓN
