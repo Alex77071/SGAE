@@ -6695,7 +6695,9 @@ body.app-body {
 
     gap: 24px;
 
-    align-items: stretch;
+    /* Evita que Ayuda rápida cambie de altura
+       cuando se abre una pregunta */
+    align-items: start;
 }
 
 
@@ -6741,13 +6743,14 @@ body.app-body {
 }
 
 .faq-item--active {
-    background: #f7e9e8;
+    /* Rosa que elegimos anteriormente */
+    background: #e6d3d2;
 
-    border-color: #c98a87;
+    /* Sin borde alrededor */
+    border-color: transparent;
 
-    box-shadow:
-        inset 4px 0 0
-        var(--primary);
+    /* Sin línea vino del lado izquierdo */
+    box-shadow: none;
 }
 
 .faq-question {
@@ -6862,6 +6865,12 @@ body.app-body {
     box-shadow:
         0 3px 10px
         rgba(0, 0, 0, 0.04);
+
+    /* NO SE MUEVE AL ABRIR PREGUNTAS */
+    align-self: start;
+
+    position: sticky;
+    top: 20px;
 }
 
 .faq-help-title {
