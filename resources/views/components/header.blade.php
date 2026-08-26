@@ -533,8 +533,9 @@
                     </h3>
 
                     <p>
-                        UsaLab<br>
-                        Laboratorio de Usabilidad
+                        Estancias profesionales<br>
+                        Universidad del Mar<br>
+                        2026
                     </p>
 
                 </article>
