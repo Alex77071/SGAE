@@ -175,56 +175,80 @@ document.addEventListener('DOMContentLoaded', function () {
 
 /*
 |--------------------------------------------------------------------------
-| SIMULACIÓN DE DESCARGA DE EVIDENCIAS
+| SIMULACIÓN DEL ANÁLISIS DE EVIDENCIAS
 |--------------------------------------------------------------------------
 */
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    const progressState =
-        document.getElementById('downloadProgressState');
+    const analysisPage =
+        document.getElementById('analysisProcessPage');
 
-    const completeState =
-        document.getElementById('downloadCompleteState');
+    const analysisRunning =
+        document.getElementById('analysisRunning');
+
+    const analysisComplete =
+        document.getElementById('analysisComplete');
 
     const progressBar =
-        document.getElementById('downloadProgressBar');
+        document.getElementById('analysisProgressBar');
 
-    const progressPercentage =
-        document.getElementById('downloadProgressPercentage');
+    const percentage =
+        document.getElementById('analysisPercentage');
+
+    const circle =
+        document.getElementById('analysisCircleProgress');
+
+    const imageCounter =
+        document.getElementById('analysisImageCounter');
+
+    const currentFile =
+        document.getElementById('analysisCurrentFile');
 
 
     /*
-     * Si no estamos en la pantalla de descarga,
-     * no hacemos nada.
+     * Si no estamos en la pantalla de análisis,
+     * no ejecutamos este código.
      */
     if (
-        !progressState ||
-        !completeState ||
+        !analysisPage ||
+        !analysisRunning ||
+        !analysisComplete ||
         !progressBar ||
-        !progressPercentage
+        !percentage ||
+        !circle ||
+        !imageCounter ||
+        !currentFile
     ) {
         return;
     }
 
 
+    const reportUrl =
+        analysisPage.dataset.reportUrl;
+
+    const totalImages = 1248;
+
+    const circumference =
+        2 * Math.PI * 50;
+
     let progress = 0;
 
 
-    /*
-     * Simulación temporal.
-     *
-     * Más adelante este valor podrá sustituirse
-     * por el progreso real de la descarga.
-     */
-    const downloadInterval = setInterval(function () {
+    circle.style.strokeDasharray =
+        circumference;
+
+    circle.style.strokeDashoffset =
+        circumference;
+
+
+    const analysisInterval = setInterval(function () {
 
         /*
-         * Incrementos ligeramente variables para
-         * dar una sensación más natural.
+         * Simulación temporal.
          */
         const increment =
-            Math.floor(Math.random() * 6) + 2;
+            Math.floor(Math.random() * 3) + 1;
 
         progress += increment;
 
@@ -234,34 +258,293 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
 
-        progressBar.style.width =
-            progress + '%';
+        /*
+         * Porcentaje.
+         */
+        percentage.textContent =
+            progress + ' %';
 
-        progressPercentage.textContent =
+
+        /*
+         * Barra horizontal.
+         */
+        progressBar.style.width =
             progress + '%';
 
 
         /*
-         * Descarga terminada.
+         * Círculo de progreso.
          */
-        if (progress === 100) {
+        const offset =
+            circumference -
+            (progress / 100) * circumference;
 
-            clearInterval(downloadInterval);
+        circle.style.strokeDashoffset =
+            offset;
+
+
+        /*
+         * Número de imagen procesada.
+         */
+        const currentImage =
+            Math.min(
+                totalImages,
+                Math.round(
+                    totalImages *
+                    (progress / 100)
+                )
+            );
+
+
+        imageCounter.textContent =
+            'Imagen ' +
+            currentImage.toLocaleString('es-MX') +
+            ' de ' +
+            totalImages.toLocaleString('es-MX');
+
+
+        /*
+         * Nombre temporal de la imagen.
+         */
+        currentFile.textContent =
+            'ciwa_' +
+            String(currentImage).padStart(4, '0') +
+            '.jpg';
+
+
+        /*
+         * Final del análisis.
+         */
+        if (progress >= 100) {
+
+    clearInterval(analysisInterval);
+
+    analysisRunning.hidden = true;
+    analysisRunning.style.display = 'none';
+
+    analysisComplete.hidden = false;
+    analysisComplete.style.display = 'flex';
+
+}
+
+    }, 220);
+
+});
+
+/*
+|--------------------------------------------------------------------------
+| DESCARGAR PDF DEL ANÁLISIS
+|--------------------------------------------------------------------------
+*/
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const saveButton =
+        document.getElementById('saveAnalysisPdf');
+
+    if (!saveButton) {
+        return;
+    }
+
+
+    saveButton.addEventListener('click', async function () {
+
+        const reportUrl =
+            saveButton.dataset.reportUrl;
+
+
+        if (!reportUrl) {
+
+            alert(
+                'No se encontró la ruta del reporte PDF.'
+            );
+
+            return;
+        }
+
+
+        try {
+
+            /*
+             * =========================================================
+             * CHROME / EDGE
+             * Permite seleccionar manualmente dónde guardar el PDF.
+             * =========================================================
+             */
+
+            if ('showSaveFilePicker' in window) {
+
+                const fileHandle =
+                    await window.showSaveFilePicker({
+
+                        suggestedName:
+                            'Reporte_Analisis.pdf',
+
+                        types: [
+                            {
+                                description:
+                                    'Documento PDF',
+
+                                accept: {
+                                    'application/pdf': [
+                                        '.pdf'
+                                    ]
+                                }
+                            }
+                        ]
+
+                    });
+
+
+                /*
+                 * Obtener el PDF desde Laravel.
+                 */
+                const response =
+                    await fetch(
+                        reportUrl,
+                        {
+                            method: 'GET',
+
+                            credentials:
+                                'same-origin'
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        'No se pudo obtener el reporte PDF.'
+                    );
+                }
+
+
+                const pdfBlob =
+                    await response.blob();
+
+
+                /*
+                 * Escribir el PDF en el archivo
+                 * seleccionado por el usuario.
+                 */
+                const writable =
+                    await fileHandle.createWritable();
+
+
+                await writable.write(
+                    pdfBlob
+                );
+
+
+                await writable.close();
+
+
+                /*
+                 * El PDF ya está guardado.
+                 *
+                 * NO abrimos otra pestaña porque el PDF
+                 * ya está visible en resultados.blade.php.
+                 */
+
+                return;
+            }
 
 
             /*
-             * Pequeña pausa para que pueda verse el 100%.
+             * =========================================================
+             * OTROS NAVEGADORES
+             * Descarga convencional del PDF.
+             * =========================================================
              */
-            setTimeout(function () {
 
-                progressState.hidden = true;
+            const response =
+                await fetch(
+                    reportUrl,
+                    {
+                        method: 'GET',
 
-                completeState.hidden = false;
+                        credentials:
+                            'same-origin'
+                    }
+                );
 
-            }, 500);
+
+            if (!response.ok) {
+
+                throw new Error(
+                    'No se pudo obtener el reporte PDF.'
+                );
+            }
+
+
+            const pdfBlob =
+                await response.blob();
+
+
+            const blobUrl =
+                URL.createObjectURL(
+                    pdfBlob
+                );
+
+
+            const downloadLink =
+                document.createElement('a');
+
+
+            downloadLink.href =
+                blobUrl;
+
+
+            downloadLink.download =
+                'Reporte_Analisis.pdf';
+
+
+            /*
+             * El enlace se agrega temporalmente
+             * para iniciar la descarga.
+             */
+            document.body.appendChild(
+                downloadLink
+            );
+
+
+            downloadLink.click();
+
+
+            downloadLink.remove();
+
+
+            /*
+             * Liberar memoria.
+             */
+            URL.revokeObjectURL(
+                blobUrl
+            );
+
+
+        } catch (error) {
+
+            /*
+             * El usuario cerró el selector
+             * sin seleccionar una ubicación.
+             */
+            if (error.name === 'AbortError') {
+                return;
+            }
+
+
+            console.error(
+                'Error al descargar el PDF:',
+                error
+            );
+
+
+            alert(
+                'No fue posible descargar el reporte PDF.'
+            );
 
         }
 
-    }, 180);
+    });
 
 });

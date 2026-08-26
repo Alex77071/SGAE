@@ -139,59 +139,59 @@
 
             {{-- PASO 2 --}}
 
-            <article class="evidence-step">
+<article class="evidence-step">
 
-                <span class="evidence-step__number">
-                    2
-                </span>
-
-
-                <div class="evidence-step__content">
-
-                    <button
-                        type="button"
-                        class="outline-action"
-                    >
-
-                       <span class="outline-action__icon" aria-hidden="true">
-
-                            <svg
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="1.8"
-                                stroke-linecap="round"
-                            >
-                                <path d="M12 2v3"></path>
-                                <path d="M12 19v3"></path>
-
-                                <path d="M4.93 4.93l2.12 2.12"></path>
-                                <path d="M16.95 16.95l2.12 2.12"></path>
-
-                                <path d="M2 12h3"></path>
-                                <path d="M19 12h3"></path>
-
-                                <path d="M4.93 19.07l2.12-2.12"></path>
-                                <path d="M16.95 7.05l2.12-2.12"></path>
-                            </svg>
-
-                        </span>
-
-                        Analizar carpetas
-
-                    </button>
+    <span class="evidence-step__number">
+        2
+    </span>
 
 
-                    <p>
+    <div class="evidence-step__content">
 
-                        Ejecute el análisis con Inteligencia Artificial y
-                        consulte los resultados
+        <a
+            href="{{ route('evidencias.analizar') }}"
+            class="outline-action"
+        >
 
-                    </p>
+            <span class="outline-action__icon" aria-hidden="true">
 
-                </div>
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                >
+                    <path d="M12 2v3"></path>
+                    <path d="M12 19v3"></path>
 
-            </article>
+                    <path d="M4.93 4.93l2.12 2.12"></path>
+                    <path d="M16.95 16.95l2.12 2.12"></path>
+
+                    <path d="M2 12h3"></path>
+                    <path d="M19 12h3"></path>
+
+                    <path d="M4.93 19.07l2.12-2.12"></path>
+                    <path d="M16.95 7.05l2.12-2.12"></path>
+                </svg>
+
+            </span>
+
+            Analizar carpetas
+
+        </a>
+
+
+        <p>
+
+            Ejecute el análisis con Inteligencia Artificial y
+            consulte los resultados
+
+        </p>
+
+    </div>
+
+</article>
 
 
             {{-- PASO 3 --}}
