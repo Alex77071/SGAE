@@ -80,41 +80,44 @@
 
 
                 {{-- PREGUNTA 1 --}}
-                <div class="faq-item faq-item--active">
+                {{-- PREGUNTA 1 --}}
+<div class="faq-item">
 
-                    <button
-                        type="button"
-                        class="faq-question"
-                        aria-expanded="true"
-                    >
+    <button
+        type="button"
+        class="faq-question"
+        aria-expanded="false"
+    >
 
-                        <span class="faq-question__text">
-                            ¿Cómo descargo carpetas?
-                        </span>
+        <span class="faq-question__text">
+            ¿Cómo descargo carpetas?
+        </span>
 
-                        <span
-                            class="faq-icon"
-                            aria-hidden="true"
-                        >
-                            −
-                        </span>
+        <span
+            class="faq-icon"
+            aria-hidden="true"
+        >
+            +
+        </span>
 
-                    </button>
+    </button>
 
 
-                    <div class="faq-answer">
+    <div
+        class="faq-answer"
+        hidden
+    >
 
-                        <p>
-                            En el dashboard, selecciona
-                            <strong>“Descargar carpetas”</strong>.
-                            El sistema generará las carpetas con las
-                            imágenes disponibles para análisis.
-                        </p>
+        <p>
+            En el dashboard, selecciona
+            <strong>“Descargar carpetas”</strong>.
+            El sistema generará las carpetas con las
+            imágenes disponibles para análisis.
+        </p>
 
-                    </div>
+    </div>
 
-                </div>
-
+</div>
 
                 {{-- PREGUNTA 2 --}}
                 <div class="faq-item">
@@ -545,26 +548,7 @@
         </div>
 
 
-        {{-- =====================================================
-             BARRA INFORMATIVA
-        ====================================================== --}}
-
-        <div class="faq-info-bar">
-
-            <span
-                class="faq-info-icon"
-                aria-hidden="true"
-            >
-                i
-            </span>
-
-            <span>
-                Selecciona una pregunta para ver su respuesta.
-            </span>
-
-        </div>
-
-    </div>
+        
 
 </section>
 
