@@ -147,6 +147,15 @@ Route::get('/evidencias/analizando', function () {
 
 })->name('evidencias.analizando');
 
+Route::get('/evidencias/analizar', function () {
+
+    if (!session('moodle_authenticated')) {
+        return redirect()->route('login');
+    }
+
+    return view('evidencias.analizar');
+
+})->name('evidencias.analizar');
 /*
 |--------------------------------------------------------------------------
 | DESCARGAR REPORTE PDF DE PRUEBA
