@@ -5098,9 +5098,9 @@ body.app-body {
 ========================================================== */
 
 .about-modal__header {
-    min-height: 100px;
+    min-height: 92px;
 
-    padding: 14px 36px;
+    padding: 0 32px;
 
     background: #eeeeee;
 
@@ -5112,8 +5112,43 @@ body.app-body {
 
     display: flex;
     align-items: center;
+    justify-content: space-between;
+}
+.about-modal__header-title {
+    margin: 0;
 
-    gap: 18px;
+    color: var(--primary);
+
+    font-size: 22px;
+    line-height: 1.2;
+    font-weight: 700;
+}
+
+.about-modal__close {
+    width: 42px;
+    height: 42px;
+
+    border: none;
+    background: transparent;
+    border-radius: 50%;
+
+    color: var(--text-main);
+    cursor: pointer;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: background 0.2s ease;
+}
+
+.about-modal__close:hover {
+    background: rgba(0, 0, 0, 0.06);
+}
+
+.about-modal__close svg {
+    width: 22px;
+    height: 22px;
 }
 
 
@@ -5149,7 +5184,7 @@ body.app-body {
 ========================================================== */
 
 .about-modal__content {
-    padding: 28px 40px 34px;
+    padding: 24px 40px 34px;
 }
 
 
@@ -5220,19 +5255,16 @@ body.app-body {
 .about-modal__cards {
     display: grid;
 
-    grid-template-columns:
-        0.8fr
-        1.15fr
-        1.15fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
 
     gap: 20px;
 }
 
 
 .about-info-card {
-    min-height: 210px;
+    min-height: 220px;
 
-    padding: 22px 16px;
+    padding: 22px 18px;
 
     border: 1px solid #d0d2d5;
     border-radius: 18px;
@@ -5300,14 +5332,14 @@ body.app-body {
 
 
     .about-modal__header {
-        border-radius:
-            23px
-            23px
-            0
-            0;
+    padding: 0 20px;
 
-        justify-content: center;
-    }
+    border-radius:
+        23px
+        23px
+        0
+        0;
+}
 
 
     .about-modal__content {
