@@ -131,47 +131,47 @@
                     aria-hidden="true"
                 >
 
-                    {{-- PREGUNTAS FRECUENTES --}}
-                    <a
-                        href="#"
-                        class="profile-dropdown__item"
-                    >
+                 {{-- PREGUNTAS FRECUENTES --}}
+<a
+    href="{{ route('preguntas.frecuentes') }}"
+    class="profile-dropdown__item"
+>
 
-                        <span class="profile-dropdown__icon">
+    <span class="profile-dropdown__icon">
 
-                            <svg
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="1.7"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                aria-hidden="true"
-                            >
+        <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+        >
 
-                                <circle
-                                    cx="12"
-                                    cy="12"
-                                    r="9"
-                                ></circle>
+            <circle
+                cx="12"
+                cy="12"
+                r="9"
+            ></circle>
 
-                                <path
-                                    d="M9.8 9a2.4 2.4 0 1 1 3.9 1.9c-1 .7-1.7 1.2-1.7 2.6"
-                                ></path>
+            <path
+                d="M9.8 9a2.4 2.4 0 1 1 3.9 1.9c-1 .7-1.7 1.2-1.7 2.6"
+            ></path>
 
-                                <path
-                                    d="M12 17h.01"
-                                ></path>
+            <path
+                d="M12 17h.01"
+            ></path>
 
-                            </svg>
+        </svg>
 
-                        </span>
+    </span>
 
-                        <span>
-                            Preguntas frecuentes
-                        </span>
+    <span>
+        Preguntas frecuentes
+    </span>
 
-                    </a>
+</a>
 
 
                     {{-- CONTACTO Y SOPORTE --}}

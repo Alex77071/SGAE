@@ -5351,6 +5351,7 @@ body.app-body {
 }
 
 /* ==========================================================
+<<<<<<< Updated upstream
    ANALIZAR EVIDENCIAS
 ========================================================== */
 
@@ -5369,10 +5370,53 @@ body.app-body {
 
     overflow-x: hidden;
     overflow-y: auto;
+=======
+   PREGUNTAS FRECUENTES
+   Diseño final:
+   - Sin breadcrumb
+   - Sin etiqueta "Actualizado"
+   - "Volver al inicio" sin flecha ni icono
+========================================================== */
+
+.faq-page {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    margin: 0 auto;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.faq-shell {
+    width: 100%;
+    min-height: 100%;
+
+    padding: 24px 26px 18px;
+
+    display: flex;
+    flex-direction: column;
+
+    background: transparent;
+
+    border: none;
+    border-radius: 0;
+
+    box-shadow: none;
+}
+
+.faq-title-block {
+    padding-left: 16px;
+    border-left: 4px solid var(--primary);
+>>>>>>> Stashed changes
 }
 
 
 /* ==========================================================
+<<<<<<< Updated upstream
    ENCABEZADO
 ========================================================== */
 
@@ -5395,16 +5439,46 @@ body.app-body {
 }
 
 .analyze-evidence-heading__title {
+=======
+   ENCABEZADO FAQ
+========================================================== */
+
+.faq-header {
+    width: 100%;
+
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 24px;
+
+    margin-bottom: 22px;
+
+    flex-shrink: 0;
+}
+
+.faq-header__copy {
+    min-width: 0;
+}
+
+.faq-title {
+>>>>>>> Stashed changes
     margin: 0;
 
     color: var(--primary);
 
+<<<<<<< Updated upstream
     font-size: 27px;
     line-height: 1.1;
+=======
+    font-size: 28px;
+    line-height: 1.15;
+>>>>>>> Stashed changes
 
     font-weight: 700;
 }
 
+<<<<<<< Updated upstream
 
 /* ==========================================================
    FILTROS
@@ -5513,11 +5587,55 @@ body.app-body {
     background: var(--primary);
 
     color: #ffffff;
+=======
+.faq-subtitle {
+    margin: 7px 0 0;
+
+    color: var(--text-soft);
+
+    font-size: 16px;
+    line-height: 1.35;
+}
+
+/* ==========================================================
+   BOTÓN VOLVER AL INICIO
+========================================================== */
+
+.faq-back-button {
+    min-width: 230px;
+    min-height: 46px;
+
+    padding: 10px 22px;
+
+    border: 1px solid #c98a87;
+    border-radius: 14px;
+
+    background: #ffffff;
+
+    color: #923734 !important;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+
+    text-decoration: none !important;
+    font-size: 16px;
+    font-weight: 500;
+
+    cursor: pointer;
+}
+
+.faq-back-button__icon {
+    width: 22px;
+    height: 22px;
+>>>>>>> Stashed changes
 
     display: inline-flex;
     align-items: center;
     justify-content: center;
 
+<<<<<<< Updated upstream
     gap: 9px;
 
     font-family: inherit;
@@ -6055,10 +6173,62 @@ body.app-body {
 
     border: 1px solid #d3d1d1;
     border-radius: 18px;
+=======
+    flex-shrink: 0;
+}
+
+.faq-back-button__icon svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    stroke: currentColor;
+}
+
+/* ==========================================================
+   CONTENIDO PRINCIPAL
+========================================================== */
+
+.faq-content {
+    width: 100%;
+
+    flex: 1;
+    min-height: 0;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 2.55fr)
+        minmax(300px, 0.9fr);
+
+    gap: 24px;
+
+    align-items: start;
+}
+
+
+/* ==========================================================
+   ACORDEÓN
+========================================================== */
+
+.faq-accordion {
+    width: 100%;
+    min-width: 0;
+
+    padding: 12px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 9px;
+
+    border: 1px solid #d7d4d4;
+    border-radius: 20px;
+>>>>>>> Stashed changes
 
     background: #ffffff;
 
     box-shadow:
+<<<<<<< Updated upstream
         0 5px 14px
         rgba(0, 0, 0, 0.04);
 }
@@ -6118,10 +6288,23 @@ body.app-body {
     padding: 22px 20px;
 
     border: 1px solid #dad8d8;
+=======
+        0 3px 10px
+        rgba(0, 0, 0, 0.04);
+}
+
+.faq-item {
+    width: 100%;
+
+    overflow: hidden;
+
+    border: 1px solid #d7d4d4;
+>>>>>>> Stashed changes
     border-radius: 10px;
 
     background: #ffffff;
 
+<<<<<<< Updated upstream
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -6247,10 +6430,50 @@ body.app-body {
     font-family: inherit;
     font-size: 14px;
     font-weight: 500;
+=======
+    transition:
+        background-color 0.18s ease,
+        border-color 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+.faq-item--active {
+    background: #e6d3d2;
+    border-color: transparent;
+    box-shadow: none;
+}
+
+.faq-question {
+    width: 100%;
+    min-height: 51px;
+
+    padding: 13px 18px;
+
+    border: none;
+
+    background: transparent;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 16px;
+
+    color: var(--text-main);
+
+    font-family: inherit;
+    font-size: 16px;
+    line-height: 1.25;
+
+    font-weight: 600;
+
+    text-align: left;
+>>>>>>> Stashed changes
 
     cursor: pointer;
 }
 
+<<<<<<< Updated upstream
 .results-button svg {
     width: 19px;
     height: 19px;
@@ -6543,11 +6766,32 @@ body.app-body {
 .analysis-finished-message__icon {
     width: 23px;
     height: 23px;
+=======
+.faq-question:hover {
+    color: var(--primary);
+}
+
+.faq-item--active .faq-question {
+    color: var(--primary);
+}
+
+.faq-question__text {
+    min-width: 0;
+
+    flex: 1;
+}
+
+.faq-icon {
+    width: 26px;
+    min-width: 26px;
+    height: 26px;
+>>>>>>> Stashed changes
 
     display: inline-flex;
     align-items: center;
     justify-content: center;
 
+<<<<<<< Updated upstream
     flex: 0 0 23px;
 
     color: #000000;
@@ -6558,10 +6802,48 @@ body.app-body {
 
     width: 23px;
     height: 23px;
+=======
+    flex: 0 0 26px;
+
+    color: var(--primary);
+
+    font-size: 25px;
+    line-height: 1;
+
+    font-weight: 400;
+}
+
+.faq-answer {
+    padding:
+        0
+        50px
+        16px
+        18px;
+
+    color: var(--text-soft);
+
+    font-size: 15px;
+    line-height: 1.48;
+}
+
+.faq-answer[hidden] {
+    display: none !important;
+}
+
+.faq-answer p {
+    margin: 0;
+}
+
+.faq-answer strong {
+    color: var(--primary);
+
+    font-weight: 600;
+>>>>>>> Stashed changes
 }
 
 
 /* ==========================================================
+<<<<<<< Updated upstream
    ACCIONES
 ========================================================== */
 
@@ -6590,11 +6872,63 @@ body.app-body {
     padding: 9px 20px;
 
     border-radius: 7px;
+=======
+   AYUDA RÁPIDA
+========================================================== */
+
+.faq-help-card {
+    width: 100%;
+    min-width: 0;
+
+    padding: 20px 22px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    border: 1px solid #d7d4d4;
+    border-radius: 20px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 3px 10px
+        rgba(0, 0, 0, 0.04);
+
+    align-self: start;
+    position: sticky;
+    top: 20px;
+}
+
+.faq-help-title {
+    width: 100%;
+
+    margin: 0 0 4px;
+
+    color: var(--primary);
+
+    font-size: 21px;
+    line-height: 1.15;
+
+    font-weight: 700;
+
+    text-align: left;
+}
+
+.faq-help-illustration {
+    width: 176px;
+    height: 132px;
+
+    max-width: 100%;
+
+    margin: 2px auto 4px;
+>>>>>>> Stashed changes
 
     display: flex;
     align-items: center;
     justify-content: center;
 
+<<<<<<< Updated upstream
     gap: 8px;
 
     box-sizing: border-box;
@@ -6604,6 +6938,83 @@ body.app-body {
     font-weight: 500;
 
     text-decoration: none;
+=======
+    flex-shrink: 0;
+}
+
+.faq-help-illustration svg {
+    width: 176px !important;
+    height: 132px !important;
+
+    max-width: 100%;
+
+    display: block;
+}
+
+.faq-help-question {
+    margin: 3px 0 4px;
+
+    color: var(--text-main);
+
+    font-size: 16px;
+    line-height: 1.25;
+
+    font-weight: 700;
+
+    text-align: center;
+}
+
+.faq-help-text {
+    margin: 0 0 14px;
+
+    color: var(--text-soft);
+
+    font-size: 14px;
+    line-height: 1.3;
+
+    text-align: center;
+}
+
+.faq-help-actions {
+    width: 100%;
+
+    margin-top: auto;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+.faq-help-button {
+    width: 100%;
+    min-height: 45px;
+
+    margin: 0;
+
+    padding: 8px 16px;
+
+    border: 1px solid #9f4949;
+    border-radius: 10px;
+
+    background: #ffffff;
+
+    color: var(--primary) !important;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 11px;
+
+    font-family: inherit;
+    font-size: 15px;
+    line-height: 1.15;
+
+    font-weight: 500;
+
+    text-decoration: none !important;
+>>>>>>> Stashed changes
 
     cursor: pointer;
 
@@ -6613,6 +7024,7 @@ body.app-body {
         border-color 0.2s ease;
 }
 
+<<<<<<< Updated upstream
 
 /* ==========================================================
    ICONOS DE BOTONES
@@ -6621,11 +7033,25 @@ body.app-body {
 .analysis-finished-button__icon {
     width: 21px;
     height: 21px;
+=======
+.faq-help-button:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+
+    color: #ffffff !important;
+}
+
+.faq-help-button__icon {
+    width: 23px;
+    min-width: 23px;
+    height: 23px;
+>>>>>>> Stashed changes
 
     display: inline-flex;
     align-items: center;
     justify-content: center;
 
+<<<<<<< Updated upstream
     flex: 0 0 21px;
 }
 
@@ -6637,10 +7063,21 @@ body.app-body {
 
     max-width: 21px;
     max-height: 21px;
+=======
+    flex: 0 0 23px;
+}
+
+.faq-help-button__icon svg {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+>>>>>>> Stashed changes
 }
 
 
 /* ==========================================================
+<<<<<<< Updated upstream
    BOTÓN PRIMARIO
 ========================================================== */
 
@@ -6915,10 +7352,68 @@ body.app-body {
     font-size: 17px;
     line-height: 1.2;
     font-weight: 400;
+=======
+   BARRA INFORMATIVA
+========================================================== */
+
+.faq-info-bar {
+    width: 100%;
+    min-height: 52px;
+
+    margin-top: 16px;
+
+    padding: 9px 16px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 13px;
+
+    flex-shrink: 0;
+
+    border: 1px solid #d7d4d4;
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    color: var(--text-main);
+
+    font-size: 14px;
+    line-height: 1.3;
+}
+
+.faq-info-icon {
+    width: 32px;
+    min-width: 32px;
+    height: 32px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 32px;
+
+    border-radius: 50%;
+
+    background: #ead9d8;
+
+    color: var(--primary);
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 17px;
+    font-weight: 700;
+
+    line-height: 1;
+>>>>>>> Stashed changes
 }
 
 
 /* ==========================================================
+<<<<<<< Updated upstream
    CONTENEDOR DEL PDF
 ========================================================== */
 
@@ -7155,35 +7650,90 @@ body.app-body {
 
         padding-top: 6px;
         padding-bottom: 6px;
+=======
+   FAQ - PANTALLAS MEDIANAS
+========================================================== */
+
+@media (max-width: 1200px) {
+
+    .faq-shell {
+        padding:
+            20px
+            22px
+            16px;
+    }
+
+    .faq-content {
+        grid-template-columns:
+            minmax(0, 2fr)
+            minmax(280px, 0.85fr);
+
+        gap: 18px;
+    }
+
+    .faq-question {
+        font-size: 15px;
+    }
+
+    .faq-help-card {
+        padding:
+            18px
+            18px;
+>>>>>>> Stashed changes
     }
 
 }
 
 
 /* ==========================================================
+<<<<<<< Updated upstream
    TABLET
+=======
+   FAQ - TABLET
+>>>>>>> Stashed changes
 ========================================================== */
 
 @media (max-width: 992px) {
 
+<<<<<<< Updated upstream
     .analysis-results-page {
         height: auto;
         min-height: 650px;
+=======
+    .faq-page {
+        height: auto;
+>>>>>>> Stashed changes
 
         overflow: visible;
     }
 
+<<<<<<< Updated upstream
 
     .analysis-pdf-card {
         height: 500px;
 
         flex: none;
+=======
+    .faq-shell {
+        min-height: 0;
+    }
+
+    .faq-content {
+        grid-template-columns: 1fr;
+
+        gap: 20px;
+    }
+
+    .faq-help-card {
+        min-height: 360px;
+>>>>>>> Stashed changes
     }
 
 }
 
 
 /* ==========================================================
+<<<<<<< Updated upstream
    CELULAR
 ========================================================== */
 
@@ -7211,3 +7761,87 @@ body.app-body {
     }
 
 }
+=======
+   FAQ - CELULAR
+========================================================== */
+
+@media (max-width: 576px) {
+
+    .faq-shell {
+        padding:
+            18px
+            14px
+            14px;
+
+        border-radius: 20px;
+    }
+
+    .faq-header {
+        flex-direction: column;
+        align-items: flex-start;
+
+        gap: 14px;
+    }
+
+    .faq-title {
+        font-size: 24px;
+    }
+
+    .faq-subtitle {
+        font-size: 15px;
+    }
+.faq-back-button {
+    min-width: 180px;
+    min-height: 42px;
+
+    padding: 8px 16px;
+
+    font-size: 15px;
+}
+.faq-help-card {
+    position: static;
+    top: auto;
+}
+
+    .faq-accordion {
+        padding: 9px;
+
+        border-radius: 16px;
+    }
+
+    .faq-question {
+        min-height: 50px;
+
+        padding:
+            12px
+            13px;
+
+        font-size: 14px;
+    }
+
+    .faq-answer {
+        padding:
+            0
+            38px
+            14px
+            13px;
+
+        font-size: 14px;
+    }
+
+    .faq-help-card {
+        min-height: 0;
+
+        padding:
+            18px
+            15px;
+
+        border-radius: 16px;
+    }
+
+    .faq-info-bar {
+        font-size: 13px;
+    }
+
+}
+>>>>>>> Stashed changes
