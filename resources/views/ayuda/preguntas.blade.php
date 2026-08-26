@@ -12,7 +12,7 @@
              ENCABEZADO
         ====================================================== --}}
 
-       <div class="faq-header">
+      <div class="faq-header">
 
     <div class="faq-title-block">
 
@@ -26,10 +26,12 @@
 
     </div>
 
+
     <a
         href="{{ route('inicio') }}"
         class="faq-back-button"
     >
+
         <span
             class="faq-back-button__icon"
             aria-hidden="true"
@@ -50,7 +52,12 @@
         <span>
             Volver al inicio
         </span>
+
     </a>
+
+</div>
+
+
 
 </div>
 
