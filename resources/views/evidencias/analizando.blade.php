@@ -117,7 +117,7 @@
              AVISO
         ================================================== --}}
 
-        <div class="analysis-warning">
+       <div class="analysis-warning">
 
     <span
         class="analysis-warning__icon"
@@ -150,15 +150,22 @@
 </div>
 
 
-    {{-- =====================================================
-         ESTADO: ANÁLISIS COMPLETADO
-    ====================================================== --}}
+{{-- =====================================================
+     CERRAR TARJETA: ANALIZANDO
+====================================================== --}}
 
-    <div
-        class="analysis-finished-card"
-        id="analysisComplete"
-        hidden
-    >
+</div>
+
+
+{{-- =====================================================
+     ESTADO: ANÁLISIS COMPLETADO
+====================================================== --}}
+
+<div
+    class="analysis-finished-card"
+    id="analysisComplete"
+    hidden
+>
 
         {{-- =================================================
              ICONO CHECK
