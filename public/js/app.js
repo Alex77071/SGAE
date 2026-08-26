@@ -1061,3 +1061,32 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
+/*
+|--------------------------------------------------------------------------
+| IR AL HISTORIAL DE ANÁLISIS
+|--------------------------------------------------------------------------
+*/
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const historyButton =
+        document.getElementById('goToHistoryButton');
+
+    if (!historyButton) {
+        return;
+    }
+
+    historyButton.addEventListener('click', function () {
+
+        const historyUrl =
+            historyButton.dataset.url;
+
+        if (!historyUrl) {
+            return;
+        }
+
+        window.location.href = historyUrl;
+
+    });
+
+});
