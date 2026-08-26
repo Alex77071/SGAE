@@ -263,6 +263,7 @@ Route::post(
 
 /*
 |--------------------------------------------------------------------------
+<<<<<<< Updated upstream
 | MANUALES DE USUARIO
 |--------------------------------------------------------------------------
 */
@@ -279,3 +280,26 @@ Route::get('/recursos/manuales', function () {
     return view('recursos.manuales');
 
 })->name('manuales');
+/*=======
+| PREGUNTAS FRECUENTES
+|--------------------------------------------------------------------------
+*/
+
+Route::get(
+    '/ayuda/preguntas-frecuentes',
+    function () {
+
+        if (!session('moodle_authenticated')) {
+
+            return redirect()
+                ->route('login');
+
+        }
+
+        return view(
+            'ayuda.preguntas'
+        );
+
+    }
+)->name('preguntas.frecuentes');
+
