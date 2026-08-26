@@ -480,3 +480,130 @@ document.addEventListener('DOMContentLoaded', function () {
     );
 
 });
+
+/* ==========================================================
+   MODAL - ACERCA DE
+========================================================== */
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const openAboutModal =
+        document.getElementById('openAboutModal');
+
+    const aboutModal =
+        document.getElementById('aboutModal');
+
+    if (!openAboutModal || !aboutModal) {
+        return;
+    }
+
+
+    function openAbout() {
+
+        aboutModal.classList.add('about-modal--open');
+
+        aboutModal.setAttribute(
+            'aria-hidden',
+            'false'
+        );
+
+
+        /* Cerrar menú del perfil */
+        const profileDropdown =
+            document.getElementById('profileDropdown');
+
+        const profileButton =
+            document.getElementById('profileMenuButton');
+
+
+        if (profileDropdown) {
+
+            profileDropdown.classList.remove(
+                'profile-dropdown--open'
+            );
+
+            profileDropdown.setAttribute(
+                'aria-hidden',
+                'true'
+            );
+
+        }
+
+
+        if (profileButton) {
+
+            profileButton.classList.remove(
+                'profile-arrow--open'
+            );
+
+            profileButton.setAttribute(
+                'aria-expanded',
+                'false'
+            );
+
+        }
+
+    }
+
+
+    function closeAbout() {
+
+        aboutModal.classList.remove(
+            'about-modal--open'
+        );
+
+        aboutModal.setAttribute(
+            'aria-hidden',
+            'true'
+        );
+
+    }
+
+
+    openAboutModal.addEventListener(
+        'click',
+        function (event) {
+
+            event.preventDefault();
+
+            openAbout();
+
+        }
+    );
+
+
+    /* Cerrar al tocar el fondo */
+    aboutModal.addEventListener(
+        'click',
+        function (event) {
+
+            if (event.target === aboutModal) {
+
+                closeAbout();
+
+            }
+
+        }
+    );
+
+
+    /* Cerrar con ESC */
+    document.addEventListener(
+        'keydown',
+        function (event) {
+
+            if (
+                event.key === 'Escape' &&
+                aboutModal.classList.contains(
+                    'about-modal--open'
+                )
+            ) {
+
+                closeAbout();
+
+            }
+
+        }
+    );
+
+});

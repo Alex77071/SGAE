@@ -216,12 +216,12 @@
 
 
                     {{-- ACERCA DE --}}
-                    <a
-                        href="#"
+                    <button
+                        type="button"
+                        id="openAboutModal"
                         class="profile-dropdown__item"
                     >
-
-                        <span class="profile-dropdown__icon">
+                        <span class="profile-dropdown__icon" aria-hidden="true">
 
                             <svg
                                 viewBox="0 0 24 24"
@@ -230,23 +230,10 @@
                                 stroke-width="1.8"
                                 stroke-linecap="round"
                                 stroke-linejoin="round"
-                                aria-hidden="true"
                             >
-
-                                <circle
-                                    cx="12"
-                                    cy="12"
-                                    r="9"
-                                ></circle>
-
-                                <path
-                                    d="M12 11v5"
-                                ></path>
-
-                                <path
-                                    d="M12 8h.01"
-                                ></path>
-
+                                <circle cx="12" cy="12" r="9"></circle>
+                                <path d="M12 11v5"></path>
+                                <path d="M12 8h.01"></path>
                             </svg>
 
                         </span>
@@ -254,8 +241,7 @@
                         <span>
                             Acerca de
                         </span>
-
-                    </a>
+                    </button>
 
 
                     {{-- SEPARADOR --}}
@@ -372,6 +358,190 @@
         </div>
 
     </div>
+
+</div>
+{{-- =====================================================
+     MODAL ACERCA DE
+===================================================== --}}
+
+<div
+    class="about-modal"
+    id="aboutModal"
+    aria-hidden="true"
+>
+
+    <section
+        class="about-modal__dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="aboutModalTitle"
+    >
+
+        {{-- ENCABEZADO --}}
+        <div class="about-modal__header">
+
+            <img
+                src="{{ asset('images/logos/utm_logo3.png') }}"
+                alt="Universidad Tecnológica de la Mixteca"
+                class="about-modal__header-logo about-modal__header-logo--utm"
+            >
+
+            <div class="about-modal__header-divider"></div>
+
+            <img
+                src="{{ asset('images/logos/usalab_logo2.png') }}"
+                alt="UsaLab"
+                class="about-modal__header-logo about-modal__header-logo--usalab"
+            >
+
+        </div>
+
+
+        {{-- CONTENIDO --}}
+        <div class="about-modal__content">
+
+            <h2
+                class="about-modal__title"
+                id="aboutModalTitle"
+            >
+                Acerca de Sistema de Gestión y Análisis de Evidencias
+            </h2>
+
+
+            <div class="about-modal__intro">
+
+                <div class="about-modal__brand">
+
+                    <img
+                        src="{{ asset('images/logos/usalab_logo2.png') }}"
+                        alt="UsaLab - Laboratorio de Usabilidad"
+                        class="about-modal__main-logo"
+                    >
+
+                </div>
+
+
+                <p class="about-modal__description">
+
+                    El Sistema de Gestión y Análisis de Evidencias
+                    permite descargar, analizar y consultar las
+                    evidencias de los exámenes realizados en Moodle
+                    mediante técnicas de Inteligencia Artificial.
+
+                </p>
+
+            </div>
+
+
+            {{-- INFORMACIÓN INFERIOR --}}
+            <div class="about-modal__cards">
+
+
+                {{-- VERSIÓN --}}
+                <article class="about-info-card">
+
+                    <span class="about-info-card__icon" aria-hidden="true">
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <path d="M5 5h9a5 5 0 1 1 0 10H8"></path>
+                            <path d="m8 11-4 4 4 4"></path>
+                            <circle cx="17" cy="17" r="4"></circle>
+                            <path d="M17 15v2l1.5 1"></path>
+                        </svg>
+
+                    </span>
+
+                    <h3>
+                        Versión
+                    </h3>
+
+                    <p>
+                        1.0
+                    </p>
+
+                </article>
+
+
+                {{-- UNIVERSIDAD --}}
+                <article class="about-info-card">
+
+                    <span class="about-info-card__icon" aria-hidden="true">
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <path d="m3 9 9-5 9 5"></path>
+                            <path d="M5 10h14"></path>
+                            <path d="M6 10v8"></path>
+                            <path d="M10 10v8"></path>
+                            <path d="M14 10v8"></path>
+                            <path d="M18 10v8"></path>
+                            <path d="M4 18h16"></path>
+                            <path d="M3 21h18"></path>
+                        </svg>
+
+                    </span>
+
+                    <h3>
+                        Universidad
+                    </h3>
+
+                    <p>
+                        Universidad Tecnológica<br>
+                        de la Mixteca
+                    </p>
+
+                </article>
+
+
+                {{-- DESARROLLADO POR --}}
+                <article class="about-info-card">
+
+                    <span class="about-info-card__icon" aria-hidden="true">
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <circle cx="12" cy="8" r="4"></circle>
+                            <path d="M5 21a7 7 0 0 1 14 0"></path>
+                            <path d="m17 13 2 2 4-4"></path>
+                        </svg>
+
+                    </span>
+
+                    <h3>
+                        Desarrollado por
+                    </h3>
+
+                    <p>
+                        UsaLab<br>
+                        Laboratorio de Usabilidad
+                    </p>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
 
 </div>
 
