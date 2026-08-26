@@ -250,6 +250,170 @@ Route::get('/evidencias/resultados', function () {
     return redirect()->route('evidencias.reporte.prueba');
 
 })->name('evidencias.resultados');
+
+/*
+|--------------------------------------------------------------------------
+| HISTORIAL DE ANÁLISIS
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/evidencias/historial', function () {
+
+    if (!session('moodle_authenticated')) {
+        return redirect()->route('login');
+    }
+
+
+    /*
+     * DATOS TEMPORALES
+     *
+     * Después estos datos vendrán de la base de datos.
+     */
+    $analisis = [
+
+        [
+            'id' => 1,
+            'nombre' => 'Examen final',
+            'fecha' => '13/05/2026',
+            'imagenes' => 248,
+            'grupo' => 'Grupo A',
+        ],
+
+        [
+            'id' => 2,
+            'nombre' => 'Práctica 3',
+            'fecha' => '12/05/2026',
+            'imagenes' => 193,
+            'grupo' => 'Grupo A',
+        ],
+
+        [
+            'id' => 3,
+            'nombre' => 'Práctica 5',
+            'fecha' => '11/05/2026',
+            'imagenes' => 215,
+            'grupo' => 'Grupo C',
+        ],
+
+        [
+            'id' => 4,
+            'nombre' => 'Proyecto final',
+            'fecha' => '10/05/2026',
+            'imagenes' => 167,
+            'grupo' => 'Grupo B',
+        ],
+
+        [
+            'id' => 5,
+            'nombre' => 'Lectura 4',
+            'fecha' => '09/05/2026',
+            'imagenes' => 198,
+            'grupo' => 'Grupo A',
+        ],
+
+        [
+            'id' => 6,
+            'nombre' => 'Práctica 8',
+            'fecha' => '08/05/2026',
+            'imagenes' => 121,
+            'grupo' => 'Grupo B',
+        ],
+
+    ];
+
+
+    return view(
+        'evidencias.historial',
+        compact('analisis')
+    );
+
+})->name('evidencias.historial');
+
+/*
+|--------------------------------------------------------------------------
+| VISUALIZAR PDF DEL HISTORIAL
+|--------------------------------------------------------------------------
+*/
+
+Route::get(
+    '/evidencias/historial/reporte/{id}',
+    function ($id) {
+
+        if (!session('moodle_authenticated')) {
+            return redirect()->route('login');
+        }
+
+
+        /*
+         * PDFs DE EJEMPLO
+         */
+        $reportes = [
+
+            1 => public_path(
+                'documentos/reportes/examen_final.pdf'
+            ),
+
+            2 => public_path(
+                'documentos/reportes/practica_3.pdf'
+            ),
+
+            3 => public_path(
+                'documentos/reportes/practica_5.pdf'
+            ),
+
+            4 => public_path(
+                'documentos/reportes/proyecto_final.pdf'
+            ),
+
+            5 => public_path(
+                'documentos/reportes/lectura_4.pdf'
+            ),
+
+            6 => public_path(
+                'documentos/reportes/practica_8.pdf'
+            ),
+
+        ];
+
+
+        if (!isset($reportes[$id])) {
+
+            abort(
+                404,
+                'No se encontró el análisis seleccionado.'
+            );
+
+        }
+
+
+        $archivo =
+            $reportes[$id];
+
+
+        if (!file_exists($archivo)) {
+
+            abort(
+                404,
+                'No se encontró el archivo PDF.'
+            );
+
+        }
+
+
+        return response()->file(
+            $archivo,
+            [
+                'Content-Type' =>
+                    'application/pdf',
+
+                'Content-Disposition' =>
+                    'inline',
+            ]
+        );
+
+    }
+)->name('evidencias.historial.reporte');
+
 /*
 |--------------------------------------------------------------------------
 | CERRAR SESIÓN
