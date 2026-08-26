@@ -119,20 +119,35 @@
 
         <div class="analysis-warning">
 
-            <span
-                class="analysis-warning__icon"
-                aria-hidden="true"
-            >
-                !
-            </span>
+    <span
+        class="analysis-warning__icon"
+        aria-hidden="true"
+    >
+        <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        >
+            <circle
+                cx="12"
+                cy="12"
+                r="9"
+            ></circle>
 
-            <span>
-                No cierre la ventana mientras el análisis está en proceso.
-            </span>
+            <path d="M12 7v6"></path>
 
-        </div>
+            <path d="M12 17h.01"></path>
+        </svg>
+    </span>
 
-    </div>
+    <span>
+        No cierre la ventana mientras el análisis está en proceso.
+    </span>
+
+</div>
 
 
     {{-- =====================================================
