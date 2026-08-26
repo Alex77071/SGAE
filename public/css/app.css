@@ -7103,6 +7103,22 @@ body.app-body {
 
 }
 
+/* ==========================================================
+   ALINEACIÓN DE LOS DOS PANELES FAQ
+========================================================== */
+
+.faq-accordion {
+    min-height: 445px;
+}
+
+.faq-help-card {
+    height: 445px;
+
+    align-self: start;
+
+    position: sticky;
+    top: 20px;
+}
 
 /* ==========================================================
    FAQ - TABLET
