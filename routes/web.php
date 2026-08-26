@@ -272,10 +272,13 @@ Route::post(
 
 Route::get('/recursos/manuales', function () {
 
+    /*
+     * Solo usuarios autenticados con Moodle pueden acceder.
+     */
     if (!session('moodle_authenticated')) {
         return redirect()->route('login');
     }
 
-    return 'Pantalla de manuales de usuario';
+    return view('recursos.manuales');
 
 })->name('manuales');
