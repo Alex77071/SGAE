@@ -168,9 +168,6 @@ Route::get('/evidencias/reporte-prueba', function () {
         return redirect()->route('login');
     }
 
-    /*
-     * PDF que utilizaremos temporalmente como prueba.
-     */
     $archivoOrigen = public_path(
         'documentos/diagrama_proceso.pdf'
     );

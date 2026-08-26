@@ -319,11 +319,36 @@ document.addEventListener('DOMContentLoaded', function () {
 
     clearInterval(analysisInterval);
 
+
+    /*
+     * OCULTAR PANTALLA DE ANÁLISIS
+     */
     analysisRunning.hidden = true;
+
     analysisRunning.style.display = 'none';
 
+
+    /*
+     * MOSTRAR PANTALLA DE ANÁLISIS COMPLETADO
+     */
     analysisComplete.hidden = false;
+
+    analysisComplete.removeAttribute('hidden');
+
+    analysisComplete.classList.add(
+        'analysis-finished-card--visible'
+    );
+
+
+    /*
+     * Forzar visibilidad por si algún estilo
+     * quedó duplicado después del merge.
+     */
     analysisComplete.style.display = 'flex';
+
+    analysisComplete.style.visibility = 'visible';
+
+    analysisComplete.style.opacity = '1';
 
 }
 

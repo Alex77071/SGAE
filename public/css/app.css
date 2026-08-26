@@ -5818,17 +5818,20 @@ body.app-body {
 }
 
 .analysis-current-file {
-    padding-left: 85px;
+    width: 100%;
+    max-width: 100%;
+
+    padding-left: 0;
 
     color: var(--text-main);
 
     font-size: 15px;
 
+    text-align: center;
+
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-
-    max-width: 90%;
 }
 
 
@@ -5843,28 +5846,36 @@ body.app-body {
     align-items: center;
     justify-content: center;
 
-    gap: 10px;
+    gap: 12px;
 
     color: var(--text-main);
 
     font-size: 16px;
 }
 
+
 .analysis-warning__icon {
-    width: 18px;
+    width: 30px;
     height: 30px;
 
-    border-left: 2px solid #111111;
+    min-width: 30px;
 
     display: flex;
-    align-items: flex-end;
-    justify-content: flex-start;
+    align-items: center;
+    justify-content: center;
 
-    color: #111111;
+    color: #7a3837;
 
-    font-size: 12px;
+    flex-shrink: 0;
 }
 
+
+.analysis-warning__icon svg {
+    display: block;
+
+    width: 30px;
+    height: 30px;
+}
 
 /* ==========================================================
    PANTALLAS DE POCA ALTURA

@@ -117,33 +117,55 @@
              AVISO
         ================================================== --}}
 
-        <div class="analysis-warning">
+       <div class="analysis-warning">
 
-            <span
-                class="analysis-warning__icon"
-                aria-hidden="true"
-            >
-                !
-            </span>
-
-            <span>
-                No cierre la ventana mientras el análisis está en proceso.
-            </span>
-
-        </div>
-
-    </div>
-
-
-    {{-- =====================================================
-         ESTADO: ANÁLISIS COMPLETADO
-    ====================================================== --}}
-
-    <div
-        class="analysis-finished-card"
-        id="analysisComplete"
-        hidden
+    <span
+        class="analysis-warning__icon"
+        aria-hidden="true"
     >
+        <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        >
+            <circle
+                cx="12"
+                cy="12"
+                r="9"
+            ></circle>
+
+            <path d="M12 7v6"></path>
+
+            <path d="M12 17h.01"></path>
+        </svg>
+    </span>
+
+    <span>
+        No cierre la ventana mientras el análisis está en proceso.
+    </span>
+
+</div>
+
+
+{{-- =====================================================
+     CERRAR TARJETA: ANALIZANDO
+====================================================== --}}
+
+</div>
+
+
+{{-- =====================================================
+     ESTADO: ANÁLISIS COMPLETADO
+====================================================== --}}
+
+<div
+    class="analysis-finished-card"
+    id="analysisComplete"
+    hidden
+>
 
         {{-- =================================================
              ICONO CHECK
