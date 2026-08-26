@@ -19,7 +19,7 @@
     <link
         rel="icon"
         type="image/png"
-        href="{{ asset('images/logos/usalab_logo2.png') }}"
+        href="{{ asset('images/logos/logo.png') }}"
     >
 
     <link
