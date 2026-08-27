@@ -1669,3 +1669,181 @@ document.addEventListener(
 
     }
 );
+
+/* ==========================================================
+   ACERCA DE - EXPANDIR / CONTRAER "DESARROLLADO POR"
+========================================================== */
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const developerCard =
+        document.getElementById('aboutDeveloperCard');
+
+    const aboutModal =
+        document.getElementById('aboutModal');
+
+
+    /*
+     * Si los elementos no existen en esta pantalla,
+     * simplemente no ejecutamos esta funcionalidad.
+     */
+    if (!developerCard || !aboutModal) {
+        return;
+    }
+
+
+    const cardsContainer =
+        developerCard.closest('.about-modal__cards');
+
+
+    const developerDetails =
+        developerCard.querySelector(
+            '.about-developer__details'
+        );
+
+
+    if (!cardsContainer || !developerDetails) {
+        return;
+    }
+
+
+    /* ======================================================
+       EXPANDIR
+    ====================================================== */
+
+    function expandDeveloperCard() {
+
+        cardsContainer.classList.add(
+            'about-modal__cards--developer-open'
+        );
+
+
+        developerCard.classList.add(
+            'about-info-card--developer-open'
+        );
+
+
+        aboutModal.classList.add(
+            'about-modal--developer-open'
+        );
+
+
+        developerCard.setAttribute(
+            'aria-expanded',
+            'true'
+        );
+
+
+        developerDetails.setAttribute(
+            'aria-hidden',
+            'false'
+        );
+
+    }
+
+
+    /* ======================================================
+       REGRESAR A LOS TRES CUADROS
+    ====================================================== */
+
+    function collapseDeveloperCard() {
+
+        cardsContainer.classList.remove(
+            'about-modal__cards--developer-open'
+        );
+
+
+        developerCard.classList.remove(
+            'about-info-card--developer-open'
+        );
+
+
+        aboutModal.classList.remove(
+            'about-modal--developer-open'
+        );
+
+
+        developerCard.setAttribute(
+            'aria-expanded',
+            'false'
+        );
+
+
+        developerDetails.setAttribute(
+            'aria-hidden',
+            'true'
+        );
+
+    }
+
+
+    /* ======================================================
+       CLIC SOBRE "DESARROLLADO POR"
+    ====================================================== */
+
+    developerCard.addEventListener(
+        'click',
+        function (event) {
+
+            event.stopPropagation();
+
+
+            const isExpanded =
+                developerCard.classList.contains(
+                    'about-info-card--developer-open'
+                );
+
+
+            if (isExpanded) {
+
+                collapseDeveloperCard();
+
+            } else {
+
+                expandDeveloperCard();
+
+            }
+
+        }
+    );
+
+
+    /* ======================================================
+       ENTER / ESPACIO
+    ====================================================== */
+
+    developerCard.addEventListener(
+        'keydown',
+        function (event) {
+
+            if (
+                event.key !== 'Enter' &&
+                event.key !== ' '
+            ) {
+                return;
+            }
+
+
+            event.preventDefault();
+
+
+            const isExpanded =
+                developerCard.classList.contains(
+                    'about-info-card--developer-open'
+                );
+
+
+            if (isExpanded) {
+
+                collapseDeveloperCard();
+
+            } else {
+
+                expandDeveloperCard();
+
+            }
+
+        }
+    );
+
+});
