@@ -20,7 +20,7 @@
                 </h2>
 
                 <p class="support-heading__description">
-                    Estamos para ayudarte. Envíanos tu consulta o reporte.
+                    Estamos para ayudarle. Envíenos su consulta o reporte.
                 </p>
             </div>
         </div>
@@ -248,7 +248,7 @@
                         id="supportName"
                         name="name"
                         class="support-form__input"
-                        placeholder="Ingresa tu nombre completo"
+                        placeholder="Ingrese su nombre completo"
                         autocomplete="name"
                         required
                     >
@@ -267,7 +267,7 @@
                         id="supportEmail"
                         name="email"
                         class="support-form__input"
-                        placeholder="Ingresa tu correo institucional"
+                        placeholder="Ingrese su dirección de correo"
                         autocomplete="email"
                         required
                     >
@@ -286,7 +286,7 @@
                         id="supportInstitution"
                         name="institution"
                         class="support-form__input"
-                        placeholder="Ingresa el nombre de tu institución"
+                        placeholder="Ingresa el nombre de su institución"
                         required
                     >
                 </div>
@@ -303,7 +303,7 @@
                         id="supportMessage"
                         name="message"
                         class="support-form__textarea"
-                        placeholder="Escribe aquí tu mensaje o consulta con el mayor detalle posible."
+                        placeholder="Escriba aquí su mensaje o consulta con el mayor detalle posible."
                         required
                     ></textarea>
                 </div>
