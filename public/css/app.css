@@ -9705,3 +9705,473 @@ body.app-body {
 
     opacity: 1;
 }
+/* ==========================================================
+   SUPERVISADO POR - ESTADO NORMAL
+========================================================== */
+
+.about-info-card--supervisor {
+    cursor: pointer;
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+
+/* ==========================================================
+   DETALLES OCULTOS
+========================================================== */
+
+.about-supervisor__details {
+    width: 0;
+    max-width: 0;
+
+    height: 0;
+    max-height: 0;
+
+    padding: 0;
+    margin: 0;
+
+    opacity: 0;
+    visibility: hidden;
+
+    overflow: hidden;
+
+    pointer-events: none;
+
+    transform: translateX(25px);
+}
+
+
+/* ==========================================================
+   CUANDO SUPERVISADO ESTÁ ABIERTO
+========================================================== */
+
+/*
+ * Versión y Desarrollado por desaparecen.
+ * Supervisado por ocupa las 3 columnas.
+ */
+
+.about-modal__cards--supervisor-open {
+    grid-template-columns:
+        0fr
+        minmax(0, 1fr)
+        0fr;
+
+    gap: 0;
+}
+
+
+/* Ocultar las otras tarjetas */
+
+.about-modal__cards--supervisor-open
+.about-info-card:not(.about-info-card--supervisor) {
+    min-width: 0;
+
+    width: 0;
+
+    padding-left: 0;
+    padding-right: 0;
+
+    border-width: 0;
+
+    opacity: 0;
+    visibility: hidden;
+
+    overflow: hidden;
+
+    pointer-events: none;
+}
+
+
+/* ==========================================================
+   TARJETA EXPANDIDA
+========================================================== */
+
+.about-info-card--supervisor-open {
+    width: 100% !important;
+
+    height: 305px !important;
+    min-height: 305px !important;
+
+    padding:
+        22px
+        28px !important;
+
+    background:
+        var(--primary) !important;
+
+    border-color:
+        var(--primary) !important;
+
+    color: #ffffff !important;
+
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+
+    cursor: default;
+
+    transform: none !important;
+
+    box-shadow:
+        0
+        8px
+        24px
+        rgba(130, 50, 51, 0.20);
+}
+
+
+/* ==========================================================
+   LADO IZQUIERDO
+========================================================== */
+
+.about-info-card--supervisor-open
+.about-supervisor__summary {
+    flex:
+        0
+        0
+        245px;
+
+    width: 245px;
+    height: 100%;
+
+    padding:
+        20px
+        28px
+        20px
+        5px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    border-right:
+        1px solid
+        rgba(255, 255, 255, 0.35);
+
+    text-align: center;
+}
+
+
+/* Icono blanco */
+
+.about-info-card--supervisor-open
+.about-info-card__icon {
+    color: #ffffff !important;
+}
+
+
+/* Título blanco */
+
+.about-info-card--supervisor-open
+.about-supervisor__summary h3 {
+    color: #ffffff !important;
+}
+
+
+/* Texto blanco */
+
+.about-info-card--supervisor-open
+.about-supervisor__summary p {
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.90
+        ) !important;
+}
+
+
+/* ==========================================================
+   LADO DERECHO
+========================================================== */
+
+.about-info-card--supervisor-open
+.about-supervisor__details {
+    flex: 1;
+
+    width: auto;
+    max-width: 100%;
+
+    height: auto;
+    max-height: none;
+
+    margin-left: 28px;
+
+    padding:
+        10px
+        55px
+        10px
+        0;
+
+    opacity: 1;
+    visibility: visible;
+
+    overflow: visible;
+
+    pointer-events: auto;
+
+    transform: translateX(0);
+
+    color: #ffffff;
+}
+
+
+/* ==========================================================
+   TÍTULO DEL DETALLE
+========================================================== */
+
+.about-supervisor__title {
+    margin:
+        0
+        0
+        10px;
+
+    color: #ffffff !important;
+
+    font-size: 22px !important;
+    line-height: 1.2;
+
+    font-weight: 700;
+}
+
+
+/* ==========================================================
+   DESCRIPCIÓN
+========================================================== */
+
+.about-supervisor__description {
+    margin:
+        0
+        0
+        22px !important;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.88
+        ) !important;
+
+    font-size: 15px !important;
+    line-height: 1.45 !important;
+
+    text-align: left !important;
+}
+
+
+/* ==========================================================
+   NOMBRES
+========================================================== */
+
+.about-supervisor__names {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0, 1fr)
+        );
+
+    gap: 12px;
+}
+
+
+/* Cada supervisor */
+
+.about-supervisor__person {
+    min-height: 105px;
+
+    padding:
+        15px
+        12px;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.35);
+
+    border-radius: 14px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.10
+        );
+
+    color: #ffffff;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 9px;
+
+    text-align: center;
+
+    font-size: 14px;
+    line-height: 1.3;
+
+    font-weight: 500;
+}
+
+
+/* Iconos */
+
+.about-supervisor__person-icon {
+    width: 32px;
+    height: 32px;
+
+    color: #ffffff;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.about-supervisor__person-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+
+/* ==========================================================
+   X INTERNA
+========================================================== */
+
+.about-supervisor__close {
+    position: absolute;
+
+    top: 16px;
+    right: 18px;
+
+    width: 38px;
+    height: 38px;
+
+    padding: 8px;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.45);
+
+    border-radius: 50%;
+
+    background: transparent;
+
+    color: #ffffff;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.about-supervisor__close:hover {
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.15
+        );
+
+    transform:
+        scale(1.05);
+}
+
+
+.about-supervisor__close svg {
+    width: 20px;
+    height: 20px;
+}
+
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 768px) {
+
+    .about-modal__cards--supervisor-open {
+        grid-template-columns: 1fr;
+    }
+
+
+    .about-modal__cards--supervisor-open
+    .about-info-card:not(.about-info-card--supervisor) {
+        display: none;
+    }
+
+
+    .about-info-card--supervisor-open {
+        height: auto !important;
+        min-height: auto !important;
+
+        flex-direction: column;
+    }
+
+
+    .about-info-card--supervisor-open
+    .about-supervisor__summary {
+        flex:
+            0
+            0
+            auto;
+
+        width: 100%;
+        height: auto;
+
+        padding:
+            12px
+            45px
+            20px;
+
+        border-right: none;
+
+        border-bottom:
+            1px solid
+            rgba(255, 255, 255, 0.35);
+    }
+
+
+    .about-info-card--supervisor-open
+    .about-supervisor__details {
+        width: 100%;
+
+        margin:
+            18px
+            0
+            0;
+
+        padding:
+            0
+            0
+            10px;
+    }
+
+
+    .about-supervisor__names {
+        grid-template-columns: 1fr;
+    }
+
+
+    .about-supervisor__person {
+        min-height: 80px;
+    }
+
+}

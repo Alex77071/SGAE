@@ -465,45 +465,207 @@
 
                 </article>
 
+{{-- =========================================================
+     SUPERVISADO POR
+========================================================= --}}
 
-              {{-- SUPERVISADO POR --}}
-<div class="about-info-card">
+<div
+    class="about-info-card about-info-card--supervisor"
+    id="aboutSupervisorCard"
+    role="button"
+    tabindex="0"
+    aria-expanded="false"
+>
 
-    <span
-        class="about-info-card__icon"
+    {{-- =========================
+         RESUMEN
+    ========================== --}}
+    <div class="about-supervisor__summary">
+
+        <span
+            class="about-info-card__icon"
+            aria-hidden="true"
+        >
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            >
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+
+                <circle
+                    cx="9"
+                    cy="7"
+                    r="4"
+                ></circle>
+
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+        </span>
+
+
+        <h3>
+            Supervisado por
+        </h3>
+
+
+        <p>
+            UsaLab
+            <br>
+            Laboratorio de Usabilidad
+        </p>
+
+    </div>
+
+
+    {{-- =========================
+         DETALLE EXPANDIDO
+    ========================== --}}
+
+    <div
+        class="about-supervisor__details"
+        id="aboutSupervisorDetails"
         aria-hidden="true"
     >
-        <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+
+        {{-- X PARA REGRESAR --}}
+        <button
+            type="button"
+            class="about-supervisor__close"
+            id="aboutSupervisorClose"
+            aria-label="Regresar a la vista principal de Acerca de"
         >
-            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            >
+                <path d="M18 6 6 18"></path>
+                <path d="m6 6 12 12"></path>
+            </svg>
+        </button>
 
-            <circle
-                cx="9"
-                cy="7"
-                r="4"
-            ></circle>
 
-            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+        <h3 class="about-supervisor__title">
+            Supervisores del proyecto
+        </h3>
 
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-        </svg>
-    </span>
 
-    <h3>
-        Supervisado por
-    </h3>
+        <p class="about-supervisor__description">
+            El desarrollo del Sistema de Gestión y Análisis de Evidencias
+            fue supervisado por integrantes del Laboratorio de Usabilidad
+            UsaLab.
+        </p>
 
-    <p>
-        UsaLab
-        <br>
-        Laboratorio de Usabilidad
-    </p>
+
+        <div class="about-supervisor__names">
+
+            {{-- PERSONA 1 --}}
+            <div class="about-supervisor__person">
+
+                <span
+                    class="about-supervisor__person-icon"
+                    aria-hidden="true"
+                >
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <circle
+                            cx="12"
+                            cy="8"
+                            r="4"
+                        ></circle>
+
+                        <path d="M4 21a8 8 0 0 1 16 0"></path>
+                    </svg>
+                </span>
+
+                <span>
+                    I. C. David del Castillo Lale
+                </span>
+
+            </div>
+
+
+            {{-- PERSONA 2 --}}
+            <div class="about-supervisor__person">
+
+                <span
+                    class="about-supervisor__person-icon"
+                    aria-hidden="true"
+                >
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <circle
+                            cx="12"
+                            cy="8"
+                            r="4"
+                        ></circle>
+
+                        <path d="M4 21a8 8 0 0 1 16 0"></path>
+                    </svg>
+                </span>
+
+                <span>
+                    I. C. Carlos Alberto Martínez Sandoval
+                </span>
+
+            </div>
+
+
+            {{-- PERSONA 3 --}}
+            <div class="about-supervisor__person">
+
+                <span
+                    class="about-supervisor__person-icon"
+                    aria-hidden="true"
+                >
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <circle
+                            cx="12"
+                            cy="8"
+                            r="4"
+                        ></circle>
+
+                        <path d="M4 21a8 8 0 0 1 16 0"></path>
+                    </svg>
+                </span>
+
+                <span>
+                    Dr. Mario Alberto Moreno Rocha
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
 
 </div>
 

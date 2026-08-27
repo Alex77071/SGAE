@@ -1521,3 +1521,219 @@ document.addEventListener('DOMContentLoaded', function () {
     );
 
 });
+
+document.addEventListener(
+    'DOMContentLoaded',
+    function () {
+
+        const cards =
+            document.querySelector(
+                '.about-modal__cards'
+            );
+
+        const supervisorCard =
+            document.getElementById(
+                'aboutSupervisorCard'
+            );
+
+        const supervisorDetails =
+            document.getElementById(
+                'aboutSupervisorDetails'
+            );
+
+        const supervisorClose =
+            document.getElementById(
+                'aboutSupervisorClose'
+            );
+
+
+        if (
+            !cards ||
+            !supervisorCard ||
+            !supervisorDetails ||
+            !supervisorClose
+        ) {
+            return;
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | ABRIR
+        |--------------------------------------------------------------------------
+        */
+
+        function abrirSupervisores() {
+
+            /*
+             * Si Desarrollado por estaba abierto,
+             * lo regresamos primero a su estado normal.
+             */
+
+            cards.classList.remove(
+                'about-modal__cards--developer-open'
+            );
+
+
+            const developerCard =
+                document.querySelector(
+                    '.about-info-card--developer'
+                );
+
+
+            if (developerCard) {
+
+                developerCard.classList.remove(
+                    'about-info-card--developer-open'
+                );
+
+            }
+
+
+            /*
+             * Abrir Supervisado por.
+             */
+
+            cards.classList.add(
+                'about-modal__cards--supervisor-open'
+            );
+
+
+            supervisorCard.classList.add(
+                'about-info-card--supervisor-open'
+            );
+
+
+            supervisorCard.setAttribute(
+                'aria-expanded',
+                'true'
+            );
+
+
+            supervisorDetails.setAttribute(
+                'aria-hidden',
+                'false'
+            );
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | CERRAR
+        |--------------------------------------------------------------------------
+        */
+
+        function cerrarSupervisores() {
+
+            cards.classList.remove(
+                'about-modal__cards--supervisor-open'
+            );
+
+
+            supervisorCard.classList.remove(
+                'about-info-card--supervisor-open'
+            );
+
+
+            supervisorCard.setAttribute(
+                'aria-expanded',
+                'false'
+            );
+
+
+            supervisorDetails.setAttribute(
+                'aria-hidden',
+                'true'
+            );
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | CLICK EN LA TARJETA
+        |--------------------------------------------------------------------------
+        */
+
+        supervisorCard.addEventListener(
+            'click',
+            function (event) {
+
+                /*
+                 * Si el click fue sobre la X,
+                 * no volvemos a abrirla.
+                 */
+
+                if (
+                    event.target.closest(
+                        '#aboutSupervisorClose'
+                    )
+                ) {
+                    return;
+                }
+
+
+                if (
+                    !supervisorCard.classList.contains(
+                        'about-info-card--supervisor-open'
+                    )
+                ) {
+                    abrirSupervisores();
+                }
+
+            }
+        );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | X INTERNA
+        |--------------------------------------------------------------------------
+        */
+
+        supervisorClose.addEventListener(
+            'click',
+            function (event) {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                cerrarSupervisores();
+
+            }
+        );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | TECLADO
+        |--------------------------------------------------------------------------
+        */
+
+        supervisorCard.addEventListener(
+            'keydown',
+            function (event) {
+
+                if (
+                    event.key === 'Enter' ||
+                    event.key === ' '
+                ) {
+
+                    event.preventDefault();
+
+                    if (
+                        !supervisorCard.classList.contains(
+                            'about-info-card--supervisor-open'
+                        )
+                    ) {
+                        abrirSupervisores();
+                    }
+
+                }
+
+            }
+        );
+
+    }
+);
