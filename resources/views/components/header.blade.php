@@ -477,9 +477,7 @@
     aria-expanded="false"
 >
 
-    {{-- =========================
-         RESUMEN
-    ========================== --}}
+    {{-- VISTA NORMAL --}}
     <div class="about-supervisor__summary">
 
         <span
@@ -495,24 +493,15 @@
                 stroke-linejoin="round"
             >
                 <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-
-                <circle
-                    cx="9"
-                    cy="7"
-                    r="4"
-                ></circle>
-
+                <circle cx="9" cy="7" r="4"></circle>
                 <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
-
                 <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
             </svg>
         </span>
 
-
         <h3>
             Supervisado por
         </h3>
-
 
         <p>
             UsaLab
@@ -523,17 +512,14 @@
     </div>
 
 
-    {{-- =========================
-         DETALLE EXPANDIDO
-    ========================== --}}
-
+    {{-- VISTA EXPANDIDA --}}
     <div
         class="about-supervisor__details"
         id="aboutSupervisorDetails"
         aria-hidden="true"
     >
 
-        {{-- X PARA REGRESAR --}}
+        {{-- X INTERNA --}}
         <button
             type="button"
             class="about-supervisor__close"
@@ -554,11 +540,13 @@
         </button>
 
 
+        {{-- TÍTULO --}}
         <h3 class="about-supervisor__title">
             Supervisores del proyecto
         </h3>
 
 
+        {{-- DESCRIPCIÓN --}}
         <p class="about-supervisor__description">
             El desarrollo del Sistema de Gestión y Análisis de Evidencias
             fue supervisado por integrantes del Laboratorio de Usabilidad
@@ -566,102 +554,20 @@
         </p>
 
 
+        {{-- NOMBRES EN TEXTO PLANO --}}
         <div class="about-supervisor__names">
 
-            {{-- PERSONA 1 --}}
-            <div class="about-supervisor__person">
+            <p>
+                I. C. David del Castillo Lale
+            </p>
 
-                <span
-                    class="about-supervisor__person-icon"
-                    aria-hidden="true"
-                >
-                    <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="1.8"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    >
-                        <circle
-                            cx="12"
-                            cy="8"
-                            r="4"
-                        ></circle>
+            <p>
+                I. C. Carlos Alberto Martínez Sandoval
+            </p>
 
-                        <path d="M4 21a8 8 0 0 1 16 0"></path>
-                    </svg>
-                </span>
-
-                <span>
-                    I. C. David del Castillo Lale
-                </span>
-
-            </div>
-
-
-            {{-- PERSONA 2 --}}
-            <div class="about-supervisor__person">
-
-                <span
-                    class="about-supervisor__person-icon"
-                    aria-hidden="true"
-                >
-                    <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="1.8"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    >
-                        <circle
-                            cx="12"
-                            cy="8"
-                            r="4"
-                        ></circle>
-
-                        <path d="M4 21a8 8 0 0 1 16 0"></path>
-                    </svg>
-                </span>
-
-                <span>
-                    I. C. Carlos Alberto Martínez Sandoval
-                </span>
-
-            </div>
-
-
-            {{-- PERSONA 3 --}}
-            <div class="about-supervisor__person">
-
-                <span
-                    class="about-supervisor__person-icon"
-                    aria-hidden="true"
-                >
-                    <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="1.8"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    >
-                        <circle
-                            cx="12"
-                            cy="8"
-                            r="4"
-                        ></circle>
-
-                        <path d="M4 21a8 8 0 0 1 16 0"></path>
-                    </svg>
-                </span>
-
-                <span>
-                    Dr. Mario Alberto Moreno Rocha
-                </span>
-
-            </div>
+            <p>
+                Dr. Mario Alberto Moreno Rocha
+            </p>
 
         </div>
 

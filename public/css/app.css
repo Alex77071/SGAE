@@ -9705,16 +9705,33 @@ body.app-body {
 
     opacity: 1;
 }
-/* ==========================================================
-   SUPERVISADO POR - ESTADO NORMAL
+//* ==========================================================
+   ACERCA DE - SUPERVISADO POR
 ========================================================== */
 
 .about-info-card--supervisor {
-    cursor: pointer;
-
     position: relative;
 
     overflow: hidden;
+
+    cursor: pointer;
+}
+
+
+/* ==========================================================
+   RESUMEN NORMAL
+========================================================== */
+
+.about-supervisor__summary {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
 }
 
 
@@ -9729,8 +9746,8 @@ body.app-body {
     height: 0;
     max-height: 0;
 
-    padding: 0;
     margin: 0;
+    padding: 0;
 
     opacity: 0;
     visibility: hidden;
@@ -9738,19 +9755,12 @@ body.app-body {
     overflow: hidden;
 
     pointer-events: none;
-
-    transform: translateX(25px);
 }
 
 
 /* ==========================================================
-   CUANDO SUPERVISADO ESTÁ ABIERTO
+   EXPANSIÓN DE LAS COLUMNAS
 ========================================================== */
-
-/*
- * Versión y Desarrollado por desaparecen.
- * Supervisado por ocupa las 3 columnas.
- */
 
 .about-modal__cards--supervisor-open {
     grid-template-columns:
@@ -9762,13 +9772,12 @@ body.app-body {
 }
 
 
-/* Ocultar las otras tarjetas */
+/* Ocultar las otras dos tarjetas */
 
 .about-modal__cards--supervisor-open
 .about-info-card:not(.about-info-card--supervisor) {
-    min-width: 0;
-
     width: 0;
+    min-width: 0;
 
     padding-left: 0;
     padding-right: 0;
@@ -9785,7 +9794,7 @@ body.app-body {
 
 
 /* ==========================================================
-   TARJETA EXPANDIDA
+   TARJETA SUPERVISOR ABIERTA
 ========================================================== */
 
 .about-info-card--supervisor-open {
@@ -9815,10 +9824,8 @@ body.app-body {
     transform: none !important;
 
     box-shadow:
-        0
-        8px
-        24px
-        rgba(130, 50, 51, 0.20);
+        0 8px 24px
+        rgba(130, 50, 51, 0.18);
 }
 
 
@@ -9831,16 +9838,16 @@ body.app-body {
     flex:
         0
         0
-        245px;
+        340px;
 
-    width: 245px;
+    width: 340px;
     height: 100%;
 
     padding:
-        20px
-        28px
-        20px
-        5px;
+        18px
+        30px
+        18px
+        4px;
 
     display: flex;
     flex-direction: column;
@@ -9855,7 +9862,7 @@ body.app-body {
 }
 
 
-/* Icono blanco */
+/* Icono */
 
 .about-info-card--supervisor-open
 .about-info-card__icon {
@@ -9863,25 +9870,32 @@ body.app-body {
 }
 
 
-/* Título blanco */
+/* Título */
 
 .about-info-card--supervisor-open
 .about-supervisor__summary h3 {
+    margin:
+        0
+        0
+        16px;
+
     color: #ffffff !important;
+
+    font-size: 21px;
+    font-weight: 700;
 }
 
 
-/* Texto blanco */
+/* Texto */
 
 .about-info-card--supervisor-open
 .about-supervisor__summary p {
-    color:
-        rgba(
-            255,
-            255,
-            255,
-            0.90
-        ) !important;
+    margin: 0;
+
+    color: #ffffff !important;
+
+    font-size: 18px;
+    line-height: 1.4;
 }
 
 
@@ -9899,12 +9913,12 @@ body.app-body {
     height: auto;
     max-height: none;
 
-    margin-left: 28px;
+    margin-left: 36px;
 
     padding:
-        10px
-        55px
-        10px
+        14px
+        70px
+        14px
         0;
 
     opacity: 1;
@@ -9914,28 +9928,34 @@ body.app-body {
 
     pointer-events: auto;
 
-    transform: translateX(0);
-
     color: #ffffff;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    text-align: left;
 }
 
 
 /* ==========================================================
-   TÍTULO DEL DETALLE
+   TÍTULO
 ========================================================== */
 
 .about-supervisor__title {
     margin:
         0
         0
-        10px;
+        13px !important;
 
     color: #ffffff !important;
 
-    font-size: 22px !important;
+    font-size: 24px !important;
     line-height: 1.2;
 
     font-weight: 700;
+
+    text-align: left !important;
 }
 
 
@@ -9944,103 +9964,54 @@ body.app-body {
 ========================================================== */
 
 .about-supervisor__description {
+    max-width: 700px;
+
     margin:
         0
         0
         22px !important;
 
     color:
-        rgba(
-            255,
-            255,
-            255,
-            0.88
-        ) !important;
+        rgba(255, 255, 255, 0.92) !important;
 
-    font-size: 15px !important;
-    line-height: 1.45 !important;
+    font-size: 16px !important;
+    line-height: 1.5 !important;
 
     text-align: left !important;
 }
 
 
 /* ==========================================================
-   NOMBRES
+   NOMBRES - TEXTO PLANO
 ========================================================== */
 
 .about-supervisor__names {
     width: 100%;
 
-    display: grid;
+    padding-top: 16px;
 
-    grid-template-columns:
-        repeat(
-            3,
-            minmax(0, 1fr)
-        );
-
-    gap: 12px;
-}
-
-
-/* Cada supervisor */
-
-.about-supervisor__person {
-    min-height: 105px;
-
-    padding:
-        15px
-        12px;
-
-    border:
+    border-top:
         1px solid
-        rgba(255, 255, 255, 0.35);
-
-    border-radius: 14px;
-
-    background:
-        rgba(
-            255,
-            255,
-            255,
-            0.10
-        );
-
-    color: #ffffff;
+        rgba(255, 255, 255, 0.28);
 
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
 
-    gap: 9px;
+    gap: 10px;
+}
 
-    text-align: center;
 
-    font-size: 14px;
-    line-height: 1.3;
+.about-supervisor__names p {
+    margin: 0 !important;
+
+    color: #ffffff !important;
+
+    font-size: 17px !important;
+    line-height: 1.35 !important;
 
     font-weight: 500;
-}
 
-
-/* Iconos */
-
-.about-supervisor__person-icon {
-    width: 32px;
-    height: 32px;
-
-    color: #ffffff;
-
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-
-.about-supervisor__person-icon svg {
-    width: 100%;
-    height: 100%;
+    text-align: left !important;
 }
 
 
@@ -10051,13 +10022,13 @@ body.app-body {
 .about-supervisor__close {
     position: absolute;
 
-    top: 16px;
-    right: 18px;
+    top: 18px;
+    right: 20px;
 
-    width: 38px;
-    height: 38px;
+    width: 42px;
+    height: 42px;
 
-    padding: 8px;
+    padding: 9px;
 
     border:
         1px solid
@@ -10083,12 +10054,7 @@ body.app-body {
 
 .about-supervisor__close:hover {
     background:
-        rgba(
-            255,
-            255,
-            255,
-            0.15
-        );
+        rgba(255, 255, 255, 0.15);
 
     transform:
         scale(1.05);
@@ -10096,8 +10062,8 @@ body.app-body {
 
 
 .about-supervisor__close svg {
-    width: 20px;
-    height: 20px;
+    width: 21px;
+    height: 21px;
 }
 
 
@@ -10137,7 +10103,7 @@ body.app-body {
         height: auto;
 
         padding:
-            12px
+            14px
             45px
             20px;
 
@@ -10154,7 +10120,7 @@ body.app-body {
         width: 100%;
 
         margin:
-            18px
+            20px
             0
             0;
 
@@ -10162,16 +10128,20 @@ body.app-body {
             0
             0
             10px;
+
+        text-align: center;
     }
 
 
-    .about-supervisor__names {
-        grid-template-columns: 1fr;
+    .about-supervisor__title,
+    .about-supervisor__description,
+    .about-supervisor__names p {
+        text-align: center !important;
     }
 
 
-    .about-supervisor__person {
-        min-height: 80px;
+    .about-supervisor__description {
+        max-width: 100%;
     }
 
 }

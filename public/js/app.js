@@ -1370,157 +1370,8 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 /* ==========================================================
-   ACERCA DE - EXPANDIR EQUIPO DEL PROYECTO
+   ACERCA DE - SUPERVISADO POR
 ========================================================== */
-
-document.addEventListener('DOMContentLoaded', function () {
-
-    const developerCard =
-        document.getElementById('aboutDeveloperCard');
-
-    const aboutCards =
-        developerCard
-            ? developerCard.closest('.about-modal__cards')
-            : null;
-
-    const aboutModal =
-        document.getElementById('aboutModal');
-
-    const developerDetails =
-        developerCard
-            ? developerCard.querySelector(
-                '.about-developer__details'
-            )
-            : null;
-
-
-    if (
-        !developerCard ||
-        !aboutCards ||
-        !developerDetails
-    ) {
-        return;
-    }
-
-
-    function expandDeveloperCard() {
-
-        aboutCards.classList.add(
-            'about-modal__cards--developer-open'
-        );
-
-        developerCard.classList.add(
-            'about-info-card--developer-open'
-        );
-
-        if (aboutModal) {
-
-            aboutModal.classList.add(
-                'about-modal--developer-open'
-            );
-
-        }
-
-        developerCard.setAttribute(
-            'aria-expanded',
-            'true'
-        );
-
-        developerDetails.setAttribute(
-            'aria-hidden',
-            'false'
-        );
-
-    }
-
-
-    function collapseDeveloperCard() {
-
-        aboutCards.classList.remove(
-            'about-modal__cards--developer-open'
-        );
-
-        developerCard.classList.remove(
-            'about-info-card--developer-open'
-        );
-
-        if (aboutModal) {
-
-            aboutModal.classList.remove(
-                'about-modal--developer-open'
-            );
-
-        }
-
-        developerCard.setAttribute(
-            'aria-expanded',
-            'false'
-        );
-
-        developerDetails.setAttribute(
-            'aria-hidden',
-            'true'
-        );
-
-    }
-
-
-    function toggleDeveloperCard() {
-
-        const isOpen =
-            developerCard.classList.contains(
-                'about-info-card--developer-open'
-            );
-
-
-        if (isOpen) {
-
-            collapseDeveloperCard();
-
-        } else {
-
-            expandDeveloperCard();
-
-        }
-
-    }
-
-
-    /*
-     * Click en el cuadro.
-     */
-    developerCard.addEventListener(
-        'click',
-        function () {
-
-            toggleDeveloperCard();
-
-        }
-    );
-
-
-    /*
-     * Accesibilidad con teclado.
-     */
-    developerCard.addEventListener(
-        'keydown',
-        function (event) {
-
-            if (
-                event.key === 'Enter' ||
-                event.key === ' '
-            ) {
-
-                event.preventDefault();
-
-                toggleDeveloperCard();
-
-            }
-
-        }
-    );
-
-});
 
 document.addEventListener(
     'DOMContentLoaded',
@@ -1557,17 +1408,15 @@ document.addEventListener(
         }
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | ABRIR
-        |--------------------------------------------------------------------------
-        */
+        /* =====================================================
+           ABRIR
+        ====================================================== */
 
         function abrirSupervisores() {
 
             /*
-             * Si Desarrollado por estaba abierto,
-             * lo regresamos primero a su estado normal.
+             * Cerrar "Desarrollado por"
+             * si estuviera abierto.
              */
 
             cards.classList.remove(
@@ -1591,7 +1440,7 @@ document.addEventListener(
 
 
             /*
-             * Abrir Supervisado por.
+             * Abrir supervisores.
              */
 
             cards.classList.add(
@@ -1618,11 +1467,9 @@ document.addEventListener(
         }
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | CERRAR
-        |--------------------------------------------------------------------------
-        */
+        /* =====================================================
+           CERRAR
+        ====================================================== */
 
         function cerrarSupervisores() {
 
@@ -1650,20 +1497,13 @@ document.addEventListener(
         }
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | CLICK EN LA TARJETA
-        |--------------------------------------------------------------------------
-        */
+        /* =====================================================
+           CLICK
+        ====================================================== */
 
         supervisorCard.addEventListener(
             'click',
             function (event) {
-
-                /*
-                 * Si el click fue sobre la X,
-                 * no volvemos a abrirla.
-                 */
 
                 if (
                     event.target.closest(
@@ -1686,11 +1526,9 @@ document.addEventListener(
         );
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | X INTERNA
-        |--------------------------------------------------------------------------
-        */
+        /* =====================================================
+           X INTERNA
+        ====================================================== */
 
         supervisorClose.addEventListener(
             'click',
@@ -1705,11 +1543,9 @@ document.addEventListener(
         );
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | TECLADO
-        |--------------------------------------------------------------------------
-        */
+        /* =====================================================
+           TECLADO
+        ====================================================== */
 
         supervisorCard.addEventListener(
             'keydown',
