@@ -1025,11 +1025,112 @@ document.addEventListener('DOMContentLoaded', function () {
 
         }
     );
-    if (closeAboutModal) {
+if (closeAboutModal) {
 
     closeAboutModal.addEventListener(
         'click',
         function () {
+
+            /*
+            |--------------------------------------------------------------------------
+            | SI "DESARROLLADO POR" ESTÁ EXPANDIDO
+            |--------------------------------------------------------------------------
+            |
+            | La X NO cierra el modal.
+            | Primero regresa a los tres cuadros:
+            |
+            | Versión | Universidad | Desarrollado por
+            |
+            */
+
+            const developerCard =
+                document.getElementById('aboutDeveloperCard');
+
+            const cardsContainer =
+                aboutModal.querySelector('.about-modal__cards');
+
+            const developerDetails =
+                developerCard
+                    ? developerCard.querySelector(
+                        '.about-developer__details'
+                    )
+                    : null;
+
+
+            const developerIsOpen =
+                developerCard &&
+                developerCard.classList.contains(
+                    'about-info-card--developer-open'
+                );
+
+
+            if (developerIsOpen) {
+
+                /*
+                 * Regresar el contenedor a los tres cuadros.
+                 */
+                if (cardsContainer) {
+
+                    cardsContainer.classList.remove(
+                        'about-modal__cards--developer-open'
+                    );
+
+                }
+
+
+                /*
+                 * Regresar "Desarrollado por"
+                 * a su tamaño normal.
+                 */
+                developerCard.classList.remove(
+                    'about-info-card--developer-open'
+                );
+
+
+                developerCard.setAttribute(
+                    'aria-expanded',
+                    'false'
+                );
+
+
+                /*
+                 * Ocultar nuevamente el texto del equipo.
+                 */
+                if (developerDetails) {
+
+                    developerDetails.setAttribute(
+                        'aria-hidden',
+                        'true'
+                    );
+
+                }
+
+
+                /*
+                 * Quitar el estado expandido del modal.
+                 */
+                aboutModal.classList.remove(
+                    'about-modal--developer-open'
+                );
+
+
+                /*
+                 * IMPORTANTE:
+                 * Detenemos aquí la función.
+                 * NO cerramos el modal.
+                 */
+                return;
+
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | SI YA ESTÁN VISIBLES LOS TRES CUADROS
+            |--------------------------------------------------------------------------
+            |
+            | Ahora sí la X cierra completamente "Acerca de".
+            */
 
             closeAbout();
 
