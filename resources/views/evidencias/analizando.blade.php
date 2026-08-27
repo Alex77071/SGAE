@@ -316,7 +316,7 @@
 
             {{-- VER RESULTADOS --}}
 <a
-    href="{{ route('evidencias.reporte.prueba') }}"
+    href="{{ route('evidencias.resultados') }}"
     class="
         analysis-finished-button
         analysis-finished-button--primary

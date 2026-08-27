@@ -247,7 +247,7 @@ Route::get('/evidencias/resultados', function () {
         return redirect()->route('login');
     }
 
-    return redirect()->route('evidencias.reporte.prueba');
+    return view('evidencias.resultados');
 
 })->name('evidencias.resultados');
 

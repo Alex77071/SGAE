@@ -10301,3 +10301,637 @@ body.app-body {
     color: #ffffff !important;
     font-weight: 400 !important;
 }
+
+/* ==========================================================
+   RESULTADO DEL ANÁLISIS - VERSIÓN COMPACTA
+========================================================== */
+
+.analysis-result-page {
+    width: 100%;
+    max-width: 1420px;
+    height: 100%;
+
+    margin: 0 auto;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+}
+
+
+/* ==========================================================
+   BREADCRUMB
+========================================================== */
+
+.analysis-result-breadcrumb {
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 12px;
+
+    color: var(--text-main);
+
+    font-size: 16px;
+}
+
+.analysis-result-breadcrumb__separator {
+    font-size: 21px;
+}
+
+.analysis-result-breadcrumb__current {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+
+/* ==========================================================
+   ENCABEZADO
+========================================================== */
+
+.analysis-result-header {
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 25px;
+
+    margin-bottom: 18px;
+}
+
+.analysis-result-heading {
+    display: flex;
+    align-items: stretch;
+
+    gap: 10px;
+}
+
+.analysis-result-heading__line {
+    width: 4px;
+    min-width: 4px;
+
+    background: var(--primary);
+
+    border-radius: 2px;
+}
+
+.analysis-result-heading__title {
+    margin: 0 0 2px;
+
+    color: var(--primary);
+
+    font-size: 25px;
+    line-height: 1.05;
+
+    font-weight: 700;
+}
+
+.analysis-result-heading__description {
+    margin: 0;
+
+    color: var(--text-soft);
+
+    font-size: 15px;
+    line-height: 1.15;
+}
+
+
+/* ==========================================================
+   VOLVER AL INICIO
+========================================================== */
+
+.analysis-result-back {
+    width: 300px;
+    min-height: 40px;
+
+    border: 1px solid var(--primary);
+    border-radius: 10px;
+
+    color: var(--primary);
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    font-size: 15px;
+
+    text-decoration: none;
+}
+
+.analysis-result-back__icon {
+    width: 21px;
+    height: 21px;
+}
+
+.analysis-result-back__icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+
+/* ==========================================================
+   CONTENIDO PRINCIPAL
+========================================================== */
+
+.analysis-result-grid {
+    flex: 1;
+    min-height: 0;
+
+    display: grid;
+
+    grid-template-columns:
+        350px
+        minmax(0, 1fr);
+
+    gap: 22px;
+
+    align-items: stretch;
+}
+
+
+/* ==========================================================
+   TARJETAS
+========================================================== */
+
+.analysis-result-info,
+.analysis-result-preview {
+    min-width: 0;
+    min-height: 0;
+
+    border: 1px solid #a5a7ad;
+    border-radius: 16px;
+
+    background: rgba(255, 255, 255, 0.7);
+}
+
+.analysis-result-info {
+    padding: 14px 16px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    gap: 6px;
+}
+
+.analysis-result-preview {
+    padding: 14px 18px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* ==========================================================
+   ENCABEZADO DE TARJETAS
+========================================================== */
+
+.analysis-result-card-heading {
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    color: var(--primary);
+}
+
+.analysis-result-card-heading__icon {
+    width: 23px;
+    min-width: 23px;
+    height: 23px;
+}
+
+.analysis-result-card-heading__icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.analysis-result-card-heading h3 {
+    margin: 0;
+
+    font-size: 18px;
+    line-height: 1.1;
+
+    font-weight: 700;
+}
+
+
+/* ==========================================================
+   DIVISORES
+========================================================== */
+
+.analysis-result-divider {
+    width: 100%;
+    height: 1px;
+
+    margin: 11px 0;
+
+    background: #aeb0b4;
+}
+
+
+/* ==========================================================
+   FILAS DE INFORMACIÓN
+========================================================== */
+
+.analysis-result-info-row {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 10px;
+}
+
+.analysis-result-info-icon {
+    width: 42px;
+    min-width: 42px;
+    height: 42px;
+
+    padding: 10px;
+
+    border-radius: 50%;
+
+    background: #ded0d0;
+
+    color: #181818;
+}
+
+.analysis-result-info-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.analysis-result-info-row strong {
+    display: block;
+
+    margin-top: 2px;
+
+    color: var(--text-main);
+
+    font-size: 15px;
+    line-height: 1.15;
+}
+
+.analysis-result-info-row p {
+    margin: 3px 0 0;
+
+    color: var(--text-soft);
+
+    font-size: 14px;
+    line-height: 1.15;
+}
+
+.analysis-result-info-row p span {
+    margin: 0 5px;
+}
+
+
+/* ==========================================================
+   FECHA Y ESTADO
+========================================================== */
+
+.analysis-result-detail {
+    margin: 10px 0 0 52px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    color: var(--text-soft);
+
+    font-size: 14px;
+}
+
+.analysis-result-detail strong {
+    color: var(--text-main);
+    font-weight: 500;
+}
+
+
+/* ==========================================================
+   DESCARGAR PDF
+========================================================== */
+
+.analysis-result-download {
+    width: 100%;
+    min-height: 40px;
+
+    margin: 9px 0 0;
+
+    border-radius: 11px;
+
+    background: var(--primary);
+
+    color: #ffffff;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 9px;
+
+    font-size: 15px;
+
+    text-decoration: none;
+
+    flex-shrink: 0;
+}
+
+.analysis-result-download:hover {
+    background: var(--primary-dark);
+}
+
+.analysis-result-download__icon {
+    width: 20px;
+    height: 20px;
+}
+
+.analysis-result-download__icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+
+/* ==========================================================
+   VISTA PREVIA PDF
+========================================================== */
+
+.analysis-result-viewer {
+    flex: 1;
+    min-height: 0;
+
+    width: 100%;
+
+    margin-top: 12px;
+
+    overflow: hidden;
+
+    border: 1px solid #a5a7ad;
+    border-radius: 14px;
+
+    background: #ffffff;
+}
+
+.analysis-result-viewer__frame {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    min-height: 0;
+
+    border: 0;
+
+    background: #ffffff;
+}
+
+
+/* ==========================================================
+   AVISO INFERIOR
+========================================================== */
+
+.analysis-result-notice {
+    flex-shrink: 0;
+
+    width: calc(100% - 10px);
+    min-height: 34px;
+
+    margin: 14px auto 0;
+
+    padding: 7px 14px;
+
+    border-radius: 9px;
+
+    background: #dedede;
+
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    color: var(--text-main);
+
+    font-size: 13px;
+    line-height: 1.15;
+}
+
+.analysis-result-notice__icon {
+    width: 18px;
+    min-width: 18px;
+    height: 18px;
+}
+
+.analysis-result-notice__icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+
+/* ==========================================================
+   PANTALLAS DE POCA ALTURA
+========================================================== */
+
+@media (min-width: 993px) and (max-height: 800px) {
+
+    .analysis-result-breadcrumb {
+        margin-bottom: 8px;
+    }
+
+    .analysis-result-header {
+        margin-bottom: 12px;
+    }
+
+    .analysis-result-heading__title {
+        font-size: 23px;
+    }
+
+    .analysis-result-grid {
+        grid-template-columns:
+            320px
+            minmax(0, 1fr);
+
+        gap: 18px;
+    }
+
+    .analysis-result-info,
+    .analysis-result-preview {
+        padding: 11px 14px;
+    }
+
+    .analysis-result-divider {
+        margin: 8px 0;
+    }
+
+    .analysis-result-info-icon {
+        width: 38px;
+        min-width: 38px;
+        height: 38px;
+
+        padding: 9px;
+    }
+
+    .analysis-result-detail {
+        margin-top: 7px;
+        margin-left: 48px;
+    }
+
+    .analysis-result-notice {
+        margin-top: 10px;
+
+        min-height: 30px;
+
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 992px) {
+
+    .analysis-result-page {
+        height: auto;
+
+        overflow: visible;
+    }
+
+    .analysis-result-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .analysis-result-back {
+        width: 100%;
+    }
+
+    .analysis-result-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .analysis-result-viewer {
+        height: 450px;
+        flex: none;
+    }
+
+}
+
+
+/* ==========================================================
+   CELULAR
+========================================================== */
+
+@media (max-width: 576px) {
+
+    .analysis-result-heading__title {
+        font-size: 22px;
+    }
+
+    .analysis-result-heading__description {
+        font-size: 14px;
+    }
+
+    .analysis-result-detail {
+        margin-left: 0;
+    }
+
+    .analysis-result-viewer {
+        height: 420px;
+    }
+
+    .analysis-result-notice {
+        align-items: flex-start;
+    }
+
+}
+
+/* ==========================================================
+   BOTÓN PANTALLA COMPLETA DEL PDF
+========================================================== */
+
+.analysis-result-viewer {
+    position: relative;
+}
+
+.analysis-result-viewer__fullscreen {
+    position: absolute;
+
+    top: 10px;
+    right: 10px;
+
+    z-index: 10;
+
+    width: 34px;
+    height: 34px;
+
+    padding: 7px;
+
+    border: 1px solid #dedede;
+    border-radius: 6px;
+
+    background: rgba(255, 255, 255, 0.95);
+
+    color: #303030;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        transform 0.15s ease;
+}
+
+.analysis-result-viewer__fullscreen:hover {
+    background: #ffffff;
+
+    transform: scale(1.04);
+}
+
+.analysis-result-viewer__fullscreen svg {
+    width: 100%;
+    height: 100%;
+}
+
+
+/* ==========================================================
+   VISOR EN PANTALLA COMPLETA
+========================================================== */
+
+.analysis-result-viewer:fullscreen {
+    width: 100vw;
+    height: 100vh;
+
+    margin: 0;
+
+    border: none;
+    border-radius: 0;
+
+    background: #ffffff;
+}
+
+.analysis-result-viewer:fullscreen
+.analysis-result-viewer__frame {
+    width: 100%;
+    height: 100%;
+}
+
+.analysis-result-viewer:fullscreen
+.analysis-result-viewer__fullscreen {
+    top: 14px;
+    right: 14px;
+}
