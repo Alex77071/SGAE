@@ -9386,3 +9386,180 @@ body.app-body {
 .about-team__table-wrap {
     overflow: visible;
 }
+/* ==========================================================
+   ACERCA DE - TEXTO DEL EQUIPO DEL PROYECTO
+========================================================== */
+
+.about-info-card--developer-open
+.about-developer__details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    padding: 10px 8px 10px 0;
+
+    text-align: left;
+}
+
+
+/* Título "Equipo del proyecto" */
+
+.about-developer__heading {
+    margin: 0 0 16px;
+
+    color: #2f3547;
+
+    font-size: 18px;
+    line-height: 1.2;
+
+    font-weight: 700;
+
+    text-align: left;
+}
+
+
+/* Párrafos */
+
+.about-developer__text {
+    margin: 0 0 20px;
+
+    color: #2f3547;
+
+    font-size: 16px;
+    line-height: 1.45;
+
+    font-weight: 400;
+
+    text-align: left;
+}
+
+
+/* El último párrafo no necesita margen abajo */
+
+.about-developer__text:last-child {
+    margin-bottom: 0;
+}
+
+/* ==========================================================
+   ACERCA DE - AJUSTE DE TIPOGRAFÍA DEL EQUIPO
+========================================================== */
+
+/*
+ * "Equipo del proyecto"
+ * Igual que "Desarrollado por" del lado izquierdo.
+ */
+.about-developer__heading {
+    margin: 0 0 16px;
+
+    font-family: inherit;
+
+    font-size: 16px;
+    line-height: 1.2;
+
+    font-weight: 700;
+
+    color: var(--text-main);
+}
+
+
+/*
+ * Textos del lado derecho.
+ * Misma tipografía que:
+ * "El Sistema de Gestión y Análisis de Evidencias permite..."
+ */
+.about-developer__text {
+    margin: 0;
+
+    font-family: inherit;
+
+    font-size: 16px;
+    line-height: 1.35;
+
+    font-weight: 400;
+
+    color: var(--text-main);
+}
+
+
+/*
+ * Espacio entre:
+ *
+ * "Este sistema fue desarrollado..."
+ *
+ * y
+ *
+ * "El equipo está conformado por..."
+ */
+.about-developer__text + .about-developer__text {
+    margin-top: 18px;
+}
+
+
+/* ==========================================================
+   ACERCA DE - CORRECCIÓN DEFINITIVA DE TIPOGRAFÍA
+========================================================== */
+
+
+/*
+ * "Equipo del proyecto"
+ *
+ * Debe verse exactamente como "Desarrollado por"
+ * del lado izquierdo cuando la tarjeta está expandida.
+ */
+.about-modal--developer-open
+.about-info-card--developer-open
+.about-developer__heading {
+
+    margin: 0 0 16px;
+
+    font-family: inherit !important;
+
+    font-size: 16px !important;
+    line-height: 1.2 !important;
+
+    font-weight: 700 !important;
+
+    color: var(--text-main) !important;
+
+    text-align: left;
+}
+
+
+/*
+ * Los dos párrafos nuevos tendrán exactamente
+ * la misma tipografía que el texto superior:
+ *
+ * "El Sistema de Gestión y Análisis de Evidencias permite..."
+ */
+.about-modal--developer-open
+.about-info-card--developer-open
+.about-developer__text {
+
+    margin: 0;
+
+    font-family: inherit !important;
+
+    font-size: 16px !important;
+    line-height: 1.35 !important;
+
+    font-weight: 500 !important;
+
+    color: var(--text-main) !important;
+
+    text-align: left;
+}
+
+
+/*
+ * Salto/espacio antes de:
+ *
+ * "El equipo está conformado por..."
+ */
+.about-modal--developer-open
+.about-info-card--developer-open
+.about-developer__text
++
+.about-developer__text {
+
+    margin-top: 20px !important;
+}

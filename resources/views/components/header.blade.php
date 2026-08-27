@@ -504,199 +504,92 @@
 
 
                
-                    {{-- DESARROLLADO POR --}}
-                    <article
-                        class="about-info-card about-info-card--developer"
-                        id="aboutDeveloperCard"
-                        role="button"
-                        tabindex="0"
-                        aria-expanded="false"
-                    >
+                {{-- DESARROLLADO POR --}}
+                <article
+                    class="about-info-card about-info-card--developer"
+                    id="aboutDeveloperCard"
+                    role="button"
+                    tabindex="0"
+                    aria-expanded="false"
+                >
 
-                        {{-- INFORMACIÓN QUE YA SE MUESTRA --}}
-                        <div class="about-developer__summary">
+                    {{-- INFORMACIÓN QUE SE MUESTRA EN ESTADO NORMAL --}}
+                    <div class="about-developer__summary">
 
-                            <span class="about-info-card__icon" aria-hidden="true">
-
-                                <svg
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    stroke-width="1.7"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                >
-                                    <circle cx="9" cy="8" r="3"></circle>
-                                    <circle cx="16" cy="8" r="3"></circle>
-
-                                    <path d="M3 20v-1.5A5.5 5.5 0 0 1 8.5 13h1A5.5 5.5 0 0 1 15 18.5V20"></path>
-
-                                    <path d="M14 14a5 5 0 0 1 7 4.5V20"></path>
-                                </svg>
-
-                            </span>
-
-                            <h3>
-                                Desarrollado por
-                            </h3>
-
-                            <p>
-                                Estancias profesionales<br>
-                                Universidad del Mar<br>
-                                2026
-                            </p>
-
-                            <span class="about-developer__hint">
-                                Ver equipo del proyecto
-                            </span>
-
-                        </div>
-
-
-                        {{-- INFORMACIÓN QUE APARECE AL EXPANDIR --}}
-                        <div
-                            class="about-developer__details"
+                        <span
+                            class="about-info-card__icon"
                             aria-hidden="true"
                         >
 
-                            <h3 class="about-team__title">
-                                Equipo del proyecto
-                            </h3>
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.7"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <circle cx="9" cy="8" r="3"></circle>
+                                <circle cx="16" cy="8" r="3"></circle>
+
+                                <path
+                                    d="M3 20v-1.5A5.5 5.5 0 0 1 8.5 13h1A5.5 5.5 0 0 1 15 18.5V20"
+                                ></path>
+
+                                <path
+                                    d="M14 14a5 5 0 0 1 7 4.5V20"
+                                ></path>
+                            </svg>
+
+                        </span>
 
 
-                            {{-- ENCABEZADO DEL EQUIPO --}}
-                            <div class="about-team__header">
-
-                                <span class="about-team__header-icon" aria-hidden="true">
-
-                                    <svg
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="1.7"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                    >
-                                        <circle cx="8" cy="8" r="3"></circle>
-                                        <circle cx="16" cy="8" r="3"></circle>
-
-                                        <path d="M2.5 20v-1.5A5.5 5.5 0 0 1 8 13h1A5.5 5.5 0 0 1 14.5 18.5V20"></path>
-
-                                        <path d="M13.5 14a5 5 0 0 1 8 4V20"></path>
-                                    </svg>
-
-                                </span>
+                        <h3>
+                            Desarrollado por
+                        </h3>
 
 
-                                <div>
-
-                                    <strong>
-                                        Desarrollado por
-                                    </strong>
-
-                                    <span>
-                                        Estudiantes en Estancias Profesionales
-                                    </span>
-
-                                </div>
-
-                            </div>
+                        <p>
+                            Estancias profesionales<br>
+                            Universidad del Mar<br>
+                            2026
+                        </p>
 
 
-                            {{-- TABLA --}}
-                            <div class="about-team__table-wrap">
+                        <span class="about-developer__hint">
+                            Ver equipo del proyecto
+                        </span>
 
-                                <table class="about-team__table">
-
-                                    <thead>
-
-                                        <tr>
-                                            <th>Nombre</th>
-                                            <th>Universidad</th>
-                                            <th>Carrera</th>
-                                        </tr>
-
-                                    </thead>
+                    </div>
 
 
-                                    <tbody>
+                    {{-- INFORMACIÓN QUE APARECE AL EXPANDIR --}}
+                    <div
+                        class="about-developer__details"
+                        aria-hidden="true"
+                    >
 
-                                        <tr>
-
-                                            <td>
-                                                Cortés Pérez Iván Alexander
-                                            </td>
-
-                                            <td>
-                                                Universidad del Mar
-                                            </td>
-
-                                            <td>
-                                                Licenciatura en Informática
-                                            </td>
-
-                                        </tr>
+                        <h3 class="about-developer__heading">
+                            Equipo del proyecto
+                        </h3>
 
 
-                                        <tr>
-
-                                            <td>
-                                                Cruz Matias Allan Daniel
-                                            </td>
-
-                                            <td>
-                                                Universidad del Mar
-                                            </td>
-
-                                            <td>
-                                                Licenciatura en Informática
-                                            </td>
-
-                                        </tr>
+                        <p class="about-developer__text">
+                            Este sistema fue diseñado y desarrollado por estudiantes en Estancias
+                            Profesionales de la Universidad del Mar durante el año 2026.<br>
+                        </p>
 
 
-                                        <tr>
+                        <p class="about-developer__text">
+                            El equipo está conformado por Iván Alexander Cortés Pérez,
+                            Allan Daniel Cruz Matias, Alejandra Jiménez Venegas y
+                            Lizeth Elisa Sánchez Jiménez, estudiantes de la
+                            Licenciatura en Informática de la Universidad del Mar.
+                        </p>
 
-                                            <td>
-                                                Jiménez Venegas Alejandra
-                                            </td>
+                    </div>
 
-                                            <td>
-                                                Universidad del Mar
-                                            </td>
-
-                                            <td>
-                                                Licenciatura en Informática
-                                            </td>
-
-                                        </tr>
-
-
-                                        <tr>
-
-                                            <td>
-                                                Sánchez Jiménez Lizeth Elisa
-                                            </td>
-
-                                            <td>
-                                                Universidad del Mar
-                                            </td>
-
-                                            <td>
-                                                Licenciatura en Informática
-                                            </td>
-
-                                        </tr>
-
-                                    </tbody>
-
-                                </table>
-
-                            </div>
-
-                        </div>
-
-                    </article>
+                </article>
 
             </div>
 
