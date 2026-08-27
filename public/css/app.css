@@ -9633,3 +9633,75 @@ body.app-body {
 
     text-align: left !important;
 }
+
+/* ==========================================================
+   ACERCA DE - HOVER EN TODAS LAS TARJETAS
+========================================================== */
+
+.about-info-card {
+    cursor: pointer;
+
+    transition:
+        background-color 0.22s ease,
+        border-color 0.22s ease,
+        color 0.22s ease,
+        transform 0.22s ease,
+        box-shadow 0.22s ease;
+}
+
+
+/* ==========================================================
+   AL PASAR EL CURSOR
+========================================================== */
+
+.about-info-card:hover {
+    background: var(--primary) !important;
+    border-color: var(--primary) !important;
+
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 8px 20px
+        rgba(130, 50, 51, 0.18);
+}
+
+
+/* ==========================================================
+   TEXTO BLANCO
+========================================================== */
+
+.about-info-card:hover h3,
+.about-info-card:hover p {
+    color: #ffffff !important;
+}
+
+
+/* ==========================================================
+   ICONOS BLANCOS
+========================================================== */
+
+.about-info-card:hover
+.about-info-card__icon {
+    color: #ffffff !important;
+}
+
+
+/* Los SVG utilizan currentColor */
+
+.about-info-card:hover
+.about-info-card__icon svg {
+    color: #ffffff !important;
+    stroke: currentColor;
+}
+
+
+/* ==========================================================
+   TEXTO "VER EQUIPO" SI EXISTE
+========================================================== */
+
+.about-info-card:hover
+.about-developer__hint {
+    color: #ffffff !important;
+
+    opacity: 1;
+}
