@@ -405,57 +405,19 @@
 
 
         {{-- CONTENIDO --}}
-      <div class="about-modal__intro">
+        <div class="about-modal__content">
 
-    {{-- LOGO USALAB --}}
-    <div class="about-modal__brand">
+            <div class="about-modal__intro">
 
-        <img
-            src="{{ asset('images/logos/usalab_logo2.png') }}"
-            alt="UsaLab - Laboratorio de Usabilidad"
-            class="about-modal__main-logo"
-        >
+                <div class="about-modal__brand">
 
-    </div>
+                    <img
+                        src="{{ asset('images/logos/usalab_logo2.png') }}"
+                        alt="UsaLab - Laboratorio de Usabilidad"
+                        class="about-modal__main-logo"
+                    >
 
-
-    {{-- INFORMACIÓN DEL LADO DERECHO --}}
-    <div class="about-modal__intro-content">
-
-        {{-- TEXTO NORMAL --}}
-        <p
-            class="about-modal__description"
-            id="aboutDefaultDescription"
-        >
-            El Sistema de Gestión y Análisis de Evidencias
-            permite descargar, analizar y consultar las
-            evidencias de los exámenes realizados en Moodle
-            mediante técnicas de Inteligencia Artificial.
-        </p>
-
-
-        {{-- TEXTO AL ABRIR "SUPERVISADO POR" --}}
-        <div
-            class="about-supervisor__intro"
-            id="aboutSupervisorIntro"
-            hidden
-        >
-
-            <h3 class="about-supervisor__intro-title">
-                Supervisores del proyecto
-            </h3>
-
-            <p class="about-supervisor__intro-description">
-                El desarrollo del Sistema de Gestión y Análisis
-                de Evidencias fue supervisado por integrantes
-                del Laboratorio de Usabilidad UsaLab.
-            </p>
-
-        </div>
-
-    </div>
-
-</div>
+                </div>
 
 
                 <p class="about-modal__description">
@@ -550,55 +512,69 @@
     </div>
 
 
-  {{-- =====================================================
-     VISTA EXPANDIDA
-====================================================== --}}
-
-<div
-    class="about-supervisor__details"
-    id="aboutSupervisorDetails"
-    aria-hidden="true"
->
-
-    {{-- X INTERNA --}}
-    <button
-        type="button"
-        class="about-supervisor__close"
-        id="aboutSupervisorClose"
-        aria-label="Regresar a la vista principal de Acerca de"
+    {{-- VISTA EXPANDIDA --}}
+    <div
+        class="about-supervisor__details"
+        id="aboutSupervisorDetails"
+        aria-hidden="true"
     >
-        <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+
+        {{-- X INTERNA --}}
+        <button
+            type="button"
+            class="about-supervisor__close"
+            id="aboutSupervisorClose"
+            aria-label="Regresar a la vista principal de Acerca de"
         >
-            <path d="M18 6 6 18"></path>
-            <path d="m6 6 12 12"></path>
-        </svg>
-    </button>
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            >
+                <path d="M18 6 6 18"></path>
+                <path d="m6 6 12 12"></path>
+            </svg>
+        </button>
 
 
-    {{-- NOMBRES EN TEXTO PLANO --}}
-    <div class="about-supervisor__names">
+        {{-- TÍTULO --}}
+        <h3 class="about-supervisor__title">
+            Supervisores del proyecto
+        </h3>
 
-        <p>
-            I. C. David del Castillo Lale
+
+        {{-- DESCRIPCIÓN --}}
+        <p class="about-supervisor__description">
+            El desarrollo del Sistema de Gestión y Análisis de Evidencias
+            fue supervisado por integrantes del Laboratorio de Usabilidad
+            UsaLab.
         </p>
 
-        <p>
-            I. C. Carlos Alberto Martínez Sandoval
-        </p>
 
-        <p>
-            Dr. Mario Alberto Moreno Rocha
-        </p>
+        {{-- NOMBRES EN TEXTO PLANO --}}
+        <div class="about-supervisor__names">
+
+            <p>
+                I. C. David del Castillo Lale
+            </p>
+
+            <p>
+                I. C. Carlos Alberto Martínez Sandoval
+            </p>
+
+            <p>
+                Dr. Mario Alberto Moreno Rocha
+            </p>
+
+        </div>
 
     </div>
 
 </div>
+
                
                 {{-- DESARROLLADO POR --}}
                 <article
