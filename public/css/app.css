@@ -10145,3 +10145,138 @@ body.app-body {
     }
 
 }
+
+/* ==========================================================
+   ACERCA DE - TIPOGRAFÍAS DEFINITIVAS
+========================================================== */
+
+
+/* ==========================================================
+   CUADROS VERDES
+   "Acerca de Sistema de Gestión..."
+   "Equipo del proyecto"
+   DEBEN SER EXACTAMENTE IGUALES
+========================================================== */
+
+.about-modal__header-title,
+.about-modal--developer-open
+.about-info-card--developer-open
+.about-developer__heading {
+
+    font-family: inherit !important;
+
+    font-size: 22px !important;
+
+    font-weight: 700 !important;
+
+    line-height: 1.2 !important;
+
+    color: #823233 !important;
+}
+
+
+/* Ajuste únicamente de posición para "Equipo del proyecto" */
+.about-modal--developer-open
+.about-info-card--developer-open
+.about-developer__heading {
+
+    margin: 0 0 18px !important;
+
+    text-align: left !important;
+}
+
+
+/* ==========================================================
+   CUADROS AMARILLOS
+
+   Texto superior:
+   "El Sistema de Gestión y Análisis de Evidencias permite..."
+
+   Y los dos textos nuevos.
+
+   LOS TRES DEBEN TENER EXACTAMENTE:
+   - mismo tipo de letra
+   - mismo tamaño
+   - mismo grosor
+   - sin negritas
+========================================================== */
+
+.about-modal__description,
+.about-modal--developer-open
+.about-info-card--developer-open
+.about-developer__text {
+
+    font-family: inherit !important;
+
+    font-size: 16px !important;
+
+    font-weight: 400 !important;
+
+    line-height: 1.45 !important;
+
+    color: #2f3547 !important;
+
+    text-align: left !important;
+}
+
+
+/* Quitar cualquier negrita heredada en los textos nuevos */
+.about-modal--developer-open
+.about-info-card--developer-open
+.about-developer__text strong {
+
+    font-weight: 400 !important;
+}
+
+
+/* ==========================================================
+   ESPACIO ENTRE LOS DOS PÁRRAFOS
+========================================================== */
+
+.about-modal--developer-open
+.about-info-card--developer-open
+.about-developer__text {
+
+    margin: 0 !important;
+}
+
+
+/*
+   Salto visual antes de:
+   "El equipo está conformado por..."
+*/
+.about-modal--developer-open
+.about-info-card--developer-open
+.about-developer__text
++
+.about-developer__text {
+
+    margin-top: 22px !important;
+}
+/* ==========================================================
+   ACERCA DE - TEXTO BLANCO EN TARJETA EXPANDIDA
+========================================================== */
+
+/* Título "Equipo del proyecto" */
+.about-modal--developer-open
+.about-info-card--developer-open
+.about-developer__heading {
+    color: #ffffff !important;
+}
+
+
+/* Los dos párrafos del equipo */
+.about-modal--developer-open
+.about-info-card--developer-open
+.about-developer__text {
+    color: #ffffff !important;
+}
+
+
+/* Por si dentro del texto existe algún <strong> */
+.about-modal--developer-open
+.about-info-card--developer-open
+.about-developer__text strong {
+    color: #ffffff !important;
+    font-weight: 400 !important;
+}
