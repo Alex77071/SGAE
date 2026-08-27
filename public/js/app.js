@@ -1372,25 +1372,37 @@ document.addEventListener('DOMContentLoaded', function () {
 /* ==========================================================
    ACERCA DE - SUPERVISADO POR
 ========================================================== */
+/* ==========================================================
+   ACERCA DE - SUPERVISADO POR
+========================================================== */
 
 document.addEventListener(
     'DOMContentLoaded',
     function () {
+
+        const aboutModal =
+            document.getElementById(
+                'aboutModal'
+            );
+
 
         const cards =
             document.querySelector(
                 '.about-modal__cards'
             );
 
+
         const supervisorCard =
             document.getElementById(
                 'aboutSupervisorCard'
             );
 
+
         const supervisorDetails =
             document.getElementById(
                 'aboutSupervisorDetails'
             );
+
 
         const supervisorClose =
             document.getElementById(
@@ -1398,24 +1410,39 @@ document.addEventListener(
             );
 
 
+        const defaultDescription =
+            document.getElementById(
+                'aboutDefaultDescription'
+            );
+
+
+        const supervisorIntro =
+            document.getElementById(
+                'aboutSupervisorIntro'
+            );
+
+
         if (
+            !aboutModal ||
             !cards ||
             !supervisorCard ||
             !supervisorDetails ||
-            !supervisorClose
+            !supervisorClose ||
+            !defaultDescription ||
+            !supervisorIntro
         ) {
             return;
         }
 
 
         /* =====================================================
-           ABRIR
+           ABRIR SUPERVISADO POR
         ====================================================== */
 
         function abrirSupervisores() {
 
             /*
-             * Cerrar "Desarrollado por"
+             * Cerrar Desarrollado por
              * si estuviera abierto.
              */
 
@@ -1424,10 +1451,23 @@ document.addEventListener(
             );
 
 
+            aboutModal.classList.remove(
+                'about-modal--developer-open'
+            );
+
+
             const developerCard =
-                document.querySelector(
-                    '.about-info-card--developer'
+                document.getElementById(
+                    'aboutDeveloperCard'
                 );
+
+
+            const developerDetails =
+                developerCard
+                    ? developerCard.querySelector(
+                        '.about-developer__details'
+                    )
+                    : null;
 
 
             if (developerCard) {
@@ -1436,11 +1476,27 @@ document.addEventListener(
                     'about-info-card--developer-open'
                 );
 
+
+                developerCard.setAttribute(
+                    'aria-expanded',
+                    'false'
+                );
+
+            }
+
+
+            if (developerDetails) {
+
+                developerDetails.setAttribute(
+                    'aria-hidden',
+                    'true'
+                );
+
             }
 
 
             /*
-             * Abrir supervisores.
+             * Expandir Supervisado por.
              */
 
             cards.classList.add(
@@ -1464,11 +1520,23 @@ document.addEventListener(
                 'false'
             );
 
+
+            /*
+             * Cambiar información superior.
+             */
+
+            defaultDescription.hidden =
+                true;
+
+
+            supervisorIntro.hidden =
+                false;
+
         }
 
 
         /* =====================================================
-           CERRAR
+           CERRAR SUPERVISADO POR
         ====================================================== */
 
         function cerrarSupervisores() {
@@ -1494,16 +1562,33 @@ document.addEventListener(
                 'true'
             );
 
+
+            /*
+             * Restaurar descripción normal.
+             */
+
+            defaultDescription.hidden =
+                false;
+
+
+            supervisorIntro.hidden =
+                true;
+
         }
 
 
         /* =====================================================
-           CLICK
+           CLICK EN LA TARJETA
         ====================================================== */
 
         supervisorCard.addEventListener(
             'click',
             function (event) {
+
+                /*
+                 * Si se hizo clic sobre la X,
+                 * este evento no debe abrir otra vez.
+                 */
 
                 if (
                     event.target.closest(
@@ -1514,12 +1599,16 @@ document.addEventListener(
                 }
 
 
-                if (
-                    !supervisorCard.classList.contains(
+                const estaAbierto =
+                    supervisorCard.classList.contains(
                         'about-info-card--supervisor-open'
-                    )
-                ) {
+                    );
+
+
+                if (!estaAbierto) {
+
                     abrirSupervisores();
+
                 }
 
             }
@@ -1535,7 +1624,9 @@ document.addEventListener(
             function (event) {
 
                 event.preventDefault();
+
                 event.stopPropagation();
+
 
                 cerrarSupervisores();
 
@@ -1558,12 +1649,17 @@ document.addEventListener(
 
                     event.preventDefault();
 
-                    if (
-                        !supervisorCard.classList.contains(
+
+                    const estaAbierto =
+                        supervisorCard.classList.contains(
                             'about-info-card--supervisor-open'
-                        )
-                    ) {
+                        );
+
+
+                    if (!estaAbierto) {
+
                         abrirSupervisores();
+
                     }
 
                 }

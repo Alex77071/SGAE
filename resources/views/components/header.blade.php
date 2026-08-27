@@ -407,30 +407,57 @@
         {{-- CONTENIDO --}}
         <div class="about-modal__content">
 
-            <div class="about-modal__intro">
+           <div class="about-modal__intro">
 
-                <div class="about-modal__brand">
+    {{-- LOGO USALAB --}}
+    <div class="about-modal__brand">
 
-                    <img
-                        src="{{ asset('images/logos/usalab_logo2.png') }}"
-                        alt="UsaLab - Laboratorio de Usabilidad"
-                        class="about-modal__main-logo"
-                    >
+        <img
+            src="{{ asset('images/logos/usalab_logo2.png') }}"
+            alt="UsaLab - Laboratorio de Usabilidad"
+            class="about-modal__main-logo"
+        >
 
-                </div>
+    </div>
 
 
-                <p class="about-modal__description">
+    {{-- CONTENIDO DEL LADO DERECHO --}}
+    <div class="about-modal__intro-content">
 
-                    El Sistema de Gestión y Análisis de Evidencias
-                    permite descargar, analizar y consultar las
-                    evidencias de los exámenes realizados en Moodle
-                    mediante técnicas de Inteligencia Artificial.
+        {{-- DESCRIPCIÓN NORMAL --}}
+        <p
+            class="about-modal__description"
+            id="aboutDefaultDescription"
+        >
+            El Sistema de Gestión y Análisis de Evidencias
+            permite descargar, analizar y consultar las
+            evidencias de los exámenes realizados en Moodle
+            mediante técnicas de Inteligencia Artificial.
+        </p>
 
-                </p>
 
-            </div>
+        {{-- TEXTO QUE APARECE AL ABRIR SUPERVISADO POR --}}
+        <div
+            class="about-supervisor__intro"
+            id="aboutSupervisorIntro"
+            hidden
+        >
 
+            <h3 class="about-supervisor__intro-title">
+                Supervisores del proyecto
+            </h3>
+
+            <p class="about-supervisor__intro-description">
+                El desarrollo del Sistema de Gestión y Análisis
+                de Evidencias fue supervisado por integrantes
+                del Laboratorio de Usabilidad UsaLab.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
 
             {{-- INFORMACIÓN INFERIOR --}}
             <div class="about-modal__cards">
@@ -513,68 +540,61 @@
 
 
     {{-- VISTA EXPANDIDA --}}
-    <div
-        class="about-supervisor__details"
-        id="aboutSupervisorDetails"
-        aria-hidden="true"
+  {{-- =====================================================
+     VISTA EXPANDIDA
+====================================================== --}}
+
+<div
+    class="about-supervisor__details"
+    id="aboutSupervisorDetails"
+    aria-hidden="true"
+>
+
+    {{-- X INTERNA --}}
+    <button
+        type="button"
+        class="about-supervisor__close"
+        id="aboutSupervisorClose"
+        aria-label="Regresar a la vista principal de Acerca de"
     >
-
-        {{-- X INTERNA --}}
-        <button
-            type="button"
-            class="about-supervisor__close"
-            id="aboutSupervisorClose"
-            aria-label="Regresar a la vista principal de Acerca de"
+        <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
         >
-            <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.8"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-            >
-                <path d="M18 6 6 18"></path>
-                <path d="m6 6 12 12"></path>
-            </svg>
-        </button>
+            <path d="M18 6 6 18"></path>
+            <path d="m6 6 12 12"></path>
+        </svg>
+    </button>
 
 
-        {{-- TÍTULO --}}
-        <h3 class="about-supervisor__title">
-            Supervisores del proyecto
-        </h3>
+       {{-- NOMBRES EN TEXTO PLANO --}}
+    <div class="about-supervisor__names">
 
-
-        {{-- DESCRIPCIÓN --}}
-        <p class="about-supervisor__description">
-            El desarrollo del Sistema de Gestión y Análisis de Evidencias
-            fue supervisado por integrantes del Laboratorio de Usabilidad
-            UsaLab.
+        <p>
+            I. C. David del Castillo Lale
         </p>
 
+        <p>
+            I. C. Carlos Alberto Martínez Sandoval
+        </p>
 
-        {{-- NOMBRES EN TEXTO PLANO --}}
-        <div class="about-supervisor__names">
-
-            <p>
-                I. C. David del Castillo Lale
-            </p>
-
-            <p>
-                I. C. Carlos Alberto Martínez Sandoval
-            </p>
-
-            <p>
-                Dr. Mario Alberto Moreno Rocha
-            </p>
-
-        </div>
+        <p>
+            Dr. Mario Alberto Moreno Rocha
+        </p>
 
     </div>
 
 </div>
+{{-- FIN VISTA EXPANDIDA --}}
 
+</div>
+{{-- FIN TARJETA SUPERVISADO POR --}}
+
+>
                
                 {{-- DESARROLLADO POR --}}
                 <article
@@ -672,3 +692,4 @@
 </div>
 
 </header>
+
