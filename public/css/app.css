@@ -8252,13 +8252,13 @@ body.app-body {
    BOTÓN ENVIAR MENSAJE
 ========================================================== */
 
+
+
 .support-submit-button {
-    width: 65%;
-    min-height: 50px;
+    width: 340px;
+    min-height: 45px;
 
-    margin: 4px 0 0 auto;
-
-    padding: 9px 24px;
+    padding: 8px 20px;
 
     border: 1px solid var(--primary);
     border-radius: 10px;
@@ -8267,38 +8267,46 @@ body.app-body {
 
     color: #ffffff;
 
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
 
-    gap: 12px;
+    gap: 9px;
 
     font-family: inherit;
-
-    font-size: 17px;
+    font-size: 16px;
     font-weight: 500;
 
+    line-height: 1;
+
     cursor: pointer;
+
+    margin: 8px 0 0 auto;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        opacity 0.2s ease;
 }
 
 .support-submit-button__icon {
-    width: 23px;
-    min-width: 23px;
-    height: 23px;
+    width: 22px;
+    height: 22px;
 
     display: inline-flex;
     align-items: center;
     justify-content: center;
 
-    flex: 0 0 23px;
+    flex: 0 0 22px;
 }
 
 .support-submit-button__icon svg {
-    width: 23px !important;
-    height: 23px !important;
-
+    width: 22px;
+    height: 22px;
     display: block;
 }
+
+
 
 .support-submit-button:not(:disabled):hover {
     background: var(--primary-dark);
