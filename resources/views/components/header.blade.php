@@ -503,37 +503,200 @@
                 </article>
 
 
-                {{-- DESARROLLADO POR --}}
-                <article class="about-info-card">
+               
+                    {{-- DESARROLLADO POR --}}
+                    <article
+                        class="about-info-card about-info-card--developer"
+                        id="aboutDeveloperCard"
+                        role="button"
+                        tabindex="0"
+                        aria-expanded="false"
+                    >
 
-                    <span class="about-info-card__icon" aria-hidden="true">
+                        {{-- INFORMACIÓN QUE YA SE MUESTRA --}}
+                        <div class="about-developer__summary">
 
-                        <svg
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="1.7"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
+                            <span class="about-info-card__icon" aria-hidden="true">
+
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="1.7"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                >
+                                    <circle cx="9" cy="8" r="3"></circle>
+                                    <circle cx="16" cy="8" r="3"></circle>
+
+                                    <path d="M3 20v-1.5A5.5 5.5 0 0 1 8.5 13h1A5.5 5.5 0 0 1 15 18.5V20"></path>
+
+                                    <path d="M14 14a5 5 0 0 1 7 4.5V20"></path>
+                                </svg>
+
+                            </span>
+
+                            <h3>
+                                Desarrollado por
+                            </h3>
+
+                            <p>
+                                Estancias profesionales<br>
+                                Universidad del Mar<br>
+                                2026
+                            </p>
+
+                            <span class="about-developer__hint">
+                                Ver equipo del proyecto
+                            </span>
+
+                        </div>
+
+
+                        {{-- INFORMACIÓN QUE APARECE AL EXPANDIR --}}
+                        <div
+                            class="about-developer__details"
+                            aria-hidden="true"
                         >
-                            <circle cx="12" cy="8" r="4"></circle>
-                            <path d="M5 21a7 7 0 0 1 14 0"></path>
-                            <path d="m17 13 2 2 4-4"></path>
-                        </svg>
 
-                    </span>
+                            <h3 class="about-team__title">
+                                Equipo del proyecto
+                            </h3>
 
-                    <h3>
-                        Desarrollado por
-                    </h3>
 
-                    <p>
-                        Estancias profesionales<br>
-                        Universidad del Mar<br>
-                        2026
-                    </p>
+                            {{-- ENCABEZADO DEL EQUIPO --}}
+                            <div class="about-team__header">
 
-                </article>
+                                <span class="about-team__header-icon" aria-hidden="true">
+
+                                    <svg
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="1.7"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    >
+                                        <circle cx="8" cy="8" r="3"></circle>
+                                        <circle cx="16" cy="8" r="3"></circle>
+
+                                        <path d="M2.5 20v-1.5A5.5 5.5 0 0 1 8 13h1A5.5 5.5 0 0 1 14.5 18.5V20"></path>
+
+                                        <path d="M13.5 14a5 5 0 0 1 8 4V20"></path>
+                                    </svg>
+
+                                </span>
+
+
+                                <div>
+
+                                    <strong>
+                                        Desarrollado por
+                                    </strong>
+
+                                    <span>
+                                        Estudiantes en Estancias Profesionales
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            {{-- TABLA --}}
+                            <div class="about-team__table-wrap">
+
+                                <table class="about-team__table">
+
+                                    <thead>
+
+                                        <tr>
+                                            <th>Nombre</th>
+                                            <th>Universidad</th>
+                                            <th>Carrera</th>
+                                        </tr>
+
+                                    </thead>
+
+
+                                    <tbody>
+
+                                        <tr>
+
+                                            <td>
+                                                Cortés Pérez Iván Alexander
+                                            </td>
+
+                                            <td>
+                                                Universidad del Mar
+                                            </td>
+
+                                            <td>
+                                                Licenciatura en Informática
+                                            </td>
+
+                                        </tr>
+
+
+                                        <tr>
+
+                                            <td>
+                                                Cruz Matias Allan Daniel
+                                            </td>
+
+                                            <td>
+                                                Universidad del Mar
+                                            </td>
+
+                                            <td>
+                                                Licenciatura en Informática
+                                            </td>
+
+                                        </tr>
+
+
+                                        <tr>
+
+                                            <td>
+                                                Jiménez Venegas Alejandra
+                                            </td>
+
+                                            <td>
+                                                Universidad del Mar
+                                            </td>
+
+                                            <td>
+                                                Licenciatura en Informática
+                                            </td>
+
+                                        </tr>
+
+
+                                        <tr>
+
+                                            <td>
+                                                Sánchez Jiménez Lizeth Elisa
+                                            </td>
+
+                                            <td>
+                                                Universidad del Mar
+                                            </td>
+
+                                            <td>
+                                                Licenciatura en Informática
+                                            </td>
+
+                                        </tr>
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                        </div>
+
+                    </article>
 
             </div>
 

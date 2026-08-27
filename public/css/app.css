@@ -8392,3 +8392,989 @@ body.app-body {
 
 }
 }
+
+/* ==========================================================
+   ACERCA DE - TARJETAS EXPANSIBLES
+========================================================== */
+
+.about-modal__cards {
+    transition:
+        grid-template-columns 0.38s ease,
+        gap 0.38s ease;
+}
+
+
+/* Permite que cada tarjeta pueda contraerse */
+.about-info-card {
+    min-width: 0;
+
+    transition:
+        opacity 0.28s ease,
+        transform 0.32s ease,
+        background-color 0.22s ease,
+        border-color 0.22s ease,
+        padding 0.32s ease;
+}
+
+
+/* ==========================================================
+   DESARROLLADO POR - ESTADO NORMAL
+========================================================== */
+
+.about-info-card--developer {
+    cursor: pointer;
+
+    overflow: hidden;
+
+    position: relative;
+}
+
+
+/* Vino claro al colocar el mouse encima */
+
+.about-info-card--developer:hover {
+    background: #ead9da;
+
+    border-color: #cda6a8;
+
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 7px 18px rgba(130, 50, 51, 0.10);
+}
+
+
+/* ==========================================================
+   CONTENIDO IZQUIERDO
+========================================================== */
+
+.about-developer__summary {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    text-align: center;
+
+    flex-shrink: 0;
+
+    transition:
+        width 0.38s ease,
+        flex-basis 0.38s ease,
+        padding 0.38s ease;
+}
+
+
+.about-developer__summary h3 {
+    margin:
+        0
+        0
+        16px;
+}
+
+
+.about-developer__summary p {
+    margin: 0;
+
+    line-height: 1.35;
+}
+
+
+/* Texto pequeño de ayuda */
+
+.about-developer__hint {
+    margin-top: 12px;
+
+    color: var(--primary);
+
+    font-size: 12px;
+    font-weight: 400;
+
+    opacity: 0;
+
+    transform: translateY(4px);
+
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.about-info-card--developer:hover
+.about-developer__hint {
+    opacity: 0.8;
+
+    transform: translateY(0);
+}
+
+
+/* ==========================================================
+   DETALLES - OCULTOS INICIALMENTE
+========================================================== */
+
+.about-developer__details {
+    width: 0;
+    max-width: 0;
+
+    /* Evita que el contenido oculto aumente la altura */
+    height: 0;
+    max-height: 0;
+
+    min-width: 0;
+
+    opacity: 0;
+    visibility: hidden;
+
+    overflow: hidden;
+
+    pointer-events: none;
+
+    transform: translateX(35px);
+
+    transition:
+        opacity 0.28s ease 0.08s,
+        transform 0.38s ease,
+        max-width 0.38s ease;
+}
+
+
+/* ==========================================================
+   AL EXPANDIR DESARROLLADO POR
+========================================================== */
+
+/*
+ * Las primeras dos columnas se contraen
+ * y la tercera ocupa todo el ancho.
+ */
+
+.about-modal__cards--developer-open {
+    grid-template-columns:
+        0fr
+        0fr
+        minmax(0, 1fr);
+
+    gap: 0;
+}
+
+
+/*
+ * Versión y Universidad desaparecen
+ * suavemente.
+ */
+
+.about-modal__cards--developer-open
+.about-info-card:not(.about-info-card--developer) {
+    min-width: 0;
+
+    padding-left: 0;
+    padding-right: 0;
+
+    border-width: 0;
+
+    opacity: 0;
+
+    overflow: hidden;
+
+    pointer-events: none;
+
+    transform:
+        translateX(-25px)
+        scale(0.96);
+}
+
+
+/* ==========================================================
+   TARJETA GRANDE
+========================================================== */
+
+.about-info-card--developer-open {
+    width: 100%;
+
+    min-height: 300px;
+
+    padding: 20px;
+
+    background: #ffffff;
+
+    border-color: #d0d2d5;
+
+    display: flex;
+
+    flex-direction: row;
+
+    align-items: stretch;
+
+    justify-content: flex-start;
+
+    text-align: left;
+
+    transform: none;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 8px 22px rgba(0, 0, 0, 0.07);
+}
+
+
+/*
+ * La información original pasa
+ * al lado izquierdo.
+ */
+
+.about-info-card--developer-open
+.about-developer__summary {
+    flex:
+        0
+        0
+        190px;
+
+    width: 190px;
+
+    padding:
+        15px
+        18px
+        15px
+        2px;
+
+    border-right:
+        1px solid #dedfe1;
+
+    justify-content: center;
+
+    align-items: center;
+
+    text-align: center;
+}
+
+
+.about-info-card--developer-open
+.about-developer__hint {
+    display: none;
+}
+
+
+/*
+ * Aparece la información del equipo.
+ */
+
+.about-info-card--developer-open
+.about-developer__details {
+    flex: 1;
+
+    width: auto;
+    max-width: 100%;
+
+    /* Al expandir permitimos nuevamente su altura */
+    height: auto;
+    max-height: none;
+
+    margin-left: 20px;
+
+    opacity: 1;
+    visibility: visible;
+
+    overflow: visible;
+
+    pointer-events: auto;
+
+    transform: translateX(0);
+}
+
+
+/* ==========================================================
+   EQUIPO DEL PROYECTO
+========================================================== */
+
+.about-team__title {
+    margin:
+        0
+        0
+        12px;
+
+    color: var(--primary);
+
+    font-size: 20px;
+
+    font-weight: 700;
+
+    text-align: left;
+}
+
+
+/* ==========================================================
+   CABECERA DEL EQUIPO
+========================================================== */
+
+.about-team__header {
+    min-height: 68px;
+
+    padding:
+        10px
+        14px;
+
+    margin-bottom: 8px;
+
+    border-radius:
+        12px
+        12px
+        0
+        0;
+
+    background: #f3f6fa;
+
+    display: flex;
+    align-items: center;
+
+    gap: 13px;
+}
+
+
+.about-team__header-icon {
+    width: 42px;
+    min-width: 42px;
+    height: 42px;
+
+    border-radius: 50%;
+
+    background: #e8eef8;
+
+    color: var(--primary);
+
+    padding: 8px;
+
+    display: inline-flex;
+}
+
+
+.about-team__header-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+
+.about-team__header div {
+    display: flex;
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+
+.about-team__header strong {
+    color: var(--text-main);
+
+    font-size: 15px;
+    font-weight: 700;
+}
+
+
+.about-team__header span {
+    color: var(--text-main);
+
+    font-size: 13px;
+}
+
+
+/* ==========================================================
+   TABLA
+========================================================== */
+
+.about-team__table-wrap {
+    width: 100%;
+
+    overflow-x: auto;
+
+    border:
+        1px solid
+        #e0e1e3;
+
+    border-radius:
+        0
+        0
+        12px
+        12px;
+}
+
+
+.about-team__table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    table-layout: fixed;
+
+    background: #ffffff;
+}
+
+
+.about-team__table th,
+.about-team__table td {
+    padding:
+        9px
+        10px;
+
+    text-align: left;
+
+    vertical-align: middle;
+
+    color: var(--text-main);
+}
+
+
+.about-team__table th {
+    background: #f4f4f4;
+
+    font-size: 13px;
+
+    font-weight: 700;
+}
+
+
+.about-team__table td {
+    font-size: 12px;
+
+    line-height: 1.25;
+
+    border-top:
+        1px solid
+        #e5e5e5;
+}
+
+
+/* Nombre */
+
+.about-team__table th:nth-child(1),
+.about-team__table td:nth-child(1) {
+    width: 39%;
+}
+
+
+/* Universidad */
+
+.about-team__table th:nth-child(2),
+.about-team__table td:nth-child(2) {
+    width: 26%;
+}
+
+
+/* Carrera */
+
+.about-team__table th:nth-child(3),
+.about-team__table td:nth-child(3) {
+    width: 35%;
+}
+
+/* ==========================================================
+   ACERCA DE EXPANDIDO - RESPONSIVE
+========================================================== */
+
+@media (max-width: 768px) {
+
+    /*
+     * En móvil ya no intentamos mantener
+     * las 3 columnas.
+     */
+
+    .about-modal__cards--developer-open {
+        grid-template-columns: 1fr;
+    }
+
+
+    .about-modal__cards--developer-open
+    .about-info-card:not(.about-info-card--developer) {
+        display: none;
+    }
+
+
+    .about-info-card--developer-open {
+        flex-direction: column;
+
+        min-height: auto;
+    }
+
+
+    .about-info-card--developer-open
+    .about-developer__summary {
+        flex:
+            0
+            0
+            auto;
+
+        width: 100%;
+
+        padding:
+            10px
+            10px
+            18px;
+
+        border-right: none;
+
+        border-bottom:
+            1px solid #dedfe1;
+    }
+
+
+    .about-info-card--developer-open
+    .about-developer__details {
+        width: 100%;
+        max-width: 100%;
+
+        margin:
+            18px
+            0
+            0;
+    }
+
+
+    /*
+     * En pantallas angostas la tabla
+     * puede desplazarse horizontalmente.
+     */
+
+    .about-team__table {
+        min-width: 620px;
+    }
+
+}
+
+/* ==========================================================
+   ACERCA DE - COMPACTAR CUANDO EL EQUIPO ESTÁ ABIERTO
+========================================================== */
+
+.about-modal--developer-open .about-modal__dialog {
+    /*
+     * Todo debe caber dentro de una sola pantalla.
+     */
+    max-height: calc(100dvh - 34px);
+
+    overflow: hidden;
+}
+
+
+/* Encabezado un poco más compacto */
+
+.about-modal--developer-open .about-modal__header {
+    min-height: 68px;
+
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+
+/* Reducimos los espacios generales */
+
+.about-modal--developer-open .about-modal__content {
+    flex: 1;
+
+    min-height: 0;
+
+    padding:
+        16px
+        34px
+        12px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* ==========================================================
+   LOGO + DESCRIPCIÓN
+========================================================== */
+
+.about-modal--developer-open .about-modal__intro {
+    grid-template-columns:
+        230px
+        minmax(0, 1fr);
+
+    gap: 34px;
+
+    margin-bottom: 16px;
+
+    flex-shrink: 0;
+}
+
+
+/* Logo más pequeño */
+
+.about-modal--developer-open .about-modal__main-logo {
+    max-width: 190px;
+    max-height: 150px;
+}
+
+
+/* Descripción un poco más compacta */
+
+.about-modal--developer-open .about-modal__description {
+    font-size: 16px;
+    line-height: 1.35;
+}
+
+
+/* ==========================================================
+   CUADRO EXPANDIDO
+========================================================== */
+
+.about-modal--developer-open
+.about-info-card--developer-open {
+    min-height: 0;
+    height: 270px;
+
+    padding:
+        14px
+        16px;
+}
+
+
+/* Parte izquierda */
+
+.about-modal--developer-open
+.about-info-card--developer-open
+.about-developer__summary {
+    flex-basis: 175px;
+
+    width: 175px;
+
+    padding:
+        8px
+        16px
+        8px
+        0;
+}
+
+
+/* Icono del lado izquierdo */
+
+.about-modal--developer-open
+.about-developer__summary
+.about-info-card__icon {
+    width: 40px;
+    height: 40px;
+
+    margin-bottom: 10px;
+}
+
+
+/* Título */
+
+.about-modal--developer-open
+.about-developer__summary h3 {
+    margin-bottom: 9px;
+
+    font-size: 16px;
+}
+
+
+/* Texto */
+
+.about-modal--developer-open
+.about-developer__summary p {
+    font-size: 14px;
+    line-height: 1.25;
+}
+
+
+/* ==========================================================
+   LADO DERECHO - EQUIPO
+========================================================== */
+
+.about-modal--developer-open
+.about-developer__details {
+    min-height: 0;
+
+    margin-left: 16px;
+}
+
+
+/* Equipo del proyecto */
+
+.about-modal--developer-open
+.about-team__title {
+    margin-bottom: 7px;
+
+    font-size: 17px;
+}
+
+
+/* Cabecera azul/gris */
+
+.about-modal--developer-open
+.about-team__header {
+    min-height: 48px;
+
+    padding:
+        6px
+        10px;
+
+    margin-bottom: 5px;
+}
+
+
+/* Icono de equipo */
+
+.about-modal--developer-open
+.about-team__header-icon {
+    width: 34px;
+    min-width: 34px;
+    height: 34px;
+
+    padding: 6px;
+}
+
+
+/* Textos de cabecera */
+
+.about-modal--developer-open
+.about-team__header strong {
+    font-size: 13px;
+}
+
+.about-modal--developer-open
+.about-team__header span {
+    font-size: 11px;
+}
+
+
+/* ==========================================================
+   TABLA MÁS COMPACTA
+========================================================== */
+
+.about-modal--developer-open
+.about-team__table th,
+.about-modal--developer-open
+.about-team__table td {
+    padding:
+        5px
+        8px;
+}
+
+
+.about-modal--developer-open
+.about-team__table th {
+    font-size: 11px;
+}
+
+
+.about-modal--developer-open
+.about-team__table td {
+    font-size: 10.5px;
+    line-height: 1.15;
+}
+
+
+/* ==========================================================
+   PIE DEL MODAL
+========================================================== */
+
+.about-modal__footer {
+    flex-shrink: 0;
+
+    min-height: 34px;
+
+    padding:
+        7px
+        20px
+        9px;
+
+    border-top:
+        1px solid #eeeeee;
+
+    color: #72747b;
+
+    font-size: 12px;
+    line-height: 1.2;
+
+    font-weight: 400;
+
+    text-align: center;
+
+    background: #ffffff;
+
+    border-radius:
+        0
+        0
+        31px
+        31px;
+}
+/* ==========================================================
+   ACERCA DE - PANTALLAS CON POCA ALTURA
+========================================================== */
+
+@media (max-height: 760px) and (min-width: 769px) {
+
+    .about-modal--developer-open .about-modal__header {
+        min-height: 58px;
+    }
+
+    .about-modal--developer-open .about-modal__content {
+        padding:
+            10px
+            30px
+            8px;
+    }
+
+    .about-modal--developer-open .about-modal__intro {
+        grid-template-columns:
+            190px
+            minmax(0, 1fr);
+
+        margin-bottom: 10px;
+    }
+
+    .about-modal--developer-open .about-modal__main-logo {
+        max-width: 155px;
+        max-height: 115px;
+    }
+
+    .about-modal--developer-open .about-modal__description {
+        font-size: 14px;
+    }
+
+    .about-modal--developer-open
+    .about-info-card--developer-open {
+        height: 240px;
+    }
+
+    .about-modal__footer {
+        min-height: 28px;
+
+        padding:
+            5px
+            16px;
+
+        font-size: 11px;
+    }
+
+}
+
+/* ==========================================================
+   ACERCA DE - IGUALAR TAMAÑO DE TEXTO DEL EQUIPO
+========================================================== */
+
+/* Texto de "Desarrollado por / Estudiantes..." */
+.about-modal--developer-open
+.about-team__header strong,
+.about-modal--developer-open
+.about-team__header span {
+    font-size: 14px;
+    line-height: 1.15;
+}
+
+
+/* Encabezados de la tabla */
+.about-modal--developer-open
+.about-team__table th {
+    font-size: 14px;
+    line-height: 1.15;
+}
+
+
+/* Contenido de la tabla */
+.about-modal--developer-open
+.about-team__table td {
+    font-size: 14px;
+    line-height: 1.15;
+}
+
+
+/* Mantener la tabla compacta aunque aumente la letra */
+.about-modal--developer-open
+.about-team__table th,
+.about-modal--developer-open
+.about-team__table td {
+    padding: 4px 7px;
+}
+
+/* ==========================================================
+   ACERCA DE - MÁS ESPACIO PARA EQUIPO DEL PROYECTO
+========================================================== */
+
+/* Modal un poco más grande cuando Desarrollado por está abierto */
+.about-modal--developer-open .about-modal__dialog {
+    width: min(94vw, 940px);
+
+    max-height: calc(100dvh - 20px);
+}
+
+
+/* Dar un poco más de espacio al contenido */
+.about-modal--developer-open .about-modal__content {
+    padding:
+        14px
+        34px
+        12px;
+}
+
+
+/* Logo + descripción un poco más compactos para ganar altura */
+.about-modal--developer-open .about-modal__intro {
+    grid-template-columns:
+        210px
+        minmax(0, 1fr);
+
+    gap: 30px;
+
+    margin-bottom: 14px;
+}
+
+
+.about-modal--developer-open .about-modal__main-logo {
+    max-width: 175px;
+    max-height: 135px;
+}
+
+
+/* ==========================================================
+   CUADRO EXPANDIDO
+========================================================== */
+
+.about-modal--developer-open
+.about-info-card--developer-open {
+    height: 305px;
+
+    min-height: 305px;
+
+    padding:
+        14px
+        18px;
+}
+
+
+/* Parte izquierda un poco más angosta para darle
+   más espacio a la tabla */
+.about-modal--developer-open
+.about-info-card--developer-open
+.about-developer__summary {
+    flex-basis: 165px;
+
+    width: 165px;
+}
+
+
+/* ==========================================================
+   TABLA
+========================================================== */
+
+/* Mantiene las letras en 14px pero permite que entren
+   correctamente las cuatro personas */
+.about-modal--developer-open
+.about-team__table th,
+.about-modal--developer-open
+.about-team__table td {
+    padding:
+        5px
+        7px;
+
+    font-size: 14px;
+
+    line-height: 1.15;
+}
+
+
+/* Evitar que alguna fila quede cortada */
+.about-modal--developer-open
+.about-team__table-wrap {
+    overflow: visible;
+}

@@ -963,6 +963,55 @@ document.addEventListener('DOMContentLoaded', function () {
             'true'
         );
 
+        const aboutCards =
+            aboutModal.querySelector('.about-modal__cards');
+
+        const developerCard =
+            aboutModal.querySelector('#aboutDeveloperCard');
+
+        const developerDetails =
+            aboutModal.querySelector(
+                '.about-developer__details'
+            );
+
+
+        if (aboutCards) {
+
+            aboutCards.classList.remove(
+                'about-modal__cards--developer-open'
+            );
+
+        }
+
+
+        if (developerCard) {
+
+            developerCard.classList.remove(
+                'about-info-card--developer-open'
+            );
+
+            developerCard.setAttribute(
+                'aria-expanded',
+                'false'
+            );
+
+        }
+
+
+        if (developerDetails) {
+
+            developerDetails.setAttribute(
+                'aria-hidden',
+                'true'
+            );
+
+        }
+
+
+        aboutModal.classList.remove(
+            'about-modal--developer-open'
+        );
+
     }
 
 
@@ -1216,5 +1265,158 @@ document.addEventListener('DOMContentLoaded', function () {
             selectedReportUrl;
 
     });
+
+});
+
+/* ==========================================================
+   ACERCA DE - EXPANDIR EQUIPO DEL PROYECTO
+========================================================== */
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const developerCard =
+        document.getElementById('aboutDeveloperCard');
+
+    const aboutCards =
+        developerCard
+            ? developerCard.closest('.about-modal__cards')
+            : null;
+
+    const aboutModal =
+        document.getElementById('aboutModal');
+
+    const developerDetails =
+        developerCard
+            ? developerCard.querySelector(
+                '.about-developer__details'
+            )
+            : null;
+
+
+    if (
+        !developerCard ||
+        !aboutCards ||
+        !developerDetails
+    ) {
+        return;
+    }
+
+
+    function expandDeveloperCard() {
+
+        aboutCards.classList.add(
+            'about-modal__cards--developer-open'
+        );
+
+        developerCard.classList.add(
+            'about-info-card--developer-open'
+        );
+
+        if (aboutModal) {
+
+            aboutModal.classList.add(
+                'about-modal--developer-open'
+            );
+
+        }
+
+        developerCard.setAttribute(
+            'aria-expanded',
+            'true'
+        );
+
+        developerDetails.setAttribute(
+            'aria-hidden',
+            'false'
+        );
+
+    }
+
+
+    function collapseDeveloperCard() {
+
+        aboutCards.classList.remove(
+            'about-modal__cards--developer-open'
+        );
+
+        developerCard.classList.remove(
+            'about-info-card--developer-open'
+        );
+
+        if (aboutModal) {
+
+            aboutModal.classList.remove(
+                'about-modal--developer-open'
+            );
+
+        }
+
+        developerCard.setAttribute(
+            'aria-expanded',
+            'false'
+        );
+
+        developerDetails.setAttribute(
+            'aria-hidden',
+            'true'
+        );
+
+    }
+
+
+    function toggleDeveloperCard() {
+
+        const isOpen =
+            developerCard.classList.contains(
+                'about-info-card--developer-open'
+            );
+
+
+        if (isOpen) {
+
+            collapseDeveloperCard();
+
+        } else {
+
+            expandDeveloperCard();
+
+        }
+
+    }
+
+
+    /*
+     * Click en el cuadro.
+     */
+    developerCard.addEventListener(
+        'click',
+        function () {
+
+            toggleDeveloperCard();
+
+        }
+    );
+
+
+    /*
+     * Accesibilidad con teclado.
+     */
+    developerCard.addEventListener(
+        'keydown',
+        function (event) {
+
+            if (
+                event.key === 'Enter' ||
+                event.key === ' '
+            ) {
+
+                event.preventDefault();
+
+                toggleDeveloperCard();
+
+            }
+
+        }
+    );
 
 });
