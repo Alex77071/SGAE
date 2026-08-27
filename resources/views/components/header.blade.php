@@ -466,42 +466,46 @@
                 </article>
 
 
-                {{-- UNIVERSIDAD --}}
-                <article class="about-info-card">
+              {{-- SUPERVISADO POR --}}
+<div class="about-info-card">
 
-                    <span class="about-info-card__icon" aria-hidden="true">
+    <span
+        class="about-info-card__icon"
+        aria-hidden="true"
+    >
+        <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        >
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
 
-                        <svg
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="1.7"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                        >
-                            <path d="m3 9 9-5 9 5"></path>
-                            <path d="M5 10h14"></path>
-                            <path d="M6 10v8"></path>
-                            <path d="M10 10v8"></path>
-                            <path d="M14 10v8"></path>
-                            <path d="M18 10v8"></path>
-                            <path d="M4 18h16"></path>
-                            <path d="M3 21h18"></path>
-                        </svg>
+            <circle
+                cx="9"
+                cy="7"
+                r="4"
+            ></circle>
 
-                    </span>
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
 
-                    <h3>
-                        Universidad
-                    </h3>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+    </span>
 
-                    <p>
-                        Universidad Tecnológica<br>
-                        de la Mixteca
-                    </p>
+    <h3>
+        Supervisado por
+    </h3>
 
-                </article>
+    <p>
+        UsaLab
+        <br>
+        Laboratorio de Usabilidad
+    </p>
 
+</div>
 
                
                 {{-- DESARROLLADO POR --}}
