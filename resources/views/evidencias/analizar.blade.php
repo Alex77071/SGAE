@@ -47,324 +47,142 @@
 
 
     {{-- =====================================================
-         1. FILTRAR
-    ====================================================== --}}
-
-    <section class="download-filter-card analyze-filter-card">
-
-        <h3 class="download-section-title">
-            1. Filtrar
-        </h3>
-
-
-        <div class="download-filter-grid">
-
-            {{-- CURSO --}}
-            <div class="download-filter-field">
-
-                <label
-                    for="analyzeCurso"
-                    class="download-filter-label"
-                >
-                    Curso:
-                </label>
-
-                <div class="download-select">
-
-                    <span
-                        class="download-select__icon"
-                        aria-hidden="true"
-                    >
-
-                        <svg
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="1.7"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                        >
-                            <path d="m3 9 9-4 9 4-9 4-9-4Z"></path>
-                            <path d="M7 11v5c3 2 7 2 10 0v-5"></path>
-                        </svg>
-
-                    </span>
-
-                    <select
-                        id="analyzeCurso"
-                        name="curso"
-                        class="download-select__control"
-                    >
-
-                        <option value="">
-                            Todos los cursos
-                        </option>
-
-                        <option value="programacion">
-                            Programación
-                        </option>
-
-                        <option value="bases-datos">
-                            Bases de datos
-                        </option>
-
-                        <option value="redes">
-                            Redes
-                        </option>
-
-                    </select>
-
-                </div>
-
-            </div>
-
-
-            {{-- GRUPO --}}
-            <div class="download-filter-field">
-
-                <label
-                    for="analyzeGrupo"
-                    class="download-filter-label"
-                >
-                    Grupo:
-                </label>
-
-                <div class="download-select">
-
-                    <span
-                        class="download-select__icon"
-                        aria-hidden="true"
-                    >
-
-                        <svg
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="1.7"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                        >
-
-                            <circle cx="9" cy="8" r="3"></circle>
-
-                            <path
-                                d="M3 19v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"
-                            ></path>
-
-                            <circle cx="17" cy="9" r="2"></circle>
-
-                            <path
-                                d="M17 13h1a3 3 0 0 1 3 3v2"
-                            ></path>
-
-                        </svg>
-
-                    </span>
-
-                    <select
-                        id="analyzeGrupo"
-                        name="grupo"
-                        class="download-select__control"
-                    >
-
-                        <option value="">
-                            Todos los grupos
-                        </option>
-
-                        <option value="a">
-                            Grupo A
-                        </option>
-
-                        <option value="b">
-                            Grupo B
-                        </option>
-
-                        <option value="c">
-                            Grupo C
-                        </option>
-
-                    </select>
-
-                </div>
-
-            </div>
-
-
-            {{-- EXAMEN --}}
-            <div class="download-filter-field">
-
-                <label
-                    for="analyzeExamen"
-                    class="download-filter-label"
-                >
-                    Nombre del examen:
-                </label>
-
-                <div class="download-select">
-
-                    <span
-                        class="download-select__icon"
-                        aria-hidden="true"
-                    >
-
-                        <svg
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="1.7"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                        >
-
-                            <rect
-                                x="3"
-                                y="4"
-                                width="18"
-                                height="16"
-                                rx="2"
-                            ></rect>
-
-                            <path d="M7 8h10"></path>
-                            <path d="M7 12h10"></path>
-                            <path d="M7 16h7"></path>
-
-                        </svg>
-
-                    </span>
-
-                    <select
-                        id="analyzeExamen"
-                        name="examen"
-                        class="download-select__control"
-                    >
-
-                        <option value="">
-                            Todos los exámenes
-                        </option>
-
-                        <option value="final">
-                            Examen Final
-                        </option>
-
-                        <option value="parcial-1">
-                            Primer parcial
-                        </option>
-
-                        <option value="parcial-2">
-                            Segundo parcial
-                        </option>
-
-                    </select>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-    {{-- =====================================================
-         2. RESULTADOS
-    ====================================================== --}}
-
-    <section class="analyze-results">
-
-        <h3 class="download-section-title">
-            2. Resultados
-        </h3>
-
-
-        <div class="analyze-table-wrapper">
-
-            <table class="analyze-table">
-
-                <thead>
-
-                    <tr>
-
-                        <th>Examen</th>
-
-                        <th>Grupo</th>
-
-                        <th>Curso</th>
-
-                        <th>Alumnos</th>
-
-                        <th>Imágenes</th>
-
-                        <th>Estado</th>
-
-                    </tr>
-
-                </thead>
-
-
-                <tbody>
-
-                    <tr>
-
-                        <td>
-                            Examen Final Programación
-                        </td>
-
-                        <td>
-                            Grupo A
-                        </td>
-
-                        <td>
-                            Programación
-                        </td>
-
-                        <td>
-                            32/33
-                        </td>
-
-                        <td>
-                            1,234
-                        </td>
-
-                        <td>
-                            Pendiente
-                        </td>
-
-                    </tr>
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-    </section>
-
-
-  {{-- =====================================================
-     BOTÓN ANALIZAR
+     SELECCIONAR ARCHIVO
 ====================================================== --}}
 
-<div class="analyze-evidence-action">
+<section class="analyze-file-card">
 
-    <a
-        href="{{ route('evidencias.analizando') }}"
-        class="analyze-evidence-button"
+    <div
+        class="analyze-file-icon"
+        aria-hidden="true"
+    >
+        <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        >
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <path d="M14 2v6h6"></path>
+            <path d="M8 13h8"></path>
+            <path d="M8 17h5"></path>
+        </svg>
+    </div>
+
+
+    <h3 class="analyze-file-title">
+        Selecciona el archivo de evidencias
+    </h3>
+
+
+    <p class="analyze-file-description">
+        Selecciona el archivo que contiene las evidencias
+        que deseas analizar.
+    </p>
+
+
+    <input
+        type="file"
+        id="analysisFileInput"
+        class="analyze-file-input"
+        accept=".zip"
+    >
+
+
+    <button
+        type="button"
+        class="analyze-file-button"
+        id="analysisFileButton"
     >
 
         <span
-            class="analyze-evidence-button__icon"
+            class="analyze-file-button__icon"
             aria-hidden="true"
         >
-            ▶
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            >
+                <path d="M3 7h5l2 2h11"></path>
+                <path d="M5 7h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2z"></path>
+            </svg>
         </span>
 
         <span>
-            Analizar
+            Seleccionar archivo
         </span>
 
-    </a>
+    </button>
 
-</div>
+
+    <p class="analyze-file-help">
+        Formato permitido: archivo ZIP
+    </p>
+
+</section>
+
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const fileInput =
+        document.getElementById('analysisFileInput');
+
+    const fileButton =
+        document.getElementById('analysisFileButton');
+
+
+    if (!fileInput || !fileButton) {
+        return;
+    }
+
+
+    /*
+     * Abrir administrador de archivos.
+     */
+    fileButton.addEventListener('click', function () {
+
+        fileInput.click();
+
+    });
+
+
+    /*
+     * Cuando el usuario seleccione un archivo,
+     * pasar ficticiamente a la pantalla de análisis.
+     */
+    fileInput.addEventListener('change', function () {
+
+        if (!fileInput.files.length) {
+            return;
+        }
+
+
+        const selectedFile =
+            fileInput.files[0];
+
+
+        /*
+         * Por ahora no se procesa ni se sube el archivo.
+         *
+         * Únicamente validamos que exista una selección
+         * y avanzamos a la siguiente pantalla.
+         */
+        window.location.href =
+            "{{ route('evidencias.analizando') }}";
+
+    });
+
+});
+
+</script>
 
 </section>
 
