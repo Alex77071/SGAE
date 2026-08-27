@@ -168,7 +168,7 @@
         type="button"
         class="download-complete-button download-complete-button--primary"
         id="goToAnalyzeButton"
-        data-url="{{ route('evidencias.analizar') }}"
+        data-url="{{ route('evidencias.analizando') }}"
     >
 
         <span class="download-complete-button__icon">

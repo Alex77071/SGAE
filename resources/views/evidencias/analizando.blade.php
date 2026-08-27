@@ -388,7 +388,7 @@
 
 
                 <span>
-                    Volver a la lista
+                    Analizar otro archivo
                 </span>
 
             </a>
