@@ -90,8 +90,8 @@
                 </div>
 
                 <div class="support-info-item__content">
-                    <strong>Instituto de Computación</strong>
-                    <span>Laboratorio de Usabilidad</span>
+                    <strong>Universidad Tecnológica de la Mixteca</strong>
+                    <span>Instituto de Computación · Laboratorio de Usabilidad</span>
                 </div>
             </div>
 
@@ -226,7 +226,7 @@
         <section class="support-card support-card--form">
 
             <h3 class="support-card__title">
-                Envíanos un mensaje
+                Envíenos un mensaje
             </h3>
 
             <form
@@ -286,7 +286,7 @@
                         id="supportInstitution"
                         name="institution"
                         class="support-form__input"
-                        placeholder="Ingresa el nombre de su institución"
+                        placeholder="Ingrese el nombre de su institución"
                         required
                     >
                 </div>
