@@ -314,11 +314,11 @@ $termsCookieName =
 
 /*
  * Buscar si ya aceptó los términos.
- */
+ 
 $termsAccepted =
     $request->cookie(
         $termsCookieName
-    );
+    );*/
 
 
 /*

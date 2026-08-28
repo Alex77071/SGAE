@@ -64,83 +64,45 @@
         </div>
 
 
-        {{-- ACEPTACIÓN --}}
-        <form
-            action="{{ route('legal.terminos.aceptar') }}"
-            method="POST"
-            class="terms-form"
+    {{-- ACEPTACIÓN --}}
+
+<form
+    action="{{ route('legal.terminos.aceptar') }}"
+    method="POST"
+    class="terms-form"
+>
+
+    @csrf
+
+    <label class="terms-acceptance">
+
+        <input
+            type="checkbox"
+            name="dont_show_again"
+            id="dontShowTermsAgain"
+            value="1"
         >
 
-            @csrf
+        <span>
+            No volver a mostrar este mensaje.
+        </span>
+
+    </label>
 
 
-            <label class="terms-acceptance">
+    <button
+        type="submit"
+        class="terms-button"
+    >
+        Aceptar
+    </button>
 
-                <input
-                    type="checkbox"
-                    name="terms_accepted"
-                    id="termsAccepted"
-                    value="1"
-                    required
-                >
-
-                <span>
-                    He leído y acepto los Términos y Condiciones.
-                </span>
-
-            </label>
-
-
-            @error('terms_accepted')
-
-                <p class="terms-error">
-                    Debes aceptar los Términos y Condiciones
-                    para continuar.
-                </p>
-
-            @enderror
-
-
-            <button
-                type="submit"
-                class="terms-button"
-                id="termsContinueButton"
-                disabled
-            >
-                Aceptar y no volver a mostrar
-            </button>
-
-        </form>
+</form>
 
     </div>
 
 </section>
 
 
-<script>
-
-document.addEventListener('DOMContentLoaded', function () {
-
-    const checkbox =
-        document.getElementById('termsAccepted');
-
-    const button =
-        document.getElementById('termsContinueButton');
-
-
-    if (!checkbox || !button) {
-        return;
-    }
-
-
-    checkbox.addEventListener('change', function () {
-
-        button.disabled = !checkbox.checked;
-
-    });
-
-});
-
-</script>
 
 @endsection
