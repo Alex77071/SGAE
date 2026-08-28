@@ -11,11 +11,103 @@ use App\Http\Controllers\MoodleAuthController;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', function () {
+Route::get('/', function (Request $request) {
 
+    /*
+     * Verificar si el usuario ya leyó
+     * el Aviso de Privacidad.
+     */
+    $privacyAccepted =
+        $request->cookie('sgae_privacy_accepted');
+
+
+    /*
+     * Si todavía no lo ha aceptado,
+     * mostrar primero el Aviso de Privacidad.
+     */
+    if ($privacyAccepted !== '1.0') {
+
+        return redirect()->route(
+            'legal.privacidad'
+        );
+
+    }
+
+
+    /*
+     * Si ya lo aceptó,
+     * mostrar normalmente el login.
+     */
     return view('auth.login');
 
 })->name('login');
+
+/*
+|--------------------------------------------------------------------------
+| AVISO DE PRIVACIDAD
+|--------------------------------------------------------------------------
+*/
+
+/*
+ * Mostrar Aviso de Privacidad.
+ */
+Route::get('/privacidad', function (Request $request) {
+
+    /*
+     * Si ya fue aceptado, no es necesario
+     * volver a mostrarlo.
+     */
+    if (
+        $request->cookie(
+            'sgae_privacy_accepted'
+        ) === '1.0'
+    ) {
+
+        return redirect()->route('login');
+
+    }
+
+
+    return view('legal.privacidad');
+
+})->name('legal.privacidad');
+
+
+/*
+ * Aceptar Aviso de Privacidad.
+ */
+Route::post(
+    '/privacidad/aceptar',
+    function (Request $request) {
+
+        /*
+         * Validar que marque la casilla.
+         */
+        $request->validate([
+            'privacy_accepted' => [
+                'required',
+                'accepted',
+            ],
+        ]);
+
+
+        /*
+         * Guardar cookie durante un año.
+         *
+         * 525600 minutos = 365 días.
+         */
+        return redirect()
+            ->route('login')
+            ->withCookie(
+                cookie(
+                    'sgae_privacy_accepted',
+                    '1.0',
+                    525600
+                )
+            );
+
+    }
+)->name('legal.privacidad.aceptar');
 
 
 /*
@@ -29,6 +121,7 @@ Route::post(
     [MoodleAuthController::class, 'login']
 )->name('login.submit');
 
+
 /*
 |--------------------------------------------------------------------------
 | TÉRMINOS Y CONDICIONES
@@ -38,7 +131,8 @@ Route::post(
 Route::get('/terminos', function (Request $request) {
 
     /*
-     * Solo usuarios autenticados con Moodle.
+     * Solo puede entrar un profesor
+     * que ya inició sesión con Moodle.
      */
     if (!session('moodle_authenticated')) {
 
@@ -58,7 +152,7 @@ Route::get('/terminos', function (Request $request) {
 
 
     /*
-     * Cookie correspondiente a este profesor.
+     * Cookie específica para este profesor.
      */
     $cookieName =
         'sgae_terms_' .
@@ -73,8 +167,8 @@ Route::get('/terminos', function (Request $request) {
 
 
     /*
-     * Si ya eligió "No volver a mostrar",
-     * ya no mostramos los términos.
+     * Si ya aceptó la versión actual,
+     * enviarlo directamente a inicio.
      */
     if (
         $request->cookie($cookieName) === '1.0'
@@ -90,16 +184,86 @@ Route::get('/terminos', function (Request $request) {
 })->name('legal.terminos');
 
 
+Route::post(
+    '/terminos/aceptar',
+    function (Request $request) {
+
+        /*
+         * Debe tener sesión Moodle.
+         */
+        if (!session('moodle_authenticated')) {
+
+            return redirect()->route('login');
+
+        }
+
+
+        /*
+         * Debe marcar la casilla.
+         */
+        $request->validate([
+
+            'terms_accepted' => [
+                'required',
+                'accepted',
+            ],
+
+        ]);
+
+
+        $userId = session('moodle_user_id');
+
+
+        if (!$userId) {
+
+            return redirect()->route('login');
+
+        }
+
+
+        /*
+         * Crear cookie específica
+         * para el profesor.
+         */
+        $cookieName =
+            'sgae_terms_' .
+            substr(
+                hash(
+                    'sha256',
+                    (string) $userId
+                ),
+                0,
+                16
+            );
+
+
+        /*
+         * Guardar aceptación durante un año.
+         */
+        return redirect()
+            ->route('inicio')
+            ->withCookie(
+                cookie(
+                    $cookieName,
+                    '1.0',
+                    525600
+                )
+            );
+
+    }
+)->name('legal.terminos.aceptar');
+
 
 /*
 |--------------------------------------------------------------------------
 | INICIO
 |--------------------------------------------------------------------------
 */
+
 Route::get('/inicio', function (Request $request) {
 
     /*
-     * Debe haber iniciado sesión con Moodle.
+     * Verificar autenticación Moodle.
      */
     if (!session('moodle_authenticated')) {
 
@@ -108,6 +272,9 @@ Route::get('/inicio', function (Request $request) {
     }
 
 
+    /*
+     * Obtener profesor actual.
+     */
     $userId = session('moodle_user_id');
 
 
@@ -119,10 +286,10 @@ Route::get('/inicio', function (Request $request) {
 
 
     /*
-     * Crear nombre de cookie
-     * para este profesor.
+     * Verificar aceptación
+     * de Términos y Condiciones.
      */
-    $cookieName =
+    $termsCookieName =
         'sgae_terms_' .
         substr(
             hash(
@@ -134,32 +301,10 @@ Route::get('/inicio', function (Request $request) {
         );
 
 
-    /*
-     * ¿Marcó anteriormente
-     * "No volver a mostrar"?
-     */
-    $dontShowAgain =
-        $request->cookie($cookieName) === '1.0';
-
-
-    /*
-     * ¿Ya aceptó durante
-     * esta sesión actual?
-     */
-    $acceptedThisSession =
-        session(
-            'terms_accepted_current_session',
-            false
-        );
-
-
-    /*
-     * Si ninguna de las dos condiciones
-     * se cumple, mostrar los términos.
-     */
     if (
-        !$dontShowAgain
-        && !$acceptedThisSession
+        $request->cookie(
+            $termsCookieName
+        ) !== '1.0'
     ) {
 
         return redirect()->route(
@@ -169,13 +314,9 @@ Route::get('/inicio', function (Request $request) {
     }
 
 
-    /*
-     * Todo correcto.
-     */
     return view('inicio.index');
 
 })->name('inicio');
-
 
 /*
 |--------------------------------------------------------------------------
