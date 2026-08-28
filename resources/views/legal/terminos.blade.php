@@ -13,9 +13,6 @@
                 Términos y Condiciones de Uso
             </h1>
 
-            <p class="terms-card__subtitle">
-                Sistema de Gestión y Análisis de Evidencias
-            </p>
 
         </div>
 
