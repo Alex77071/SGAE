@@ -10991,3 +10991,245 @@ body.app-body {
 
     text-align: left;
 }
+
+/* ==========================================================
+   ACERCA DE - DESARROLLADO POR EN ROJO VINO PERMANENTE
+========================================================== */
+
+/*
+ * La tarjeta permanece vino siempre.
+ * Ya no depende del :hover.
+ */
+/* ==========================================================
+   DESARROLLADO POR - ESTADO NORMAL
+========================================================== */
+
+.about-info-card--developer {
+    background: #ffffff !important;
+    border-color: #d0d2d5 !important;
+
+    color: var(--text-main) !important;
+
+    transition:
+        background-color 0.25s ease,
+        border-color 0.25s ease,
+        color 0.25s ease,
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+
+/*
+ * Al pasar el mouse puede conservar un pequeño movimiento,
+ * pero NO cambia de color.
+ */
+/* ==========================================================
+   DESARROLLADO POR - HOVER
+========================================================== */
+
+.about-info-card--developer:hover {
+    background: #8f3435 !important;
+    border-color: #8f3435 !important;
+
+    color: #ffffff !important;
+
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 8px 20px rgba(130, 50, 51, 0.20);
+}
+
+/* ==========================================================
+   TEXTO E ICONO DEL CUADRO NORMAL
+========================================================== */
+
+.about-info-card--developer
+.about-info-card__icon,
+.about-info-card--developer
+.about-developer__summary h3,
+.about-info-card--developer
+.about-developer__summary p {
+    color: var(--text-main) !important;
+}
+
+
+.about-info-card--developer
+.about-info-card__icon svg {
+    stroke: var(--text-main) !important;
+}
+/* ==========================================================
+   TEXTO E ICONO - AL PASAR EL CURSOR
+========================================================== */
+
+.about-info-card--developer:hover
+.about-info-card__icon,
+.about-info-card--developer:hover
+.about-developer__summary h3,
+.about-info-card--developer:hover
+.about-developer__summary p,
+.about-info-card--developer:hover
+.about-developer__hint {
+    color: #ffffff !important;
+}
+
+
+.about-info-card--developer:hover
+.about-info-card__icon svg {
+    stroke: #ffffff !important;
+}
+
+
+/* ==========================================================
+   CUADRO EXPANDIDO
+========================================================== */
+
+.about-info-card--developer-open {
+    background: #8f3435 !important;
+    border-color: #8f3435 !important;
+
+    color: #ffffff !important;
+}
+
+
+/*
+ * Línea divisoria entre izquierda y derecha.
+ */
+.about-info-card--developer-open
+.about-developer__summary {
+    border-right:
+        1px solid rgba(255, 255, 255, 0.35) !important;
+}
+
+
+/*
+ * El lado derecho servirá también como referencia
+ * para posicionar la X.
+ */
+.about-info-card--developer-open
+.about-developer__details {
+    position: relative;
+
+    padding-right: 54px;
+}
+
+
+/* Título */
+.about-info-card--developer-open
+.about-developer__heading {
+    color: #ffffff !important;
+}
+
+
+/* Textos */
+.about-info-card--developer-open
+.about-developer__text {
+    color: #ffffff !important;
+    font-weight: 400 !important;
+}
+
+
+/* ==========================================================
+   X INTERNA DEL CUADRO
+========================================================== */
+
+.about-developer__close {
+    position: absolute;
+
+    top: 0;
+    right: 0;
+
+    width: 44px;
+    height: 44px;
+
+    padding: 0;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.45);
+
+    border-radius: 50%;
+
+    background: transparent;
+
+    color: #ffffff;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.about-developer__close svg {
+    width: 20px;
+    height: 20px;
+
+    stroke: currentColor;
+}
+
+
+.about-developer__close:hover {
+    background:
+        rgba(255, 255, 255, 0.12);
+
+    border-color:
+        rgba(255, 255, 255, 0.75);
+
+    transform: scale(1.05);
+}
+
+
+/*
+ * La X solo existe visualmente cuando
+ * "Desarrollado por" está expandido.
+ */
+.about-info-card--developer:not(
+    .about-info-card--developer-open
+)
+.about-developer__close {
+    display: none;
+}
+
+/* ==========================================================
+   DESARROLLADO POR - CUANDO ESTÁ EXPANDIDO
+========================================================== */
+
+.about-info-card--developer.about-info-card--developer-open {
+    background: #8f3435 !important;
+    border-color: #8f3435 !important;
+
+    color: #ffffff !important;
+
+    transform: none;
+}
+
+
+/* Todo el contenido queda blanco al expandirse */
+
+.about-info-card--developer.about-info-card--developer-open
+.about-info-card__icon,
+
+.about-info-card--developer.about-info-card--developer-open
+.about-developer__summary h3,
+
+.about-info-card--developer.about-info-card--developer-open
+.about-developer__summary p,
+
+.about-info-card--developer.about-info-card--developer-open
+.about-developer__heading,
+
+.about-info-card--developer.about-info-card--developer-open
+.about-developer__text {
+    color: #ffffff !important;
+}
+
+
+.about-info-card--developer.about-info-card--developer-open
+.about-info-card__icon svg {
+    stroke: #ffffff !important;
+}

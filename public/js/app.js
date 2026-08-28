@@ -1775,6 +1775,43 @@ document.addEventListener('DOMContentLoaded', function () {
         );
 
     }
+    /* ======================================================
+   X INTERNA - CERRAR SOLO EL CUADRO EXPANDIDO
+====================================================== */
+
+const closeDeveloperCard =
+    document.getElementById('closeDeveloperCard');
+
+
+if (closeDeveloperCard) {
+
+    closeDeveloperCard.addEventListener(
+        'click',
+        function (event) {
+
+            /*
+             * Evitamos que el clic llegue al <article>.
+             *
+             * Esto es MUY importante porque todo el
+             * cuadro también tiene su propio evento click.
+             */
+            event.preventDefault();
+            event.stopPropagation();
+
+
+            /*
+             * Regresa únicamente a:
+             *
+             * Versión | Universidad | Desarrollado por
+             *
+             * NO cierra el modal Acerca de.
+             */
+            collapseDeveloperCard();
+
+        }
+    );
+
+}
 
 
     /* ======================================================
