@@ -9,10 +9,11 @@
         {{-- ENCABEZADO --}}
         <div class="terms-card__header">
 
-            <h1 class="terms-card__title">
+            <h1 class="terms-card__subtitle">
                 Términos y Condiciones de Uso
             </h1>
 
+        
 
         </div>
 
