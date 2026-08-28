@@ -101,9 +101,7 @@
                 El Sistema de Gestión y Análisis de Evidencias (SGAE)
                 utiliza una cookie funcional con la finalidad de recordar
                 que el usuario ha leído el presente Aviso de Privacidad.
-            </p>
-
-            <p>
+        
                 Esta cookie no se utiliza con fines publicitarios,
                 comerciales ni para elaborar perfiles del usuario.
                 Si las cookies del navegador son eliminadas, el sistema
