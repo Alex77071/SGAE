@@ -248,7 +248,7 @@
                 </strong>
 
                 <span>
-                    carpetas
+                    Carpetas de alumnos
                 </span>
 
             </div>

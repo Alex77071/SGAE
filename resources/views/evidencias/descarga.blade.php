@@ -136,7 +136,7 @@
                     </strong>
 
                     <span>
-                        carpetas de<br>
+                        Carpetas de<br>
                         alumnos
                     </span>
 
