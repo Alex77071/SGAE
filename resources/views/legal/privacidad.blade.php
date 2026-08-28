@@ -23,6 +23,10 @@
         {{-- CONTENIDO --}}
         <div class="privacy-card__content">
 
+              <h2 class="privacy-card__section-title">
+                    Aviso de privacidad Simplificado de la Universidad Tecnológica de la Mixteca
+            </h2>
+
             <p>
                 La Universidad Tecnológica de la Mixteca en adelante "la UTM" 
                 en cumplimiento a la Ley General de Protección de Datos Personales
@@ -57,15 +61,15 @@
 
 
             <p>
-    Para ejercer los derechos de Acceso, Rectificación, Cancelación,
-    Oposición y Portabilidad al tratamiento de datos personales (ARCOP),
-    podrá dirigirse a la Unidad de Transparencia de la UTM, ubicada en
-    Avenida Doctor Modesto Seara Vázquez No. 1, Acatlima, Heroica Ciudad
-    de Huajuapan de León, Oaxaca, C.P. 69004 Interior del Edificio del
-    Departamento de Recursos Materiales de la U.T.M o enviar su solicitud
-    al correo electrónico
+                Para ejercer los derechos de Acceso, Rectificación, Cancelación,
+                Oposición y Portabilidad al tratamiento de datos personales (ARCOP),
+                podrá dirigirse a la Unidad de Transparencia de la UTM, ubicada en
+                Avenida Doctor Modesto Seara Vázquez No. 1, Acatlima, Heroica Ciudad
+                de Huajuapan de León, Oaxaca, C.P. 69004 Interior del Edificio del
+                Departamento de Recursos Materiales de la U.T.M o enviar su solicitud
+                al correo electrónico
 
-    <a
+            <a
         href="mailto:transparenciaderechosarco@mixteco.utm.mx"
         class="privacy-link"
     >
