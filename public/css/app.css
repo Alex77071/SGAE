@@ -10709,10 +10709,12 @@ body.app-body {
 .analysis-result-notice {
     flex-shrink: 0;
 
-    width: calc(100% - 10px);
+    width: fit-content;
+    max-width: 100%;
+
     min-height: 34px;
 
-    margin: 14px auto 0;
+    margin: 14px 0 0;
 
     padding: 7px 14px;
 
