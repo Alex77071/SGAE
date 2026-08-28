@@ -246,7 +246,6 @@
                 <strong>
                     32
                 </strong>
-
                 <span>
                     Carpetas de alumnos
                 </span>
