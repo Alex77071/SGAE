@@ -57,16 +57,36 @@
 
 
             <p>
-                Para ejercer los derechos de Acceso, Rectificación, Cancelación, Oposición y Portabilidad
-                al tratamiento de datos personales (ARCOP), podrá dirigirse a la Unidad de Transparencia 
-                de la UTM, ubicada en Avenida Doctor Modesto Seara Vázquez No. 1, Acatlima, Heroica Ciudad
-                de Huajuapan de León, Oaxaca, C.P. 69004 Interior del Edificio del Departamento de Recursos 
-                Materiales de la U.T.M o enviar su solicitud al correo electrónico 
-                transparenciaderechosarco@mixteco.utm.mx, Tel. 953-53-2 456 0 Ext. 165 y 701. 
-                Para mayor información sobre el uso de sus datos personales, puede consultar el aviso de 
-                privacidad integral en la unidad de Transparencia de la UTM o en el siguiente 
-                link: https://www.utm.mx/avisodeprivacidad/Aviso_de_privacidad_Integral.pdf
-            </p>
+    Para ejercer los derechos de Acceso, Rectificación, Cancelación,
+    Oposición y Portabilidad al tratamiento de datos personales (ARCOP),
+    podrá dirigirse a la Unidad de Transparencia de la UTM, ubicada en
+    Avenida Doctor Modesto Seara Vázquez No. 1, Acatlima, Heroica Ciudad
+    de Huajuapan de León, Oaxaca, C.P. 69004 Interior del Edificio del
+    Departamento de Recursos Materiales de la U.T.M o enviar su solicitud
+    al correo electrónico
+
+    <a
+        href="mailto:transparenciaderechosarco@mixteco.utm.mx"
+        class="privacy-link"
+    >
+        transparenciaderechosarco@mixteco.utm.mx
+    </a>,
+
+    Tel. 953-53-2 456 0 Ext. 165 y 701.
+
+    Para mayor información sobre el uso de sus datos personales, puede
+    consultar el aviso de privacidad integral en la unidad de Transparencia
+    de la UTM o en el siguiente link:
+
+    <a
+        href="https://www.utm.mx/avisodeprivacidad/Aviso_de_privacidad_Integral.pdf"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="privacy-link"
+    >
+        Consultar Aviso de Privacidad Integral
+    </a>
+</p>
 
 
             <h2>
