@@ -86,6 +86,7 @@
 
                 <span>
                     He leído y acepto los Términos y Condiciones.
+                    No volver a mostrar este mensaje.
                 </span>
 
             </label>
@@ -107,7 +108,7 @@
                 id="termsContinueButton"
                 disabled
             >
-                Aceptar y no volver a mostrar
+                Aceptar
             </button>
 
         </form>
