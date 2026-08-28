@@ -573,11 +573,11 @@
 
        {{-- NOMBRES EN TEXTO PLANO --}}
     <div class="about-supervisor__names">
-
+{{--
         <p>
             I. C. David del Castillo Lale
         </p>
-
+--}}
         <p>
             I. C. Carlos Alberto Martínez Sandoval
         </p>
