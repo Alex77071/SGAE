@@ -122,7 +122,7 @@
 
                 <div class="support-info-item__content">
                     <strong>Correo</strong>
-                    <span>correo@utm.mx</span>
+                    <span>carlosmtz@gs.utm.mx</span>
                 </div>
             </div>
 
