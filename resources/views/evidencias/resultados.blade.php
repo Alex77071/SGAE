@@ -236,13 +236,13 @@
 
                 <div>
 
-                    <strong>
-                        32 archivos de alumnos analizados
-                    </strong>
+                 <strong>
+    32 archivos de alumnos analizados
+</strong>
 
                     <p>
-                        Imágenes analizadas
-                    </p>
+    Imágenes analizadas con MiniCPM-V 4.5:8B mediante Ollama 0.32.15
+</p>
 
                 </div>
 
