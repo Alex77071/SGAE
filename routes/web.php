@@ -124,27 +124,199 @@ Route::post(
 
 /*
 |--------------------------------------------------------------------------
-| INICIO
+| TÉRMINOS Y CONDICIONES
 |--------------------------------------------------------------------------
 */
 
-Route::get('/inicio', function () {
+Route::get('/terminos', function (Request $request) {
 
     /*
-     * Verificamos que el usuario haya iniciado sesión
-     * correctamente mediante Moodle.
+     * Solo puede entrar un profesor
+     * que ya inició sesión con Moodle.
      */
-
     if (!session('moodle_authenticated')) {
 
         return redirect()->route('login');
 
     }
 
+
+    $userId = session('moodle_user_id');
+
+
+    if (!$userId) {
+
+        return redirect()->route('login');
+
+    }
+
+
+    /*
+     * Cookie específica para este profesor.
+     */
+    $cookieName =
+        'sgae_terms_' .
+        substr(
+            hash(
+                'sha256',
+                (string) $userId
+            ),
+            0,
+            16
+        );
+
+
+    /*
+     * Si ya aceptó la versión actual,
+     * enviarlo directamente a inicio.
+     */
+    if (
+        $request->cookie($cookieName) === '1.0'
+    ) {
+
+        return redirect()->route('inicio');
+
+    }
+
+
+    return view('legal.terminos');
+
+})->name('legal.terminos');
+
+
+Route::post(
+    '/terminos/aceptar',
+    function (Request $request) {
+
+        /*
+         * Debe tener sesión Moodle.
+         */
+        if (!session('moodle_authenticated')) {
+
+            return redirect()->route('login');
+
+        }
+
+
+        /*
+         * Debe marcar la casilla.
+         */
+        $request->validate([
+
+            'terms_accepted' => [
+                'required',
+                'accepted',
+            ],
+
+        ]);
+
+
+        $userId = session('moodle_user_id');
+
+
+        if (!$userId) {
+
+            return redirect()->route('login');
+
+        }
+
+
+        /*
+         * Crear cookie específica
+         * para el profesor.
+         */
+        $cookieName =
+            'sgae_terms_' .
+            substr(
+                hash(
+                    'sha256',
+                    (string) $userId
+                ),
+                0,
+                16
+            );
+
+
+        /*
+         * Guardar aceptación durante un año.
+         */
+        return redirect()
+            ->route('inicio')
+            ->withCookie(
+                cookie(
+                    $cookieName,
+                    '1.0',
+                    525600
+                )
+            );
+
+    }
+)->name('legal.terminos.aceptar');
+
+
+/*
+|--------------------------------------------------------------------------
+| INICIO
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/inicio', function (Request $request) {
+
+    /*
+     * Verificar autenticación Moodle.
+     */
+    if (!session('moodle_authenticated')) {
+
+        return redirect()->route('login');
+
+    }
+
+
+    /*
+     * Obtener profesor actual.
+     */
+    $userId = session('moodle_user_id');
+
+
+    if (!$userId) {
+
+        return redirect()->route('login');
+
+    }
+
+
+    /*
+     * Verificar aceptación
+     * de Términos y Condiciones.
+     */
+    $termsCookieName =
+        'sgae_terms_' .
+        substr(
+            hash(
+                'sha256',
+                (string) $userId
+            ),
+            0,
+            16
+        );
+
+
+    if (
+        $request->cookie(
+            $termsCookieName
+        ) !== '1.0'
+    ) {
+
+        return redirect()->route(
+            'legal.terminos'
+        );
+
+    }
+
+
     return view('inicio.index');
 
 })->name('inicio');
-
 
 /*
 |--------------------------------------------------------------------------

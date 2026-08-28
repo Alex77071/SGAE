@@ -230,21 +230,6 @@ class MoodleAuthController extends Controller
         }
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | 5. PROFESOR AUTORIZADO
-        |--------------------------------------------------------------------------
-        |
-        | Si llegamos aquí:
-        |
-        | ✓ usuario correcto
-        | ✓ contraseña correcta
-        | ✓ Moodle generó token
-        | ✓ usuario identificado
-        | ✓ tiene rol teacher/editingteacher
-        |
-        */
-
 
         /*
         |--------------------------------------------------------------------------
@@ -286,6 +271,78 @@ class MoodleAuthController extends Controller
                 $teacherResponse['roles']
                 ?? [],
         ]);
+
+
+
+        /*
+|--------------------------------------------------------------------------
+| 6. VERIFICAR TÉRMINOS Y CONDICIONES
+|--------------------------------------------------------------------------
+*/
+
+/*
+ * Recuperar el ID del profesor que
+ * acabamos de guardar en sesión.
+ */
+$userId = $request->session()->get(
+    'moodle_user_id'
+);
+
+
+if (!$userId) {
+
+    return redirect()->route('login');
+
+}
+
+
+/*
+ * Crear el nombre de cookie correspondiente
+ * a este profesor.
+ */
+$termsCookieName =
+    'sgae_terms_' .
+    substr(
+        hash(
+            'sha256',
+            (string) $userId
+        ),
+        0,
+        16
+    );
+
+
+/*
+ * Buscar si ya aceptó los términos.
+ */
+$termsAccepted =
+    $request->cookie(
+        $termsCookieName
+    );
+
+
+/*
+|--------------------------------------------------------------------------
+| NO LOS HA ACEPTADO
+|--------------------------------------------------------------------------
+*/
+
+if ($termsAccepted !== '1.0') {
+
+    return redirect()->route(
+        'legal.terminos'
+    );
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| YA LOS ACEPTÓ
+|--------------------------------------------------------------------------
+*/
+
+return redirect()->route('inicio');
 
 
         /*
