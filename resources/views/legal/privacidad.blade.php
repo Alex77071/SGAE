@@ -55,68 +55,17 @@
                 entre otros y/o cualquier actividad y obligación surgida del quehacer universitario."
             </p>
 
-            <p>
-                Al proporcionar sus datos a la UTM se da por entendido que
-                está de acuerdo con los términos de este aviso, las finalidades
-                del tratamiento de los datos así como los medios y
-                procedimientos que ponemos a su disposición para ejercer sus
-                derechos de Acceso, Rectificación, Cancelación y Oposición.
-            </p>
 
             <p>
-                Los datos personales que recabamos de usted, incluyendo
-                estudiantes, empleados, proveedores, usuarios y grupos de
-                interés, serán utilizados para las actividades, trámites y
-                servicios académicos, de investigación, administrativos y
-                demás actividades propias de la Universidad Tecnológica
-                de la Mixteca.
-            </p>
-
-
-            <h2>
-                Derechos ARCOP
-            </h2>
-
-            <p>
-                Para ejercer los derechos de Acceso, Rectificación,
-                Cancelación, Oposición y Portabilidad al tratamiento de
-                datos personales (ARCOP), podrá dirigirse a la Unidad de
-                Transparencia de la UTM, ubicada en Avenida Doctor Modesto
-                Seara Vázquez No. 1, Acatlima, Heroica Ciudad de Huajuapan
-                de León, Oaxaca, C.P. 69004.
-            </p>
-
-            <p>
-                Correo electrónico:
-                <a
-                    href="mailto:transparenciaderechosarco@mixteco.utm.mx"
-                >
-                    transparenciaderechosarco@mixteco.utm.mx
-                </a>
-            </p>
-
-            <p>
-                Teléfono: 953-53-2 456 0 Ext. 165 y 701.
-            </p>
-
-
-            <h2>
-                Aviso de Privacidad Integral
-            </h2>
-
-            <p>
-                Para mayor información sobre el uso de sus datos personales,
-                puede consultar el Aviso de Privacidad Integral de la UTM.
-            </p>
-
-            <p>
-                <a
-                    href="https://www.utm.mx/avisodeprivacidad/Aviso_de_privacidad_Integral.pdf"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Consultar Aviso de Privacidad Integral
-                </a>
+                Para ejercer los derechos de Acceso, Rectificación, Cancelación, Oposición y Portabilidad
+                al tratamiento de datos personales (ARCOP), podrá dirigirse a la Unidad de Transparencia 
+                de la UTM, ubicada en Avenida Doctor Modesto Seara Vázquez No. 1, Acatlima, Heroica Ciudad
+                de Huajuapan de León, Oaxaca, C.P. 69004 Interior del Edificio del Departamento de Recursos 
+                Materiales de la U.T.M o enviar su solicitud al correo electrónico 
+                transparenciaderechosarco@mixteco.utm.mx, Tel. 953-53-2 456 0 Ext. 165 y 701. 
+                Para mayor información sobre el uso de sus datos personales, puede consultar el aviso de 
+                privacidad integral en la unidad de Transparencia de la UTM o en el siguiente 
+                link: https://www.utm.mx/avisodeprivacidad/Aviso_de_privacidad_Integral.pdf
             </p>
 
 
