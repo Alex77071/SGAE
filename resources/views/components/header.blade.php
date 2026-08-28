@@ -487,7 +487,7 @@
                     </h3>
 
                     <p>
-                        1.0
+                        2.0
                     </p>
 
                 </article>
@@ -527,7 +527,7 @@
         </span>
 
         <h3>
-            Supervisado por
+            Desarrollado para
         </h3>
 
         <p>
@@ -573,19 +573,21 @@
 
        {{-- NOMBRES EN TEXTO PLANO --}}
     <div class="about-supervisor__names">
+
+        <p>
+            CEO Dr. Mario Alberto Moreno Rocha
+           
+        </p>
+
+        <p>
+            Coordinador I. C. Carlos Alberto Martínez Sandoval
+            
+        </p>
 {{--
         <p>
-            I. C. David del Castillo Lale
+            Técnico I. C. David del Castillo Lale
         </p>
 --}}
-        <p>
-            I. C. Carlos Alberto Martínez Sandoval
-        </p>
-
-        <p>
-            Dr. Mario Alberto Moreno Rocha
-        </p>
-
     </div>
 
 </div>
