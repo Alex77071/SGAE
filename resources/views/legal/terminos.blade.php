@@ -9,13 +9,11 @@
         {{-- ENCABEZADO --}}
         <div class="terms-card__header">
 
-            <h1 class="terms-card__title">
+            <h1 class="terms-card__subtitle">
                 Términos y Condiciones de Uso
             </h1>
 
-            <p class="terms-card__subtitle">
-                Sistema de Gestión y Análisis de Evidencias
-            </p>
+        
 
         </div>
 
@@ -86,6 +84,7 @@
 
                 <span>
                     He leído y acepto los Términos y Condiciones.
+                    No volver a mostrar este mensaje.
                 </span>
 
             </label>
@@ -107,7 +106,7 @@
                 id="termsContinueButton"
                 disabled
             >
-                Aceptar y no volver a mostrar
+                Aceptar
             </button>
 
         </form>
