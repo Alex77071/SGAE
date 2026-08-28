@@ -11,11 +11,103 @@ use App\Http\Controllers\MoodleAuthController;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', function () {
+Route::get('/', function (Request $request) {
 
+    /*
+     * Verificar si el usuario ya leyó
+     * el Aviso de Privacidad.
+     */
+    $privacyAccepted =
+        $request->cookie('sgae_privacy_accepted');
+
+
+    /*
+     * Si todavía no lo ha aceptado,
+     * mostrar primero el Aviso de Privacidad.
+     */
+    if ($privacyAccepted !== '1.0') {
+
+        return redirect()->route(
+            'legal.privacidad'
+        );
+
+    }
+
+
+    /*
+     * Si ya lo aceptó,
+     * mostrar normalmente el login.
+     */
     return view('auth.login');
 
 })->name('login');
+
+/*
+|--------------------------------------------------------------------------
+| AVISO DE PRIVACIDAD
+|--------------------------------------------------------------------------
+*/
+
+/*
+ * Mostrar Aviso de Privacidad.
+ */
+Route::get('/privacidad', function (Request $request) {
+
+    /*
+     * Si ya fue aceptado, no es necesario
+     * volver a mostrarlo.
+     */
+    if (
+        $request->cookie(
+            'sgae_privacy_accepted'
+        ) === '1.0'
+    ) {
+
+        return redirect()->route('login');
+
+    }
+
+
+    return view('legal.privacidad');
+
+})->name('legal.privacidad');
+
+
+/*
+ * Aceptar Aviso de Privacidad.
+ */
+Route::post(
+    '/privacidad/aceptar',
+    function (Request $request) {
+
+        /*
+         * Validar que marque la casilla.
+         */
+        $request->validate([
+            'privacy_accepted' => [
+                'required',
+                'accepted',
+            ],
+        ]);
+
+
+        /*
+         * Guardar cookie durante un año.
+         *
+         * 525600 minutos = 365 días.
+         */
+        return redirect()
+            ->route('login')
+            ->withCookie(
+                cookie(
+                    'sgae_privacy_accepted',
+                    '1.0',
+                    525600
+                )
+            );
+
+    }
+)->name('legal.privacidad.aceptar');
 
 
 /*
