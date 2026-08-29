@@ -11742,3 +11742,369 @@ body.app-body {
     }
 
 }
+
+/* ==========================================================
+   ACERCA DE - TARJETA VERSIÓN
+========================================================== */
+
+.about-info-card--version {
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+
+    transition:
+        background-color .25s ease,
+        border-color .25s ease,
+        color .25s ease,
+        transform .25s ease,
+        box-shadow .25s ease;
+}
+
+
+/* ==========================================================
+   VERSIÓN - HOVER
+========================================================== */
+
+.about-info-card--version:hover {
+    background: #8f3435;
+    border-color: #8f3435;
+
+    color: #ffffff;
+
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 8px 20px rgba(130, 50, 51, .20);
+}
+
+
+.about-info-card--version:hover
+.about-info-card__icon,
+
+.about-info-card--version:hover
+.about-version__summary h3,
+
+.about-info-card--version:hover
+.about-version__summary p,
+
+.about-info-card--version:hover
+.about-version__hint {
+    color: #ffffff;
+}
+
+
+.about-info-card--version:hover
+.about-info-card__icon svg {
+    stroke: #ffffff;
+}
+
+
+/* ==========================================================
+   RESUMEN DE VERSIÓN
+========================================================== */
+
+.about-version__summary {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+}
+
+
+.about-version__hint {
+    margin-top: 10px;
+
+    font-size: 12px;
+
+    opacity: 0;
+
+    transition: opacity .2s ease;
+}
+
+
+.about-info-card--version:hover
+.about-version__hint {
+    opacity: .85;
+}
+
+
+/* ==========================================================
+   INFORMACIÓN OCULTA
+========================================================== */
+
+.about-version__details {
+    width: 0;
+    max-width: 0;
+    height: 0;
+
+    opacity: 0;
+    visibility: hidden;
+
+    overflow: hidden;
+    pointer-events: none;
+
+    transform: translateX(30px);
+}
+
+
+/* ==========================================================
+   EXPANDIR VERSIÓN
+========================================================== */
+
+.about-modal__cards--version-open {
+    grid-template-columns:
+        minmax(0, 1fr)
+        0fr
+        0fr;
+
+    gap: 0;
+}
+
+
+/* Ocultar las otras dos tarjetas */
+.about-modal__cards--version-open
+.about-info-card:not(.about-info-card--version) {
+    min-width: 0;
+
+    padding-left: 0;
+    padding-right: 0;
+
+    border-width: 0;
+
+    opacity: 0;
+
+    overflow: hidden;
+
+    pointer-events: none;
+
+    transform:
+        translateX(25px)
+        scale(.96);
+}
+
+
+/* Tarjeta versión abierta */
+.about-info-card--version-open {
+    width: 100%;
+
+    min-height: 235px;
+
+    padding: 12px;
+
+    background: #8f3435 !important;
+
+    border-color: #8f3435 !important;
+
+    color: #ffffff !important;
+
+    display: flex;
+
+    flex-direction: row;
+
+    align-items: stretch;
+
+    text-align: left;
+
+    transform: none !important;
+
+    box-shadow:
+        0 8px 22px rgba(0, 0, 0, .08);
+}
+
+
+/* ==========================================================
+   LADO IZQUIERDO
+========================================================== */
+
+.about-info-card--version-open
+.about-version__summary {
+    flex: 0 0 185px;
+
+    width: 185px;
+
+    padding:
+        12px
+        18px;
+
+    border-right:
+        1px solid rgba(255, 255, 255, .35);
+
+    color: #ffffff;
+}
+
+
+.about-info-card--version-open
+.about-version__summary h3,
+
+.about-info-card--version-open
+.about-version__summary p,
+
+.about-info-card--version-open
+.about-info-card__icon {
+    color: #ffffff !important;
+}
+
+
+.about-info-card--version-open
+.about-info-card__icon svg {
+    stroke: #ffffff !important;
+}
+
+
+.about-info-card--version-open
+.about-version__hint {
+    display: none;
+}
+
+
+/* ==========================================================
+   LADO DERECHO
+========================================================== */
+
+.about-info-card--version-open
+.about-version__details {
+    position: relative;
+
+    flex: 1;
+
+    width: auto;
+    max-width: 100%;
+
+    height: auto;
+
+    margin-left: 22px;
+
+    padding:
+        8px
+        58px
+        8px
+        0;
+
+    opacity: 1;
+    visibility: visible;
+
+    overflow: visible;
+
+    pointer-events: auto;
+
+    transform: translateX(0);
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+
+    color: #ffffff;
+}
+
+
+/* ==========================================================
+   TEXTO DE VERSIONES
+========================================================== */
+
+.about-version__section {
+    margin: 0;
+}
+
+
+.about-version__section + .about-version__section {
+    margin-top: 18px;
+}
+
+
+.about-version__section h3 {
+    margin:
+        0
+        0
+        4px;
+
+    font-family: inherit;
+
+    font-size: 16px;
+
+    line-height: 1.3;
+
+    font-weight: 700;
+
+    color: #ffffff;
+}
+
+
+.about-version__section p {
+    margin: 0;
+
+    font-family: inherit;
+
+    font-size: 15px;
+
+    line-height: 1.4;
+
+    font-weight: 400;
+
+    color: #ffffff;
+}
+
+
+/* ==========================================================
+   X INTERNA
+========================================================== */
+
+.about-version__close {
+    position: absolute;
+
+    top: 0;
+    right: 0;
+
+    width: 42px;
+    height: 42px;
+
+    padding: 0;
+
+    border:
+        1px solid rgba(255, 255, 255, .45);
+
+    border-radius: 50%;
+
+    background: transparent;
+
+    color: #ffffff;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+}
+
+
+.about-version__close svg {
+    width: 19px;
+    height: 19px;
+
+    stroke: currentColor;
+}
+
+
+.about-version__close:hover {
+    background:
+        rgba(255, 255, 255, .12);
+
+    border-color:
+        rgba(255, 255, 255, .8);
+}
+
+
+/* La X no aparece en el estado normal */
+.about-info-card--version:not(
+    .about-info-card--version-open
+)
+.about-version__close {
+    display: none;
+}

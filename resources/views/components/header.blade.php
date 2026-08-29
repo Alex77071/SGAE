@@ -463,8 +463,17 @@
             <div class="about-modal__cards">
 
 
-                {{-- VERSIÓN --}}
-                <article class="about-info-card">
+            {{-- VERSIÓN --}}
+            <article
+                class="about-info-card about-info-card--version"
+                id="aboutVersionCard"
+                role="button"
+                tabindex="0"
+                aria-expanded="false"
+            >
+
+                {{-- INFORMACIÓN NORMAL --}}
+                <div class="about-version__summary">
 
                     <span class="about-info-card__icon" aria-hidden="true">
 
@@ -476,8 +485,8 @@
                             stroke-linecap="round"
                             stroke-linejoin="round"
                         >
-                            <circle cx="12" cy="12" r="8"></circle>
-                            <path d="M12 8v4l3 2"></path>
+                            <circle cx="12" cy="12" r="9"></circle>
+                            <path d="M12 7v5l3 2"></path>
                         </svg>
 
                     </span>
@@ -490,7 +499,73 @@
                         2.0
                     </p>
 
-                </article>
+                    <span class="about-version__hint">
+                        Ver información de versiones
+                    </span>
+
+                </div>
+
+
+                {{-- INFORMACIÓN QUE APARECE AL EXPANDIR --}}
+                <div
+                    class="about-version__details"
+                    aria-hidden="true"
+                >
+
+                    {{-- X QUE CIERRA SOLO EL RECUADRO --}}
+                    <button
+                        type="button"
+                        class="about-version__close"
+                        id="closeVersionCard"
+                        aria-label="Cerrar información de versión"
+                    >
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                        >
+                            <path d="M18 6L6 18"></path>
+                            <path d="M6 6l12 12"></path>
+                        </svg>
+                    </button>
+
+
+                    <div class="about-version__section">
+
+                        <h3>
+                            Primera versión.
+                        </h3>
+
+                        <p>
+                            Se utilizaba Moodle 3.4.2 junto con ChatGPT 5.0 para simular el proctoring mediante prompts.
+                            <br>
+                            Un script en Python descargaba las evidencias, pero todo el proceso era realizado manualmente por el usuario.
+                        </p>
+
+                    </div>
+
+
+                    <div class="about-version__section">
+
+                        <h3>
+                            Segunda versión.
+                        </h3>
+
+                        <p>
+                            Se incorporó una interfaz gráfica que automatizó el proceso, eliminando la intervención manual del usuario.
+                            <br>
+                            Tecnologías: Moodle 3.4.2 · ChatGPT 5.0 · Laravel 7.30.7 · PHP 7.4.33.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </article>
 
 {{-- =========================================================
      SUPERVISADO POR

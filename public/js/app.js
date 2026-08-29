@@ -1884,3 +1884,206 @@ if (closeDeveloperCard) {
     );
 
 });
+
+/* ==========================================================
+   ACERCA DE - EXPANDIR / CONTRAER VERSIÓN
+========================================================== */
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const versionCard =
+        document.getElementById('aboutVersionCard');
+
+    const aboutModal =
+        document.getElementById('aboutModal');
+
+
+    if (!versionCard || !aboutModal) {
+        return;
+    }
+
+
+    const cardsContainer =
+        versionCard.closest('.about-modal__cards');
+
+
+    const versionDetails =
+        versionCard.querySelector(
+            '.about-version__details'
+        );
+
+
+    const closeVersionCard =
+        document.getElementById('closeVersionCard');
+
+
+    if (!cardsContainer || !versionDetails) {
+        return;
+    }
+
+
+    /* ======================================================
+       EXPANDIR
+    ====================================================== */
+
+    function expandVersionCard() {
+
+        cardsContainer.classList.add(
+            'about-modal__cards--version-open'
+        );
+
+
+        versionCard.classList.add(
+            'about-info-card--version-open'
+        );
+
+
+        aboutModal.classList.add(
+            'about-modal--version-open'
+        );
+
+
+        versionCard.setAttribute(
+            'aria-expanded',
+            'true'
+        );
+
+
+        versionDetails.setAttribute(
+            'aria-hidden',
+            'false'
+        );
+
+    }
+
+
+    /* ======================================================
+       CONTRAER
+    ====================================================== */
+
+    function collapseVersionCard() {
+
+        cardsContainer.classList.remove(
+            'about-modal__cards--version-open'
+        );
+
+
+        versionCard.classList.remove(
+            'about-info-card--version-open'
+        );
+
+
+        aboutModal.classList.remove(
+            'about-modal--version-open'
+        );
+
+
+        versionCard.setAttribute(
+            'aria-expanded',
+            'false'
+        );
+
+
+        versionDetails.setAttribute(
+            'aria-hidden',
+            'true'
+        );
+
+    }
+
+
+    /* ======================================================
+       CLIC EN VERSIÓN
+    ====================================================== */
+
+    versionCard.addEventListener(
+        'click',
+        function (event) {
+
+            /*
+             * Si se presionó la X,
+             * ese clic se controla aparte.
+             */
+            if (
+                event.target.closest(
+                    '#closeVersionCard'
+                )
+            ) {
+                return;
+            }
+
+
+            const isExpanded =
+                versionCard.classList.contains(
+                    'about-info-card--version-open'
+                );
+
+
+            if (!isExpanded) {
+                expandVersionCard();
+            }
+
+        }
+    );
+
+
+    /* ======================================================
+       X INTERNA
+    ====================================================== */
+
+    if (closeVersionCard) {
+
+        closeVersionCard.addEventListener(
+            'click',
+            function (event) {
+
+                event.preventDefault();
+
+                event.stopPropagation();
+
+
+                /*
+                 * Solo cierra el recuadro rojo.
+                 * El modal "Acerca de" permanece abierto.
+                 */
+                collapseVersionCard();
+
+            }
+        );
+
+    }
+
+
+    /* ======================================================
+       ENTER / ESPACIO
+    ====================================================== */
+
+    versionCard.addEventListener(
+        'keydown',
+        function (event) {
+
+            if (
+                event.key !== 'Enter' &&
+                event.key !== ' '
+            ) {
+                return;
+            }
+
+
+            event.preventDefault();
+
+
+            const isExpanded =
+                versionCard.classList.contains(
+                    'about-info-card--version-open'
+                );
+
+
+            if (!isExpanded) {
+                expandVersionCard();
+            }
+
+        }
+    );
+
+});
