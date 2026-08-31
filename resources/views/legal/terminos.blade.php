@@ -43,7 +43,7 @@
                 investigación, publicaciones, presentaciones, capacitación,
                 demostraciones u otros proyectos, deberá contar previamente
                 con la autorización del UsaLab Laboratorio de Usabilidad de la 
-                Universidad Tecnologica de la Mixteca.
+                Universidad Tecnológica de la Mixteca.
             </p>
 
             <p>
