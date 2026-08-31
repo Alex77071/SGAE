@@ -25,7 +25,7 @@
                 El Sistema de Gestión y Análisis de Evidencias (SGAE)
                 es una herramienta de apoyo académico para la revisión
                 y análisis de evidencias generadas durante evaluaciones
-                en línea.
+                en línea mediante la herramienta Moodle.
             </p>
 
             <p>
@@ -42,7 +42,8 @@
                 correspondiente. Cualquier uso adicional, incluyendo
                 investigación, publicaciones, presentaciones, capacitación,
                 demostraciones u otros proyectos, deberá contar previamente
-                con la autorización de UsaLab.
+                con la autorización del UsaLab Laboratorio de Usabilidad de la 
+                Universidad Tecnologica de la Mixteca.
             </p>
 
             <p>
