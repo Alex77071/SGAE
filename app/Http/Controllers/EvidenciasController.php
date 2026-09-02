@@ -548,20 +548,252 @@ private function ejecutarPython(array $argumentos): array
         ]);
     }
 
+    /*
+|--------------------------------------------------------------------------
+| OBTENER CMID DEL EXAMEN
+|--------------------------------------------------------------------------
+*/
+
+$examenes =
+    $this->moodleService
+        ->getCourseQuizzes(
+            $token,
+            $courseId
+        );
+
+
+if (!$examenes['success']) {
+
+    return response()->json([
+        'ok' => false,
+
+        'message' =>
+            'No fue posible obtener la información del examen.',
+    ]);
+}
+
+
+$cmid = 0;
+
+
+foreach (
+    $examenes['data'] ?? []
+    as $examen
+) {
+
+    if (
+        (int) ($examen['id'] ?? 0)
+        ===
+        $quizId
+    ) {
+
+        $cmid =
+            (int) ($examen['cmid'] ?? 0);
+
+        break;
+    }
+}
+
+
+if ($cmid <= 0) {
+
+    return response()->json([
+        'ok' => false,
+
+        'message' =>
+            'No se encontró el módulo del examen.',
+    ]);
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| CONTAR IMÁGENES
+|--------------------------------------------------------------------------
+*/
+
+$alumnosIds =
+    $resultado['data']['alumnos_ids']
+    ?? [];
+
+
+$imagenesResultado =
+    $this->moodleService
+        ->countProctoringImages(
+            $token,
+            $courseId,
+            $cmid,
+            $alumnosIds
+        );
+
+
+if (!$imagenesResultado['success']) {
+
+    return response()->json([
+        'ok' => false,
+
+        'message' =>
+            $imagenesResultado['message']
+            ?? 'No fue posible contar las imágenes.',
+    ]);
+}
+
+
+   return response()->json([
+    'ok' => true,
+
+    'alumnos_total' =>
+        $resultado['data']['alumnos_total']
+        ?? 0,
+
+    'alumnos_con_intento' =>
+        $resultado['data']['alumnos_con_intento']
+        ?? 0,
+
+    'imagenes' =>
+        $imagenesResultado['data']['imagenes']
+        ?? 0,
+]);
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| PROBAR CAPTURAS DE PROCTORING
+|--------------------------------------------------------------------------
+*/
+
+public function probarCapturas(Request $request)
+{
+    if (!session('moodle_authenticated')) {
+
+        return response()->json(
+            [
+                'ok' => false,
+                'message' => 'Sesión no válida.',
+            ],
+            401
+        );
+    }
+
+
+    $request->validate([
+
+        'courseid' =>
+            'required|integer',
+
+        'quizid' =>
+            'required|integer',
+
+        'cmid' =>
+            'required|integer',
+
+    ]);
+
+
+    $token =
+        session('moodle_token');
+
+
+    $userIdProfesor =
+        (int) session('moodle_user_id');
+
+
+    $courseId =
+        (int) $request->courseid;
+
+
+    $quizId =
+        (int) $request->quizid;
+
+
+    $cmid =
+        (int) $request->cmid;
+
+
+    if (!$token || !$userIdProfesor) {
+
+        return response()->json([
+            'ok' => false,
+            'message' =>
+                'No se encontró la sesión de Moodle.',
+        ]);
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | OBTENER UN ALUMNO QUE HAYA REALIZADO EL EXAMEN
+    |--------------------------------------------------------------------------
+    */
+
+    $alumnos =
+        $this->moodleService
+            ->getQuizStudents(
+                $token,
+                $courseId,
+                $quizId
+            );
+
+
+    if (!$alumnos['success']) {
+
+        return response()->json([
+            'ok' => false,
+            'message' =>
+                $alumnos['message']
+                ?? 'No fue posible obtener los alumnos.',
+        ]);
+    }
+
+
+    $alumnoId =
+        $alumnos['data']['primer_alumno_id']
+        ?? null;
+
+
+    if (!$alumnoId) {
+
+        return response()->json([
+            'ok' => false,
+            'message' =>
+                'No se encontró un alumno con intento en este examen.',
+        ]);
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | CONSULTAR SUS CAPTURAS
+    |--------------------------------------------------------------------------
+    */
+
+    $capturas =
+        $this->moodleService
+            ->getProctoringCamshots(
+                $token,
+                $courseId,
+                $cmid,
+                (int) $alumnoId
+            );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | DEVOLVER RESPUESTA SIN MODIFICAR
+    |--------------------------------------------------------------------------
+    */
 
     return response()->json([
         'ok' => true,
 
-        'alumnos_total' =>
-            $resultado['data']['alumnos_total']
-            ?? 0,
+        'alumno_id' =>
+            (int) $alumnoId,
 
-        'alumnos_con_intento' =>
-            $resultado['data']['alumnos_con_intento']
-            ?? 0,
+        'capturas' =>
+            $capturas,
     ]);
 }
-
 
     /*
     |--------------------------------------------------------------------------

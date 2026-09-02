@@ -2484,20 +2484,29 @@ async function actualizarTablaResultados() {
     const quizId =
         examSelect.value;
 
+
     if (!courseId || !quizId) {
         return;
     }
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | DATOS SELECCIONADOS
+    |--------------------------------------------------------------------------
+    */
 
     const courseOption =
         courseSelect.options[
             courseSelect.selectedIndex
         ];
 
+
     const groupOption =
         groupSelect.options[
             groupSelect.selectedIndex
         ];
+
 
     const examOption =
         examSelect.options[
@@ -2508,110 +2517,154 @@ async function actualizarTablaResultados() {
     const courseName =
         courseOption.textContent.trim();
 
+
     const examName =
         examOption.textContent.trim();
 
-        const fechaTimestamp =
-    Number(
-        examOption.dataset.fechaHora || 0
-    );
 
+    /*
+    |--------------------------------------------------------------------------
+    | FECHA DEL EXAMEN
+    |--------------------------------------------------------------------------
+    */
 
-let fechaHora =
-    'Sin fecha definida';
-
-
-if (fechaTimestamp > 0) {
-
-    const fecha =
-        new Date(
-            fechaTimestamp * 1000
+    const fechaTimestamp =
+        Number(
+            examOption.dataset.fechaHora || 0
         );
 
 
-    fechaHora =
-        fecha.toLocaleString(
-            'es-MX',
-            {
-                dateStyle: 'short',
-                timeStyle: 'short'
-            }
-        );
+    let fechaHora =
+        'Sin fecha definida';
 
-}
+
+    if (fechaTimestamp > 0) {
+
+        const fecha =
+            new Date(
+                fechaTimestamp * 1000
+            );
+
+
+        fechaHora =
+            fecha.toLocaleString(
+                'es-MX',
+                {
+                    dateStyle: 'short',
+                    timeStyle: 'short'
+                }
+            );
+
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | GRUPO
+    |--------------------------------------------------------------------------
+    */
 
     let groupName =
         'Todos los grupos';
+
 
     if (
         groupSelect.value &&
         groupOption
     ) {
+
         groupName =
             groupOption.textContent.trim();
+
     }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | ALUMNOS E IMÁGENES
+    |--------------------------------------------------------------------------
+    */
 
     let alumnos =
-    '—';
+        '—';
 
 
-try {
-
-    const url =
-        new URL(
-            examDataUrl,
-            window.location.origin
-        );
+    let imagenes =
+        '—';
 
 
-    url.searchParams.set(
-        'courseid',
-        courseId
-    );
+    try {
 
-
-    url.searchParams.set(
-        'quizid',
-        quizId
-    );
-
-
-    const data =
-        await obtenerJson(
-            url.toString()
-        );
-
-
-    if (data.ok) {
-
-        const alumnosConIntento =
-            Number(
-                data.alumnos_con_intento || 0
+        const url =
+            new URL(
+                examDataUrl,
+                window.location.origin
             );
 
 
-        const alumnosTotal =
-            Number(
-                data.alumnos_total || 0
+        url.searchParams.set(
+            'courseid',
+            courseId
+        );
+
+
+        url.searchParams.set(
+            'quizid',
+            quizId
+        );
+
+
+        const data =
+            await obtenerJson(
+                url.toString()
             );
 
 
-        alumnos =
-            alumnosConIntento +
-            ' / ' +
-            alumnosTotal;
+        if (data.ok) {
+
+            const alumnosConIntento =
+                Number(
+                    data.alumnos_con_intento || 0
+                );
+
+
+            const alumnosTotal =
+                Number(
+                    data.alumnos_total || 0
+                );
+
+
+            alumnos =
+                alumnosConIntento +
+                ' / ' +
+                alumnosTotal;
+
+
+            imagenes =
+                Number(
+                    data.imagenes || 0
+                ).toLocaleString(
+                    'es-MX'
+                );
+
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            'Error cargando datos del examen:',
+            error
+        );
 
     }
 
 
-} catch (error) {
-
-    console.error(
-        'Error cargando alumnos:',
-        error
-    );
-
-}
+    /*
+    |--------------------------------------------------------------------------
+    | MOSTRAR FILA
+    |--------------------------------------------------------------------------
+    */
 
     resultsBody.innerHTML = `
         <tr>
@@ -2630,16 +2683,14 @@ try {
 
             <td>
                 ${alumnos}
-
             </td>
 
             <td>
-                —
+                ${imagenes}
             </td>
 
             <td>
-                    ${fechaHora}
-
+                ${fechaHora}
             </td>
 
             <td>
@@ -2667,7 +2718,6 @@ try {
         </tr>
     `;
 }
-
 /*
 |--------------------------------------------------------------------------
 | CUANDO CAMBIA EL EXAMEN

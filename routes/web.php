@@ -789,3 +789,14 @@ Route::get(
     '/evidencias/datos-examen',
     [EvidenciasController::class, 'datosExamen']
 )->name('evidencias.datos-examen');
+
+/*
+|--------------------------------------------------------------------------
+| PROBAR CAPTURAS DE PROCTORING
+|--------------------------------------------------------------------------
+*/
+
+Route::get(
+    '/evidencias/probar-capturas',
+    [EvidenciasController::class, 'probarCapturas']
+)->name('evidencias.probar-capturas');
