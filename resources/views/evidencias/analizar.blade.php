@@ -49,6 +49,13 @@
     {{-- =====================================================
      SELECCIONAR ARCHIVO
 ====================================================== --}}
+<form
+    id="analysisUploadForm"
+    action="{{ route('evidencias.analisis.iniciar') }}"
+    method="POST"
+    enctype="multipart/form-data"
+>
+    @csrf
 
 <section class="analyze-file-card">
 
@@ -83,12 +90,13 @@
     </p>
 
 
-    <input
-        type="file"
-        id="analysisFileInput"
-        class="analyze-file-input"
-        accept=".zip"
-    >
+<input
+    type="file"
+    id="analysisFileInput"
+    name="archivo"
+    class="analyze-file-input"
+    accept=".zip"
+>
 
 
     <button
@@ -126,6 +134,7 @@
     </p>
 
 </section>
+</form>
 
 
 <script>
@@ -160,25 +169,41 @@ document.addEventListener('DOMContentLoaded', function () {
      */
     fileInput.addEventListener('change', function () {
 
-        if (!fileInput.files.length) {
-            return;
-        }
+    if (!fileInput.files.length) {
+        return;
+    }
 
+    const selectedFile =
+        fileInput.files[0];
 
-        const selectedFile =
-            fileInput.files[0];
+    const fileName =
+        selectedFile.name.toLowerCase();
 
+    if (!fileName.endsWith('.zip')) {
 
-        /*
-         * Por ahora no se procesa ni se sube el archivo.
-         *
-         * Únicamente validamos que exista una selección
-         * y avanzamos a la siguiente pantalla.
-         */
-        window.location.href =
-            "{{ route('evidencias.analizando') }}";
+        alert(
+            'Selecciona un archivo ZIP válido.'
+        );
 
-    });
+        fileInput.value = '';
+
+        return;
+    }
+
+    const form =
+        document.getElementById(
+            'analysisUploadForm'
+        );
+
+    if (!form) {
+        return;
+    }
+
+    fileButton.disabled = true;
+
+    form.submit();
+
+});
 
 });
 

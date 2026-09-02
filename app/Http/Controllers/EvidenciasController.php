@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Symfony\Component\Process\Process;
 use App\Services\MoodleService;
-
+use Illuminate\Support\Facades\Http;
 
 class EvidenciasController extends Controller
 {
@@ -1251,5 +1251,246 @@ public function probarCapturas(Request $request)
             basename($zip)
         )
         ->deleteFileAfterSend(true);
+}
+
+public function iniciarAnalisis(Request $request)
+{
+    if (!session('moodle_authenticated')) {
+        return redirect()->route('login');
+    }
+
+    $request->validate([
+        'archivo' => 'required|file|mimes:zip',
+    ]);
+
+    $archivo = $request->file('archivo');
+
+    $stream = fopen(
+        $archivo->getRealPath(),
+        'r'
+    );
+
+    try {
+
+        $respuesta = Http::timeout(60)
+            ->attach(
+                'archivo',
+                $stream,
+                $archivo->getClientOriginalName()
+            )
+            ->post(
+                'http://127.0.0.1:8000/analizar/iniciar'
+            );
+
+    } catch (\Throwable $error) {
+
+        return back()->withErrors([
+            'archivo' =>
+                'No fue posible conectar con la API de análisis: '
+                . $error->getMessage()
+        ]);
+
+    } finally {
+
+        if (is_resource($stream)) {
+            fclose($stream);
+        }
+    }
+
+    if (!$respuesta->successful()) {
+
+        return back()->withErrors([
+            'archivo' =>
+                'La API no pudo iniciar el análisis.'
+        ]);
+    }
+
+    $datos = $respuesta->json();
+
+    if (
+        !isset($datos['job_id'])
+        ||
+        !isset($datos['archivo'])
+    ) {
+
+        return back()->withErrors([
+            'archivo' =>
+                'La API devolvió una respuesta inválida.'
+        ]);
+    }
+
+    session([
+        'analisis_job_id' =>
+            $datos['job_id'],
+
+        'analisis_archivo' =>
+            $datos['archivo'],
+    ]);
+
+    return redirect()->route(
+        'evidencias.analizando'
+    );
+}
+public function progresoAnalisis()
+{
+    $jobId = session(
+        'analisis_job_id'
+    );
+
+    if (!$jobId) {
+
+        return response()->json(
+            [
+                'estado' => 'error',
+                'mensaje' =>
+                    'No existe un análisis activo.',
+            ],
+            404
+        );
+    }
+
+    try {
+
+        $respuesta = Http::timeout(15)
+            ->get(
+                'http://127.0.0.1:8000'
+                . '/analizar/progreso/'
+                . $jobId
+            );
+
+    } catch (\Throwable $error) {
+
+        return response()->json(
+            [
+                'estado' => 'error',
+                'mensaje' =>
+                    'No fue posible conectar con la API.',
+            ],
+            500
+        );
+    }
+
+    if (!$respuesta->successful()) {
+
+        return response()->json(
+            [
+                'estado' => 'error',
+                'mensaje' =>
+                    'No fue posible consultar el progreso.',
+            ],
+            500
+        );
+    }
+
+    $progreso = $respuesta->json();
+
+    if (
+        isset($progreso['estado'])
+        &&
+        $progreso['estado'] === 'completado'
+    ) {
+
+        try {
+
+            $respuestaResultado =
+                Http::timeout(15)
+                    ->get(
+                        'http://127.0.0.1:8000'
+                        . '/analizar/resultado/'
+                        . $jobId
+                    );
+
+            if (
+                $respuestaResultado
+                    ->successful()
+            ) {
+
+                session([
+                    'analisis_resultado' =>
+                        $respuestaResultado
+                            ->json()
+                ]);
+            }
+
+        } catch (\Throwable $error) {
+            // El progreso ya terminó.
+            // El resultado podrá consultarse después.
+        }
+    }
+
+    return response()->json(
+        $progreso
+    );
+}
+public function reporteActual(Request $request)
+{
+    $jobId = session(
+        'analisis_job_id'
+    );
+
+    if (!$jobId) {
+
+        abort(
+            404,
+            'No existe un reporte disponible.'
+        );
+    }
+
+    try {
+
+        $respuesta = Http::timeout(60)
+            ->get(
+                'http://127.0.0.1:8000'
+                . '/analizar/reporte/'
+                . $jobId
+            );
+
+    } catch (\Throwable $error) {
+
+        abort(
+            500,
+            'No fue posible conectar con la API.'
+        );
+    }
+
+    if (!$respuesta->successful()) {
+
+        abort(
+            404,
+            'No fue posible obtener el reporte.'
+        );
+    }
+
+    $resultado = session(
+        'analisis_resultado',
+        []
+    );
+
+    $nombrePdf =
+        $resultado['reporte']['nombre']
+        ?? 'Reporte_Analisis.pdf';
+
+    $descargar =
+        $request->query('download') == '1';
+
+    $disposicion =
+        $descargar
+            ? 'attachment'
+            : 'inline';
+
+    return response(
+        $respuesta->body(),
+        200,
+        [
+            'Content-Type' =>
+                'application/pdf',
+
+            'Content-Disposition' =>
+                $disposicion
+                . '; filename="'
+                . $nombrePdf
+                . '"',
+        ]
+    );
 }
 }
