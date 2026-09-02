@@ -784,3 +784,8 @@ Route::get('/debug-sesion', function () {
     ]);
 
 });
+
+Route::get(
+    '/evidencias/datos-examen',
+    [EvidenciasController::class, 'datosExamen']
+)->name('evidencias.datos-examen');

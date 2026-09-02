@@ -462,7 +462,105 @@ private function ejecutarPython(array $argumentos): array
                 $resultado['data'] ?? [],
         ]);
     }
-    
+
+
+    public function datosExamen(Request $request)
+{
+    if (!session('moodle_authenticated')) {
+
+        return response()->json(
+            [
+                'ok' => false,
+                'message' => 'Sesión no válida.',
+            ],
+            401
+        );
+    }
+
+
+    $request->validate([
+        'courseid' =>
+            'required|integer',
+
+        'quizid' =>
+            'required|integer',
+    ]);
+
+
+    $token =
+        session('moodle_token');
+
+
+    $userId =
+        (int) session('moodle_user_id');
+
+
+    $courseId =
+        (int) $request->courseid;
+
+
+    $quizId =
+        (int) $request->quizid;
+
+
+    if (!$token || !$userId) {
+
+        return response()->json([
+            'ok' => false,
+            'message' =>
+                'No se encontró la sesión de Moodle.',
+        ]);
+    }
+
+
+    if (
+        !$this->profesorTieneCurso(
+            $token,
+            $userId,
+            $courseId
+        )
+    ) {
+
+        return response()->json([
+            'ok' => false,
+            'message' =>
+                'No tienes acceso a este curso.',
+        ]);
+    }
+
+
+    $resultado =
+        $this->moodleService
+            ->getQuizStudents(
+                $token,
+                $courseId,
+                $quizId
+            );
+
+
+    if (!$resultado['success']) {
+
+        return response()->json([
+            'ok' => false,
+            'message' =>
+                $resultado['message']
+                ?? 'No fue posible obtener los alumnos.',
+        ]);
+    }
+
+
+    return response()->json([
+        'ok' => true,
+
+        'alumnos_total' =>
+            $resultado['data']['alumnos_total']
+            ?? 0,
+
+        'alumnos_con_intento' =>
+            $resultado['data']['alumnos_con_intento']
+            ?? 0,
+    ]);
+}
 
 
     /*
@@ -470,6 +568,8 @@ private function ejecutarPython(array $argumentos): array
     | DESCARGAR EVIDENCIAS
     |--------------------------------------------------------------------------
     */
+
+
 
    public function descargar(Request $request)
 {

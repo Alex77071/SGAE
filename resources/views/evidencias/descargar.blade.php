@@ -10,6 +10,8 @@
     data-courses-url="{{ route('evidencias.cursos') }}"
     data-groups-url="{{ route('evidencias.grupos') }}"
     data-exams-url="{{ route('evidencias.examenes') }}"
+    data-exam-data-url="{{ route('evidencias.datos-examen') }}"
+
 >
 
 

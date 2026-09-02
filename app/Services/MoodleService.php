@@ -609,4 +609,146 @@ public function getCourseQuizzes(
         'data' => $resultado,
     ];
 }
+
+public function getQuizStudents(
+    string $token,
+    int $courseId,
+    int $quizId
+): array {
+
+    /*
+    |--------------------------------------------------------------------------
+    | OBTENER PARTICIPANTES DEL CURSO
+    |--------------------------------------------------------------------------
+    */
+
+    $usersResponse =
+        $this->call(
+            $token,
+            'core_enrol_get_enrolled_users',
+            [
+                'courseid' => $courseId,
+            ]
+        );
+
+
+    if (!$usersResponse['success']) {
+
+        return [
+            'success' => false,
+            'message' =>
+                $usersResponse['message']
+                ?? 'No fue posible obtener los alumnos.',
+            'data' => [],
+        ];
+    }
+
+
+    $usuarios =
+        $usersResponse['data']
+        ?? [];
+
+
+    $alumnosTotal = 0;
+
+    $alumnosConIntento = 0;
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | RECORRER ÚNICAMENTE ALUMNOS
+    |--------------------------------------------------------------------------
+    */
+
+    foreach ($usuarios as $usuario) {
+
+        $esAlumno = false;
+
+
+        foreach (($usuario['roles'] ?? []) as $rol) {
+
+            $shortname =
+                strtolower(
+                    trim(
+                        $rol['shortname']
+                        ?? ''
+                    )
+                );
+
+
+            if ($shortname === 'student') {
+
+                $esAlumno = true;
+
+                break;
+            }
+        }
+
+
+        if (!$esAlumno) {
+            continue;
+        }
+
+
+        $alumnosTotal++;
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | VERIFICAR SI EL ALUMNO TIENE INTENTO
+        |--------------------------------------------------------------------------
+        */
+
+        $attemptsResponse =
+            $this->call(
+                $token,
+                'mod_quiz_get_user_attempts',
+                [
+                    'quizid' =>
+                        $quizId,
+
+                    'userid' =>
+                        (int) $usuario['id'],
+
+                    'status' =>
+                        'all',
+
+                    'includepreviews' =>
+                        0,
+                ]
+            );
+
+
+        if (!$attemptsResponse['success']) {
+            continue;
+        }
+
+
+        $intentos =
+            $attemptsResponse['data']['attempts']
+            ?? [];
+
+
+        if (!empty($intentos)) {
+
+            $alumnosConIntento++;
+        }
+    }
+
+
+    return [
+        'success' => true,
+
+        'data' => [
+
+            'alumnos_total' =>
+                $alumnosTotal,
+
+            'alumnos_con_intento' =>
+                $alumnosConIntento,
+
+        ],
+    ];
+}
+
 }

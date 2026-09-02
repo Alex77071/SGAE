@@ -2137,6 +2137,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const examsUrl =
         page.dataset.examsUrl;
 
+    const examDataUrl =
+        page.dataset.examDataUrl;
 
     /*
     |--------------------------------------------------------------------------
@@ -2474,7 +2476,7 @@ document.addEventListener('DOMContentLoaded', function () {
 |--------------------------------------------------------------------------
 */
 
-function actualizarTablaResultados() {
+async function actualizarTablaResultados() {
 
     const courseId =
         courseSelect.value;
@@ -2549,6 +2551,67 @@ if (fechaTimestamp > 0) {
             groupOption.textContent.trim();
     }
 
+    let alumnos =
+    '—';
+
+
+try {
+
+    const url =
+        new URL(
+            examDataUrl,
+            window.location.origin
+        );
+
+
+    url.searchParams.set(
+        'courseid',
+        courseId
+    );
+
+
+    url.searchParams.set(
+        'quizid',
+        quizId
+    );
+
+
+    const data =
+        await obtenerJson(
+            url.toString()
+        );
+
+
+    if (data.ok) {
+
+        const alumnosConIntento =
+            Number(
+                data.alumnos_con_intento || 0
+            );
+
+
+        const alumnosTotal =
+            Number(
+                data.alumnos_total || 0
+            );
+
+
+        alumnos =
+            alumnosConIntento +
+            ' / ' +
+            alumnosTotal;
+
+    }
+
+
+} catch (error) {
+
+    console.error(
+        'Error cargando alumnos:',
+        error
+    );
+
+}
 
     resultsBody.innerHTML = `
         <tr>
@@ -2566,7 +2629,8 @@ if (fechaTimestamp > 0) {
             </td>
 
             <td>
-                —
+                ${alumnos}
+
             </td>
 
             <td>
