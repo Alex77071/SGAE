@@ -11,6 +11,7 @@
     data-groups-url="{{ route('evidencias.grupos') }}"
     data-exams-url="{{ route('evidencias.examenes') }}"
     data-exam-data-url="{{ route('evidencias.datos-examen') }}"
+    data-captures-url="{{ route('evidencias.capturas') }}"
 
 >
 

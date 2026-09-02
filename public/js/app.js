@@ -2195,6 +2195,9 @@ const evidenceCloseButton =
     const examDataUrl =
         page.dataset.examDataUrl;
 
+    const capturesUrl =
+    page.dataset.capturesUrl;
+
     /*
     |--------------------------------------------------------------------------
     | FUNCIÓN AUXILIAR
@@ -2541,6 +2544,14 @@ examSelect.appendChild(
 
 let totalImagenesSeleccionadas = 0;
 
+let evidenceOffset = 0;
+
+const evidenceLimit = 24;
+
+let evidenceHasMore = false;
+
+let evidenceLoading = false;
+
 async function actualizarTablaResultados() {
 
     const courseId =
@@ -2791,6 +2802,335 @@ imagenes =
 
 /*
 |--------------------------------------------------------------------------
+| CREAR UNA MINIATURA
+|--------------------------------------------------------------------------
+*/
+
+function agregarImagenGaleria(imagen) {
+
+    if (!imagen || !imagen.url) {
+        return;
+    }
+
+
+    const item =
+        document.createElement('div');
+
+
+    item.className =
+        'evidence-gallery__item';
+
+
+    const img =
+        document.createElement('img');
+
+
+    img.className =
+        'evidence-gallery__image';
+
+
+    img.src =
+        imagen.url;
+
+
+    img.alt =
+        'Evidencia del examen';
+
+
+    /*
+     * Evita cargar físicamente todas las imágenes
+     * antes de que sean necesarias.
+     */
+    img.loading =
+        'lazy';
+
+
+    /*
+     * Si una imagen falla, ocultamos únicamente
+     * esa miniatura.
+     */
+    img.addEventListener(
+        'error',
+        function () {
+
+            item.style.display =
+                'none';
+
+        }
+    );
+
+
+    item.appendChild(
+        img
+    );
+
+
+    evidenceGallery.appendChild(
+        item
+    );
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| CARGAR CAPTURAS DESDE LARAVEL
+|--------------------------------------------------------------------------
+*/
+
+async function cargarCapturas(
+    reiniciar = false
+) {
+
+    if (
+        evidenceLoading ||
+        !capturesUrl
+    ) {
+        return;
+    }
+
+
+    const courseId =
+        courseSelect.value;
+
+
+    const quizId =
+        examSelect.value;
+
+
+    if (!courseId || !quizId) {
+        return;
+    }
+
+
+    /*
+     * Primera carga.
+     */
+    if (reiniciar) {
+
+        evidenceOffset = 0;
+
+        evidenceHasMore = false;
+
+        evidenceGallery.innerHTML =
+            '';
+
+        if (evidenceModalShown) {
+
+            evidenceModalShown.textContent =
+                '';
+        }
+
+    }
+
+
+    evidenceLoading =
+        true;
+
+
+    /*
+     * Mostrar mensaje solo si todavía
+     * no hay fotografías.
+     */
+    if (evidenceOffset === 0) {
+
+        evidenceModalStatus.hidden =
+            false;
+
+        evidenceModalStatus.textContent =
+            'Cargando evidencias...';
+
+    }
+
+
+    if (evidenceLoadMore) {
+
+        evidenceLoadMore.disabled =
+            true;
+    }
+
+
+    try {
+
+        const url =
+            new URL(
+                capturesUrl,
+                window.location.origin
+            );
+
+
+        url.searchParams.set(
+            'courseid',
+            courseId
+        );
+
+
+        url.searchParams.set(
+            'quizid',
+            quizId
+        );
+
+
+        url.searchParams.set(
+            'offset',
+            evidenceOffset
+        );
+
+
+        url.searchParams.set(
+            'limit',
+            evidenceLimit
+        );
+
+
+        const data =
+            await obtenerJson(
+                url.toString()
+            );
+
+
+        if (!data.ok) {
+
+            throw new Error(
+                data.message ||
+                'No fue posible cargar las imágenes.'
+            );
+
+        }
+
+
+        const imagenes =
+            Array.isArray(
+                data.imagenes
+            )
+                ? data.imagenes
+                : [];
+
+
+        /*
+         * Ocultamos "Cargando..."
+         */
+        evidenceModalStatus.hidden =
+            true;
+
+
+        /*
+         * Dibujar fotografías.
+         */
+        imagenes.forEach(
+            function (imagen) {
+
+                agregarImagenGaleria(
+                    imagen
+                );
+
+            }
+        );
+
+
+        /*
+         * Actualizar offset.
+         */
+        evidenceOffset =
+            Number(
+                data.next_offset
+                ?? (
+                    evidenceOffset +
+                    imagenes.length
+                )
+            );
+
+
+        evidenceHasMore =
+            Boolean(
+                data.has_more
+            );
+
+
+        /*
+         * Texto inferior.
+         */
+        if (evidenceModalShown) {
+
+            evidenceModalShown.textContent =
+                'Mostrando ' +
+                evidenceOffset.toLocaleString(
+                    'es-MX'
+                ) +
+                ' de ' +
+                totalImagenesSeleccionadas
+                    .toLocaleString(
+                        'es-MX'
+                    ) +
+                ' imágenes';
+
+        }
+
+
+        /*
+         * Mostrar u ocultar "Cargar más".
+         */
+        if (evidenceModalMore) {
+
+            evidenceModalMore.hidden =
+                !evidenceHasMore;
+
+        }
+
+
+        /*
+         * Si no existe ninguna fotografía.
+         */
+        if (
+            reiniciar &&
+            imagenes.length === 0
+        ) {
+
+            evidenceModalStatus.hidden =
+                false;
+
+            evidenceModalStatus.textContent =
+                'No se encontraron evidencias para este examen.';
+
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            'Error cargando evidencias:',
+            error
+        );
+
+
+        evidenceModalStatus.hidden =
+            false;
+
+
+        evidenceModalStatus.textContent =
+            'No fue posible cargar las evidencias.';
+
+
+    } finally {
+
+        evidenceLoading =
+            false;
+
+
+        if (evidenceLoadMore) {
+
+            evidenceLoadMore.disabled =
+                false;
+
+        }
+
+    }
+
+}
+
+
+
+/*
+|--------------------------------------------------------------------------
 | ABRIR MODAL DE EVIDENCIAS
 |--------------------------------------------------------------------------
 */
@@ -2874,6 +3214,10 @@ function abrirModalEvidencias() {
     evidenceModal.hidden =
         false;
 
+        /*
+ * Cargar las primeras 24 imágenes.
+ */
+cargarCapturas(true);
 
     evidenceModal.setAttribute(
         'aria-hidden',
@@ -2955,6 +3299,29 @@ if (evidenceClose) {
 
 }
 
+/*
+|--------------------------------------------------------------------------
+| CARGAR MÁS EVIDENCIAS
+|--------------------------------------------------------------------------
+*/
+
+if (evidenceLoadMore) {
+
+    evidenceLoadMore.addEventListener(
+        'click',
+        function () {
+
+            if (!evidenceHasMore) {
+                return;
+            }
+
+
+            cargarCapturas(false);
+
+        }
+    );
+
+}
 
 /*
 |--------------------------------------------------------------------------
