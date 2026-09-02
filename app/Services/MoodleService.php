@@ -541,70 +541,72 @@ class MoodleService
     | OBTENER EXÁMENES DEL CURSO
     |--------------------------------------------------------------------------
     */
+public function getCourseQuizzes(
+    string $token,
+    int $courseId
+): array {
 
-    public function getCourseQuizzes(
-        string $token,
-        int $courseId
-    ): array {
-
-        $response =
-            $this->call(
-                $token,
-                'mod_quiz_get_quizzes_by_courses',
-                [
-                    'courseids[0]' =>
-                        $courseId,
-                ]
-            );
-
-
-        if (!$response['success']) {
-
-            return [
-                'success' => false,
-
-                'message' =>
-                    $response['message']
-                    ?? 'No fue posible obtener los exámenes.',
-
-                'data' => [],
-            ];
-
-        }
+    $response =
+        $this->call(
+            $token,
+            'mod_quiz_get_quizzes_by_courses',
+            [
+                'courseids[0]' =>
+                    $courseId,
+            ]
+        );
 
 
-        $quizzes =
-            $response['data']['quizzes']
-            ?? [];
-
-
-        $resultado = [];
-
-
-        foreach ($quizzes as $quiz) {
-
-            if (empty($quiz['id'])) {
-                continue;
-            }
-
-
-            $resultado[] = [
-
-                'id' =>
-                    (int) $quiz['id'],
-
-                'nombre' =>
-                    $quiz['name']
-                    ?? 'Examen',
-
-            ];
-
-        }
-
+    if (!$response['success']) {
 
         return [
-            'success' => true,
-            'data' => $resultado,
+            'success' => false,
+
+            'message' =>
+                $response['message']
+                ?? 'No fue posible obtener los exámenes.',
+
+            'data' => [],
         ];
     }
+
+
+    $quizzes =
+        $response['data']['quizzes']
+        ?? [];
+
+
+    $resultado = [];
+
+
+    foreach ($quizzes as $quiz) {
+
+        if (empty($quiz['id'])) {
+            continue;
+        }
+
+
+        $resultado[] = [
+
+            'id' =>
+                (int) $quiz['id'],
+
+            'nombre' =>
+                $quiz['name']
+                ?? 'Examen',
+
+            'fecha_hora' =>
+                isset($quiz['timeopen'])
+                    ? (int) $quiz['timeopen']
+                    : 0,
+
+        ];
+    }
+
+
+    return [
+        'success' => true,
+        'data' => $resultado,
+    ];
+}
 }

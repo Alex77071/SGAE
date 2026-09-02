@@ -2417,26 +2417,33 @@ document.addEventListener('DOMContentLoaded', function () {
             `;
 
 
-            data.examenes.forEach(function (examen) {
+          data.examenes.forEach(function (examen) {
 
-                const option =
-                    document.createElement('option');
-
-
-                option.value =
-                    examen.id;
+    const option =
+        document.createElement('option');
 
 
-                option.textContent =
-                    examen.nombre;
+    option.value =
+        examen.id;
 
 
-                examSelect.appendChild(
-                    option
-                );
+    option.textContent =
+        examen.nombre;
 
-            });
 
+    /*
+     * Guardamos también la fecha del examen
+     * dentro de la opción.
+     */
+    option.dataset.fechaHora =
+        examen.fecha_hora || 0;
+
+
+    examSelect.appendChild(
+        option
+    );
+
+});
 
             examSelect.disabled =
                 false;
@@ -2502,6 +2509,34 @@ function actualizarTablaResultados() {
     const examName =
         examOption.textContent.trim();
 
+        const fechaTimestamp =
+    Number(
+        examOption.dataset.fechaHora || 0
+    );
+
+
+let fechaHora =
+    'Sin fecha definida';
+
+
+if (fechaTimestamp > 0) {
+
+    const fecha =
+        new Date(
+            fechaTimestamp * 1000
+        );
+
+
+    fechaHora =
+        fecha.toLocaleString(
+            'es-MX',
+            {
+                dateStyle: 'short',
+                timeStyle: 'short'
+            }
+        );
+
+}
 
     let groupName =
         'Todos los grupos';
@@ -2539,7 +2574,8 @@ function actualizarTablaResultados() {
             </td>
 
             <td>
-                —
+                    ${fechaHora}
+
             </td>
 
             <td>
