@@ -2113,6 +2113,61 @@ document.addEventListener('DOMContentLoaded', function () {
         'downloadResultsBody'
     );
 
+    /*
+|--------------------------------------------------------------------------
+| MODAL DE EVIDENCIAS
+|--------------------------------------------------------------------------
+*/
+
+const evidenceModal =
+    document.getElementById(
+        'evidenceGalleryModal'
+    );
+
+const evidenceModalTitle =
+    document.getElementById(
+        'evidenceGalleryTitle'
+    );
+
+const evidenceModalCount =
+    document.getElementById(
+        'evidenceGalleryCount'
+    );
+
+const evidenceModalStatus =
+    document.getElementById(
+        'evidenceGalleryStatus'
+    );
+
+const evidenceGallery =
+    document.getElementById(
+        'evidenceGallery'
+    );
+
+const evidenceModalShown =
+    document.getElementById(
+        'evidenceGalleryShown'
+    );
+
+const evidenceModalMore =
+    document.getElementById(
+        'evidenceGalleryMore'
+    );
+
+const evidenceLoadMore =
+    document.getElementById(
+        'evidenceGalleryLoadMore'
+    );
+
+const evidenceClose =
+    document.getElementById(
+        'evidenceGalleryClose'
+    );
+
+const evidenceCloseButton =
+    document.getElementById(
+        'evidenceGalleryCloseButton'
+    );
 
     /*
      * Este código solamente se ejecuta
@@ -2437,13 +2492,21 @@ document.addEventListener('DOMContentLoaded', function () {
      * Guardamos también la fecha del examen
      * dentro de la opción.
      */
-    option.dataset.fechaHora =
-        examen.fecha_hora || 0;
+   option.dataset.fechaHora =
+    examen.fecha_hora || 0;
 
 
-    examSelect.appendChild(
-        option
-    );
+/*
+ * Guardamos el CMID porque lo necesitaremos
+ * para consultar las capturas del examen.
+ */
+option.dataset.cmid =
+    examen.cmid || 0;
+
+
+examSelect.appendChild(
+    option
+);
 
 });
 
@@ -2475,6 +2538,8 @@ document.addEventListener('DOMContentLoaded', function () {
 | MOSTRAR RESULTADO SELECCIONADO
 |--------------------------------------------------------------------------
 */
+
+let totalImagenesSeleccionadas = 0;
 
 async function actualizarTablaResultados() {
 
@@ -2640,12 +2705,17 @@ async function actualizarTablaResultados() {
                 alumnosTotal;
 
 
-            imagenes =
-                Number(
-                    data.imagenes || 0
-                ).toLocaleString(
-                    'es-MX'
-                );
+            totalImagenesSeleccionadas =
+    Number(
+        data.imagenes || 0
+    );
+
+
+imagenes =
+    totalImagenesSeleccionadas
+        .toLocaleString(
+            'es-MX'
+        );
 
         }
 
@@ -2718,6 +2788,241 @@ async function actualizarTablaResultados() {
         </tr>
     `;
 }
+
+/*
+|--------------------------------------------------------------------------
+| ABRIR MODAL DE EVIDENCIAS
+|--------------------------------------------------------------------------
+*/
+
+function abrirModalEvidencias() {
+
+    if (
+        !evidenceModal ||
+        !evidenceModalTitle ||
+        !evidenceModalCount ||
+        !evidenceModalStatus ||
+        !evidenceGallery
+    ) {
+        return;
+    }
+
+
+    const examOption =
+        examSelect.options[
+            examSelect.selectedIndex
+        ];
+
+
+    if (!examOption || !examSelect.value) {
+        return;
+    }
+
+
+    const examName =
+        examOption.textContent.trim();
+
+
+    /*
+     * Título.
+     */
+    evidenceModalTitle.textContent =
+        'Evidencias - ' + examName;
+
+
+    /*
+     * Total.
+     */
+    evidenceModalCount.textContent =
+        totalImagenesSeleccionadas
+            .toLocaleString('es-MX')
+        +
+        ' imágenes';
+
+
+    /*
+     * Reiniciar galería.
+     */
+    evidenceGallery.innerHTML = '';
+
+
+    evidenceModalStatus.hidden =
+        false;
+
+
+    evidenceModalStatus.textContent =
+        'Cargando evidencias...';
+
+
+    if (evidenceModalShown) {
+
+        evidenceModalShown.textContent =
+            '';
+    }
+
+
+    if (evidenceModalMore) {
+
+        evidenceModalMore.hidden =
+            true;
+    }
+
+
+    /*
+     * Mostrar modal.
+     */
+    evidenceModal.hidden =
+        false;
+
+
+    evidenceModal.setAttribute(
+        'aria-hidden',
+        'false'
+    );
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| CERRAR MODAL DE EVIDENCIAS
+|--------------------------------------------------------------------------
+*/
+
+function cerrarModalEvidencias() {
+
+    if (!evidenceModal) {
+        return;
+    }
+
+
+    evidenceModal.hidden =
+        true;
+
+
+    evidenceModal.setAttribute(
+        'aria-hidden',
+        'true'
+    );
+
+
+    if (evidenceGallery) {
+
+        evidenceGallery.innerHTML =
+            '';
+    }
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| CLICK EN DETALLES
+|--------------------------------------------------------------------------
+*/
+
+resultsBody.addEventListener(
+    'click',
+    function (event) {
+
+        const detailsButton =
+            event.target.closest(
+                '.download-details-button'
+            );
+
+
+        if (!detailsButton) {
+            return;
+        }
+
+
+        abrirModalEvidencias();
+
+    }
+);
+/*
+|--------------------------------------------------------------------------
+| CERRAR CON X
+|--------------------------------------------------------------------------
+*/
+
+if (evidenceClose) {
+
+    evidenceClose.addEventListener(
+        'click',
+        cerrarModalEvidencias
+    );
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| BOTÓN CERRAR
+|--------------------------------------------------------------------------
+*/
+
+if (evidenceCloseButton) {
+
+    evidenceCloseButton.addEventListener(
+        'click',
+        cerrarModalEvidencias
+    );
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| CLIC EN EL FONDO
+|--------------------------------------------------------------------------
+*/
+
+if (evidenceModal) {
+
+    evidenceModal.addEventListener(
+        'click',
+        function (event) {
+
+            if (
+                event.target.matches(
+                    '[data-close-evidence-modal]'
+                )
+            ) {
+
+                cerrarModalEvidencias();
+
+            }
+
+        }
+    );
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| CERRAR CON ESC
+|--------------------------------------------------------------------------
+*/
+
+document.addEventListener(
+    'keydown',
+    function (event) {
+
+        if (
+            event.key === 'Escape' &&
+            evidenceModal &&
+            !evidenceModal.hidden
+        ) {
+
+            cerrarModalEvidencias();
+
+        }
+
+    }
+);
+
 /*
 |--------------------------------------------------------------------------
 | CUANDO CAMBIA EL EXAMEN

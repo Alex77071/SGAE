@@ -656,6 +656,319 @@ if (!$imagenesResultado['success']) {
 ]);
 }
 
+/*
+|--------------------------------------------------------------------------
+| OBTENER CAPTURAS PARA EL MODAL
+|--------------------------------------------------------------------------
+*/
+
+public function capturas(Request $request)
+{
+    /*
+    |--------------------------------------------------------------------------
+    | VALIDAR SESIÓN
+    |--------------------------------------------------------------------------
+    */
+
+    if (!session('moodle_authenticated')) {
+
+        return response()->json(
+            [
+                'ok' => false,
+                'message' => 'Sesión no válida.',
+            ],
+            401
+        );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | VALIDAR PARÁMETROS
+    |--------------------------------------------------------------------------
+    */
+
+    $request->validate([
+
+        'courseid' =>
+            'required|integer',
+
+        'quizid' =>
+            'required|integer',
+
+        'offset' =>
+            'nullable|integer|min:0',
+
+        'limit' =>
+            'nullable|integer|min:1|max:48',
+
+    ]);
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | DATOS
+    |--------------------------------------------------------------------------
+    */
+
+    $token =
+        session('moodle_token');
+
+
+    $profesorId =
+        (int) session('moodle_user_id');
+
+
+    $courseId =
+        (int) $request->courseid;
+
+
+    $quizId =
+        (int) $request->quizid;
+
+
+    $offset =
+        max(
+            0,
+            (int) $request->input(
+                'offset',
+                0
+            )
+        );
+
+
+    $limit =
+        max(
+            1,
+            min(
+                48,
+                (int) $request->input(
+                    'limit',
+                    24
+                )
+            )
+        );
+
+
+    if (!$token || !$profesorId) {
+
+        return response()->json([
+            'ok' => false,
+
+            'message' =>
+                'No se encontró la sesión de Moodle.',
+        ]);
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | VERIFICAR QUE EL PROFESOR TENGA ACCESO AL CURSO
+    |--------------------------------------------------------------------------
+    */
+
+    if (
+        !$this->profesorTieneCurso(
+            $token,
+            $profesorId,
+            $courseId
+        )
+    ) {
+
+        return response()->json([
+            'ok' => false,
+
+            'message' =>
+                'No tienes acceso a este curso.',
+        ]);
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | OBTENER CMID DEL EXAMEN
+    |--------------------------------------------------------------------------
+    */
+
+    $examenes =
+        $this->moodleService
+            ->getCourseQuizzes(
+                $token,
+                $courseId
+            );
+
+
+    if (!$examenes['success']) {
+
+        return response()->json([
+            'ok' => false,
+
+            'message' =>
+                'No fue posible obtener la información del examen.',
+        ]);
+    }
+
+
+    $cmid = 0;
+
+
+    foreach (
+        $examenes['data'] ?? []
+        as $examen
+    ) {
+
+        if (
+            (int) ($examen['id'] ?? 0)
+            ===
+            $quizId
+        ) {
+
+            $cmid =
+                (int) (
+                    $examen['cmid']
+                    ?? 0
+                );
+
+            break;
+        }
+    }
+
+
+    if ($cmid <= 0) {
+
+        return response()->json([
+            'ok' => false,
+
+            'message' =>
+                'No se encontró el módulo del examen.',
+        ]);
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | OBTENER ALUMNOS QUE REALIZARON EL EXAMEN
+    |--------------------------------------------------------------------------
+    */
+
+    $alumnos =
+        $this->moodleService
+            ->getQuizStudents(
+                $token,
+                $courseId,
+                $quizId
+            );
+
+
+    if (!$alumnos['success']) {
+
+        return response()->json([
+            'ok' => false,
+
+            'message' =>
+                $alumnos['message']
+                ?? 'No fue posible obtener los alumnos.',
+        ]);
+    }
+
+
+    $alumnosIds =
+        $alumnos['data']['alumnos_ids']
+        ?? [];
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | OBTENER IMÁGENES
+    |--------------------------------------------------------------------------
+    |
+    | Pedimos una imagen adicional.
+    | Esto nos permite saber si existe otra página.
+    |
+    */
+
+    $resultado =
+        $this->moodleService
+            ->getProctoringImages(
+                $token,
+                $courseId,
+                $cmid,
+                $alumnosIds,
+                $offset,
+                $limit + 1
+            );
+
+
+    if (!$resultado['success']) {
+
+        return response()->json([
+            'ok' => false,
+
+            'message' =>
+                $resultado['message']
+                ?? 'No fue posible obtener las imágenes.',
+        ]);
+    }
+
+
+    $imagenes =
+        $resultado['data']['imagenes']
+        ?? [];
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | SABER SI HAY MÁS IMÁGENES
+    |--------------------------------------------------------------------------
+    */
+
+    $hayMas =
+        count($imagenes) > $limit;
+
+
+    if ($hayMas) {
+
+        $imagenes =
+            array_slice(
+                $imagenes,
+                0,
+                $limit
+            );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | RESPUESTA
+    |--------------------------------------------------------------------------
+    */
+
+    return response()->json([
+
+        'ok' => true,
+
+        'imagenes' =>
+            $imagenes,
+
+        'cantidad' =>
+            count($imagenes),
+
+        'offset' =>
+            $offset,
+
+        'limit' =>
+            $limit,
+
+        'next_offset' =>
+            $offset
+            +
+            count($imagenes),
+
+        'has_more' =>
+            $hayMas,
+
+    ]);
+}
 
 /*
 |--------------------------------------------------------------------------

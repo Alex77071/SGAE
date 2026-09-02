@@ -927,4 +927,235 @@ public function countProctoringImages(
     ];
 }
 
+/*
+|--------------------------------------------------------------------------
+| OBTENER IMÁGENES DE PROCTORING
+|--------------------------------------------------------------------------
+|
+| Devuelve las URLs de las capturas por bloques.
+| Por defecto se obtienen 24 imágenes.
+|
+*/
+
+public function getProctoringImages(
+    string $token,
+    int $courseId,
+    int $cmid,
+    array $userIds,
+    int $offset = 0,
+    int $limit = 24
+): array {
+
+    $imagenes = [];
+
+    $imagenesVistas = [];
+
+    $indiceUnico = 0;
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | RECORRER ALUMNOS CON INTENTO
+    |--------------------------------------------------------------------------
+    */
+
+    foreach ($userIds as $userId) {
+
+        $userId =
+            (int) $userId;
+
+
+        if ($userId <= 0) {
+            continue;
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | CONSULTAR CAPTURAS DEL ALUMNO
+        |--------------------------------------------------------------------------
+        */
+
+        $response =
+            $this->getProctoringCamshots(
+                $token,
+                $courseId,
+                $cmid,
+                $userId
+            );
+
+
+        if (!$response['success']) {
+
+            return [
+                'success' => false,
+
+                'message' =>
+                    $response['message']
+                    ?? 'No fue posible obtener las capturas.',
+
+                'data' => [
+                    'imagenes' => [],
+                ],
+            ];
+        }
+
+
+        $camshots =
+            $response['data']['camshots']
+            ?? [];
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | FILTRAR CAPTURAS
+        |--------------------------------------------------------------------------
+        */
+
+        foreach ($camshots as $camshot) {
+
+            $camshotCourseId =
+                (int) (
+                    $camshot['courseid']
+                    ?? 0
+                );
+
+
+            $camshotQuizId =
+                (int) (
+                    $camshot['quizid']
+                    ?? 0
+                );
+
+
+            $camshotUserId =
+                (int) (
+                    $camshot['userid']
+                    ?? 0
+                );
+
+
+            $url =
+                trim(
+                    $camshot['webcampicture']
+                    ?? ''
+                );
+
+
+            /*
+             * Ignorar capturas que no sean
+             * exactamente del examen seleccionado.
+             */
+            if (
+                $camshotCourseId !== $courseId
+                ||
+                $camshotQuizId !== $cmid
+                ||
+                $camshotUserId !== $userId
+                ||
+                $url === ''
+            ) {
+                continue;
+            }
+
+
+            /*
+             * Evitar imágenes duplicadas.
+             */
+            if (isset($imagenesVistas[$url])) {
+                continue;
+            }
+
+
+            $imagenesVistas[$url] =
+                true;
+
+
+            /*
+             * Saltar las imágenes anteriores
+             * según la paginación.
+             */
+            if ($indiceUnico < $offset) {
+
+                $indiceUnico++;
+
+                continue;
+            }
+
+
+            /*
+             * Agregar imagen.
+             */
+            $imagenes[] = [
+
+                'url' =>
+                    $url,
+
+                'userid' =>
+                    $camshotUserId,
+
+                'fecha' =>
+                    isset($camshot['timemodified'])
+                        ? (int) $camshot['timemodified']
+                        : 0,
+
+            ];
+
+
+            $indiceUnico++;
+
+
+            /*
+             * Cuando ya tenemos 24,
+             * no seguimos recorriendo Moodle.
+             */
+            if (count($imagenes) >= $limit) {
+
+                return [
+                    'success' => true,
+
+                    'data' => [
+
+                        'imagenes' =>
+                            $imagenes,
+
+                        'offset' =>
+                            $offset,
+
+                        'limit' =>
+                            $limit,
+
+                    ],
+                ];
+            }
+
+        }
+
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | RESPUESTA FINAL
+    |--------------------------------------------------------------------------
+    */
+
+    return [
+        'success' => true,
+
+        'data' => [
+
+            'imagenes' =>
+                $imagenes,
+
+            'offset' =>
+                $offset,
+
+            'limit' =>
+                $limit,
+
+        ],
+    ];
+}
+
 }

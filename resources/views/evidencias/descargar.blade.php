@@ -305,6 +305,201 @@
 
 </section>
 
+
+{{-- =====================================================
+     MODAL - DETALLES DE EVIDENCIAS
+====================================================== --}}
+
+<div
+    class="evidence-gallery-modal"
+    id="evidenceGalleryModal"
+    aria-hidden="true"
+    hidden
+>
+
+    <div
+        class="evidence-gallery-modal__backdrop"
+        data-close-evidence-modal
+    ></div>
+
+
+    <div
+        class="evidence-gallery-modal__dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="evidenceGalleryTitle"
+    >
+
+        {{-- =============================================
+             ENCABEZADO
+        ============================================== --}}
+
+        <div class="evidence-gallery-modal__header">
+
+            <div class="evidence-gallery-modal__heading">
+
+                <span
+                    class="evidence-gallery-modal__icon"
+                    aria-hidden="true"
+                >
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <rect
+                            x="3"
+                            y="3"
+                            width="18"
+                            height="18"
+                            rx="2"
+                        ></rect>
+
+                        <circle
+                            cx="8.5"
+                            cy="8.5"
+                            r="1.5"
+                        ></circle>
+
+                        <path
+                            d="m21 15-5-5L5 21"
+                        ></path>
+                    </svg>
+                </span>
+
+
+                <div>
+
+                    <h3
+                        class="evidence-gallery-modal__title"
+                        id="evidenceGalleryTitle"
+                    >
+                        Evidencias
+                    </h3>
+
+
+                    <p
+                        class="evidence-gallery-modal__count"
+                        id="evidenceGalleryCount"
+                    >
+                        Cargando imágenes...
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="evidence-gallery-modal__close"
+                id="evidenceGalleryClose"
+                aria-label="Cerrar detalles"
+            >
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                >
+                    <path d="M6 6l12 12"></path>
+                    <path d="M18 6 6 18"></path>
+                </svg>
+            </button>
+
+        </div>
+
+
+        {{-- =============================================
+             ESTADO DE CARGA
+        ============================================== --}}
+
+        <div
+            class="evidence-gallery-modal__status"
+            id="evidenceGalleryStatus"
+        >
+            Cargando evidencias...
+        </div>
+
+
+        {{-- =============================================
+             GALERÍA
+        ============================================== --}}
+
+        <div
+            class="evidence-gallery"
+            id="evidenceGallery"
+        >
+        </div>
+
+
+        {{-- =============================================
+             CARGAR MÁS
+        ============================================== --}}
+
+        <div
+            class="evidence-gallery-modal__more"
+            id="evidenceGalleryMore"
+            hidden
+        >
+
+            <button
+                type="button"
+                class="evidence-gallery-load-more"
+                id="evidenceGalleryLoadMore"
+            >
+                <span>
+                    Cargar más imágenes
+                </span>
+
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                >
+                    <path d="m7 10 5 5 5-5"></path>
+                </svg>
+            </button>
+
+        </div>
+
+
+        {{-- =============================================
+             PIE DEL MODAL
+        ============================================== --}}
+
+        <div class="evidence-gallery-modal__footer">
+
+            <span
+                class="evidence-gallery-modal__shown"
+                id="evidenceGalleryShown"
+            >
+            </span>
+
+
+            <button
+                type="button"
+                class="evidence-gallery-modal__close-button"
+                id="evidenceGalleryCloseButton"
+            >
+                Cerrar
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
 </section>
 
 @endsection
