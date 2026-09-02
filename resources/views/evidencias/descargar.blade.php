@@ -4,30 +4,13 @@
 
 @section('content')
 
-<section class="download-evidence-page">
-
-    <nav
-        class="download-evidence-breadcrumb"
-        aria-label="Navegación"
-    >
-        <a
-            href="{{ route('inicio') }}"
-            class="download-evidence-breadcrumb__link"
-        >
-            Inicio
-        </a>
-
-        <span
-            class="download-evidence-breadcrumb__separator"
-            aria-hidden="true"
-        >
-            ›
-        </span>
-
-        <span class="download-evidence-breadcrumb__current">
-            Descargar evidencias
-        </span>
-    </nav>
+<section
+    class="download-evidence-page"
+    id="downloadEvidencePage"
+    data-courses-url="{{ route('evidencias.cursos') }}"
+    data-groups-url="{{ route('evidencias.grupos') }}"
+    data-exams-url="{{ route('evidencias.examenes') }}"
+>
 
 
     {{-- =====================================================
@@ -92,27 +75,15 @@
                         </svg>
                     </span>
 
-                    <select
-                        id="curso"
-                        name="curso"
-                        class="download-select__control"
-                    >
-                        <option value="">
-                            Todos los cursos
-                        </option>
-
-                        <option value="programacion">
-                            Programación
-                        </option>
-
-                        <option value="bases-datos">
-                            Bases de datos
-                        </option>
-
-                        <option value="redes">
-                            Redes
-                        </option>
-                    </select>
+              <select
+    id="curso"
+    name="courseid"
+    class="download-select__control"
+>
+    <option value="" selected disabled>
+        Cargando cursos...
+    </option>
+</select>
 
                 </div>
 
@@ -153,27 +124,16 @@
                         </svg>
                     </span>
 
-                    <select
-                        id="grupo"
-                        name="grupo"
-                        class="download-select__control"
-                    >
-                        <option value="">
-                            Todos los grupos
-                        </option>
-
-                        <option value="a">
-                            Grupo A
-                        </option>
-
-                        <option value="b">
-                            Grupo B
-                        </option>
-
-                        <option value="c">
-                            Grupo C
-                        </option>
-                    </select>
+                  <select
+    id="grupo"
+    name="groupid"
+    class="download-select__control"
+    disabled
+>
+    <option value="">
+        Selecciona primero un curso
+    </option>
+</select>
 
                 </div>
 
@@ -217,28 +177,16 @@
                             <path d="M7 16h7"></path>
                         </svg>
                     </span>
-
-                    <select
-                        id="examen"
-                        name="examen"
-                        class="download-select__control"
-                    >
-                        <option value="">
-                            Todos los exámenes
-                        </option>
-
-                        <option value="final">
-                            Examen Final
-                        </option>
-
-                        <option value="parcial-1">
-                            Primer parcial
-                        </option>
-
-                        <option value="parcial-2">
-                            Segundo parcial
-                        </option>
-                    </select>
+<select
+    id="examen"
+    name="quizid"
+    class="download-select__control"
+    disabled
+>
+    <option value="">
+        Selecciona primero un curso
+    </option>
+</select>
 
                 </div>
 
@@ -299,66 +247,20 @@
                 </thead>
 
 
-                <tbody>
+               <tbody id="downloadResultsBody">
 
-                    <tr>
+    <tr>
 
-                        <td class="download-table__exam">
-                            Examen Final P...
-                        </td>
+        <td
+            colspan="7"
+            style="text-align: center;"
+        >
+            Selecciona un curso y un examen para mostrar resultados.
+        </td>
 
-                        <td>
-                            Grupo A
-                        </td>
+    </tr>
 
-                        <td>
-                            Programación
-                        </td>
-
-                        <td>
-                            32/33
-                        </td>
-
-                        <td>
-                            1,234
-                        </td>
-
-                        <td>
-                            <span class="download-table__date">
-                                12/05/2026
-                            </span>
-
-                            <span class="download-table__time">
-                                10 a. m.
-                            </span>
-                        </td>
-
-                        <td>
-
-                            <button
-                                type="button"
-                                class="download-details-button"
-                            >
-
-                                <span
-                                    class="download-details-button__icon"
-                                    aria-hidden="true"
-                                >
-                                    •••
-                                </span>
-
-                                <span>
-                                    Detalles
-                                </span>
-
-                            </button>
-
-                        </td>
-
-                    </tr>
-
-                </tbody>
-
+</tbody>
             </table>
 
         </div>

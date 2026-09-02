@@ -2,56 +2,119 @@ import os
 import re
 import shutil
 import zipfile
-from datetime import datetime
+import logging
+import tempfile
+from pathlib import Path
+from typing import Optional
 
 import mysql.connector
 from mysql.connector import Error
 
 
+
+
+class HTTPException(Exception):
+    """Excepción interna para conservar validaciones sin depender de FastAPI."""
+    def __init__(self, status_code=None, detail="Error", headers=None):
+        super().__init__(detail)
+        self.status_code = status_code
+        self.detail = detail
+        self.headers = headers or {}
+
+
+class _Status:
+    HTTP_400_BAD_REQUEST = 400
+    HTTP_401_UNAUTHORIZED = 401
+    HTTP_403_FORBIDDEN = 403
+    HTTP_404_NOT_FOUND = 404
+    HTTP_413_REQUEST_ENTITY_TOO_LARGE = 413
+    HTTP_429_TOO_MANY_REQUESTS = 429
+    HTTP_500_INTERNAL_SERVER_ERROR = 500
+    HTTP_503_SERVICE_UNAVAILABLE = 503
+
+
+status = _Status()
+
 # ============================================================
-# CONFIGURACIÓN
+# CONFIGURACIÓN SEGURA
 # ============================================================
+
+
+def env_obligatoria(nombre: str) -> str:
+    valor = os.getenv(nombre)
+    if not valor:
+        raise RuntimeError(
+            f"Falta la variable de entorno obligatoria: {nombre}"
+        )
+    return valor
+
+
+def env_entero(nombre: str, valor_por_defecto: int, minimo: int = 1) -> int:
+    valor = os.getenv(nombre)
+    if valor is None:
+        return valor_por_defecto
+
+    try:
+        convertido = int(valor)
+    except ValueError as exc:
+        raise RuntimeError(
+            f"La variable {nombre} debe ser un número entero."
+        ) from exc
+
+    if convertido < minimo:
+        raise RuntimeError(
+            f"La variable {nombre} debe ser >= {minimo}."
+        )
+
+    return convertido
+
 
 DB_CONFIG = {
-    "host": "localhost",
-    "user": "moodleuser",
-    "password": os.getenv("MOODLE_DB_PASSWORD", "moodle3xamen"),
-    "database": "moodle",
+    "host": os.getenv("MOODLE_DB_HOST", "localhost"),
+    "port": env_entero("MOODLE_DB_PORT", 3306),
+    "user": os.getenv("MOODLE_DB_USER", "moodleuser"),
+    "password": env_obligatoria("MOODLE_DB_PASSWORD"),
+    "database": os.getenv("MOODLE_DB_NAME", "moodle"),
     "charset": "utf8mb4",
+    "connection_timeout": env_entero("MOODLE_DB_TIMEOUT", 10),
+    "autocommit": True,
 }
 
-# Carpeta filedir de moodledata.
-MOODLEDATA_FILEDIR = os.getenv(
-    "MOODLEDATA_FILEDIR",
-    "/var/moodledata/filedir"
+MOODLEDATA_FILEDIR = Path(
+    os.getenv("MOODLEDATA_FILEDIR", "/var/moodledata/filedir")
+).resolve()
+
+MAX_ARCHIVOS = env_entero("SGAE_MAX_FILES", 3000)
+MAX_BYTES = env_entero("SGAE_MAX_TOTAL_BYTES", 2 * 1024 * 1024 * 1024)
+
+# ============================================================
+# ROLES AUTORIZADOS
+# ============================================================
+
+ROLES_PROFESOR = {
+    "teacher",
+    "editingteacher",
+}
+
+# ============================================================
+# LOGGING
+# ============================================================
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(name)s: %(message)s",
 )
-
-# Carpeta donde se guardarán las imágenes descargadas.
-OUTPUT_DIR = os.getenv(
-    "MOODLE_OUTPUT_DIR",
-    "/home/egresados/moodle_imgs"
-)
-
-# Áreas del plugin que contienen imágenes.
-FILE_AREAS = ("picture", "face_image")
-
-# Elimina la carpeta del examen antes de volver a descargar.
-# Evita conservar archivos de ejecuciones anteriores.
-LIMPIAR_CARPETA_SELECCIONADA = True
-
-# Crear archivo ZIP al finalizar.
-CREAR_ZIP = True
+logger = logging.getLogger("sgae.descargas")
 
 
 # ============================================================
-# FUNCIONES AUXILIARES
+# FUNCIONES AUXILIARES DE RUTAS
 # ============================================================
 
-def limpiar_nombre(nombre):
-    """
-    Convierte un texto en un nombre válido para carpetas
-    y archivos en Linux y Windows.
-    """
+
+def limpiar_nombre(nombre: object) -> str:
+    """Devuelve un único componente seguro para archivo/carpeta."""
+
     if nombre is None:
         return "Sin_nombre"
 
@@ -60,858 +123,860 @@ def limpiar_nombre(nombre):
     if not nombre:
         return "Sin_nombre"
 
-    nombre = re.sub(r'[\\/:*?"<>|]', "_", nombre)
-    nombre = re.sub(r"[\r\n\t]+", " ", nombre)
+    # Elimina controles y sustituye caracteres no seguros.
+    nombre = re.sub(r"[\x00-\x1f\x7f]", "_", nombre)
+    nombre = re.sub(r"[\\/:*?\"<>|]", "_", nombre)
     nombre = re.sub(r"\s+", " ", nombre).strip()
+
+    # Evita componentes especiales y nombres que sólo sean puntos.
+    nombre = nombre.strip(" .")
+    if not nombre or nombre in {".", ".."} or set(nombre) == {"."}:
+        nombre = "Sin_nombre"
+
+    # Evita nombres reservados frecuentes de Windows.
+    reservados = {
+        "CON", "PRN", "AUX", "NUL",
+        *(f"COM{i}" for i in range(1, 10)),
+        *(f"LPT{i}" for i in range(1, 10)),
+    }
+    base = nombre.split(".", 1)[0].upper()
+    if base in reservados:
+        nombre = f"_{nombre}"
 
     return nombre[:180]
 
 
-def seleccionar_elemento(elementos, titulo, campo_nombre):
-    """
-    Muestra un menú numerado y devuelve el elemento seleccionado.
-    """
-    if not elementos:
-        print(f"\nNo se encontraron registros para: {titulo}")
-        return None
+def ruta_segura_dentro(base: Path, *partes: str) -> Path:
+    """Construye una ruta y garantiza que permanezca dentro de base."""
 
-    print("\n" + "=" * 75)
-    print(titulo)
-    print("=" * 75)
+    base_resuelta = base.resolve()
+    candidata = base_resuelta.joinpath(*partes).resolve()
 
-    for indice, elemento in enumerate(elementos, start=1):
-        nombre = elemento.get(campo_nombre, "Sin nombre")
-
-        identificador = (
-            elemento.get("id")
-            or elemento.get("quizid")
-            or elemento.get("groupid")
-            or elemento.get("courseid")
+    try:
+        candidata.relative_to(base_resuelta)
+    except ValueError:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Se detectó una ruta no válida.",
         )
 
-        print(f"{indice:3}. {nombre} [ID: {identificador}]")
-
-    while True:
-        respuesta = input(
-            "\nEscribe el número correspondiente o 'q' para salir: "
-        ).strip()
-
-        if respuesta.lower() in ("q", "salir", "exit"):
-            return None
-
-        try:
-            numero = int(respuesta)
-
-            if 1 <= numero <= len(elementos):
-                return elementos[numero - 1]
-
-            print("El número seleccionado está fuera del rango.")
-
-        except ValueError:
-            print("Debes escribir un número válido.")
+    return candidata
 
 
-def obtener_ruta_origen(contenthash):
-    """
-    Obtiene la ruta física del archivo dentro de moodledata/filedir.
-    """
-    subcarpeta_1 = contenthash[:2]
-    subcarpeta_2 = contenthash[2:4]
+def validar_contenthash(contenthash: object) -> str:
+    valor = str(contenthash or "").strip().lower()
 
-    return os.path.join(
+    if not re.fullmatch(r"[0-9a-f]{40}", valor):
+        raise ValueError("contenthash inválido")
+
+    return valor
+
+
+def obtener_ruta_origen(contenthash: object) -> Path:
+    hash_valido = validar_contenthash(contenthash)
+
+    return ruta_segura_dentro(
         MOODLEDATA_FILEDIR,
-        subcarpeta_1,
-        subcarpeta_2,
-        contenthash
+        hash_valido[:2],
+        hash_valido[2:4],
+        hash_valido,
     )
 
 
-def obtener_ruta_destino_unica(carpeta, filename, fileid):
-    """
-    Evita sobrescribir imágenes cuando existen archivos
-    con el mismo nombre.
-    """
-    filename = limpiar_nombre(filename)
-    destino = os.path.join(carpeta, filename)
+def obtener_ruta_destino_unica(
+    carpeta: Path,
+    filename: object,
+    fileid: int,
+) -> Path:
+    filename_seguro = limpiar_nombre(filename)
 
-    if not os.path.exists(destino):
+    destino = ruta_segura_dentro(carpeta, filename_seguro)
+
+    if not destino.exists():
         return destino
 
-    nombre, extension = os.path.splitext(filename)
+    nombre = destino.stem
+    extension = destino.suffix
 
-    return os.path.join(
+    return ruta_segura_dentro(
         carpeta,
-        f"{nombre}_file_{fileid}{extension}"
+        f"{nombre}_file_{int(fileid)}{extension}",
     )
 
 
-def escribir_registro(registro_path, texto):
-    """
-    Agrega una línea al registro de descargas.
-    """
-    fecha_hora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+def eliminar_temporal(ruta: object) -> None:
+    if not ruta:
+        return
 
-    with open(registro_path, "a", encoding="utf-8") as archivo:
-        archivo.write(f"[{fecha_hora}] {texto}\n")
-
-
-def crear_zip(carpeta_examen, zip_path):
-    """
-    Comprime la carpeta del examen.
-    """
-    if os.path.exists(zip_path):
-        os.remove(zip_path)
-
-    carpeta_padre = os.path.dirname(carpeta_examen)
-
-    with zipfile.ZipFile(
-        zip_path,
-        mode="w",
-        compression=zipfile.ZIP_DEFLATED,
-        compresslevel=6
-    ) as archivo_zip:
-
-        for raiz, _, archivos in os.walk(carpeta_examen):
-            for archivo in archivos:
-                ruta_completa = os.path.join(raiz, archivo)
-
-                ruta_dentro_zip = os.path.relpath(
-                    ruta_completa,
-                    carpeta_padre
-                )
-
-                archivo_zip.write(
-                    ruta_completa,
-                    arcname=ruta_dentro_zip
-                )
+    try:
+        ruta_path = Path(ruta)
+        if ruta_path.is_dir():
+            shutil.rmtree(ruta_path, ignore_errors=False)
+    except Exception:
+        logger.exception("No se pudo eliminar una carpeta temporal.")
 
 
 # ============================================================
-# CONSULTAS A MOODLE
+# BASE DE DATOS
 # ============================================================
 
-def obtener_cursos(cursor):
+
+def obtener_conexion():
+    try:
+        return mysql.connector.connect(**DB_CONFIG)
+    except Error:
+        logger.exception("No fue posible conectar con Moodle/MySQL.")
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Servicio temporalmente no disponible.",
+        )
+
+
+def usuario_es_admin_moodle(cursor, userid: int) -> bool:
+    cursor.execute(
+        "SELECT value FROM mdl_config WHERE name = 'siteadmins' LIMIT 1"
+    )
+    fila = cursor.fetchone()
+
+    if not fila or not fila.get("value"):
+        return False
+
+    try:
+        admins = {
+            int(valor.strip())
+            for valor in fila["value"].split(",")
+            if valor.strip()
+        }
+    except ValueError:
+        logger.warning("El valor siteadmins de Moodle no pudo interpretarse.")
+        return False
+
+    return userid in admins
+
+
+def usuario_puede_descargar_curso(cursor, userid: int, courseid: int) -> bool:
     """
-    Obtiene los cursos que tienen imágenes del plugin
-    quizaccess_proctoring.
+    Autoriza administradores Moodle o usuarios con un rol docente
+    configurado en el contexto del curso (o contexto padre).
     """
+
+    if usuario_es_admin_moodle(cursor, userid):
+        return True
+
     consulta = """
+        SELECT 1
+        FROM mdl_user requester
+        JOIN mdl_context coursectx
+          ON coursectx.contextlevel = 50
+         AND coursectx.instanceid = %s
+        JOIN mdl_context assignedctx
+          ON coursectx.path LIKE CONCAT(assignedctx.path, '/%')
+          OR coursectx.id = assignedctx.id
+        JOIN mdl_role_assignments ra
+          ON ra.contextid = assignedctx.id
+         AND ra.userid = %s
+        JOIN mdl_role r
+          ON r.id = ra.roleid
+        WHERE requester.id = %s
+          AND requester.deleted = 0
+          AND requester.suspended = 0
+          AND LOWER(r.shortname) IN ({})
+        LIMIT 1
+    """.format(
+        ",".join(["%s"] * len(ROLES_PROFESOR))
+    )
+
+    parametros = [courseid, userid, userid, *sorted(ROLES_PROFESOR)]
+    cursor.execute(consulta, tuple(parametros))
+    return cursor.fetchone() is not None
+
+
+# ============================================================
+# CONSULTAS MOODLE
+# ============================================================
+
+
+def obtener_examen(cursor, courseid: int, quizid: int):
+    consulta = """
+        SELECT
+            q.id AS quizid,
+            q.name AS examen,
+            c.id AS courseid,
+            c.fullname AS curso
+        FROM mdl_quiz q
+        JOIN mdl_course c ON c.id = q.course
+        WHERE q.id = %s
+          AND q.course = %s
+        LIMIT 1
+    """
+
+    cursor.execute(consulta, (quizid, courseid))
+    return cursor.fetchone()
+
+
+def obtener_grupo(cursor, courseid: int, groupid: Optional[int]):
+    if groupid is None:
+        return None
+
+    consulta = """
+        SELECT id, name, courseid
+        FROM mdl_groups
+        WHERE id = %s
+          AND courseid = %s
+        LIMIT 1
+    """
+
+    cursor.execute(consulta, (groupid, courseid))
+    return cursor.fetchone()
+
+
+def obtener_imagenes(
+    cursor,
+    courseid: int,
+    quizid: int,
+    groupid: Optional[int] = None,
+):
+    """
+    Obtiene únicamente archivos de imagen del componente de proctoring
+    ubicados en el contexto del módulo del quiz solicitado.
+
+    Nota: no se fuerza f.itemid = qa.id porque esa relación depende de la
+    implementación/versión exacta del plugin. El aislamiento principal se
+    realiza por contextid -> course_module -> quiz, userid y existencia de
+    intento no-preview.
+    """
+
+    join_grupo = """
+        JOIN mdl_groups_members gm
+          ON gm.userid = u.id
+         AND gm.groupid = %s
+        JOIN mdl_groups g
+          ON g.id = gm.groupid
+         AND g.courseid = c.id
+    """ if groupid is not None else ""
+
+    columnas_grupo = (
+        "g.id AS groupid, g.name AS grupo"
+        if groupid is not None
+        else "NULL AS groupid, NULL AS grupo"
+    )
+
+    consulta = f"""
         SELECT DISTINCT
-            c.id,
-            c.fullname,
-            c.shortname
-        FROM mdl_course c
-
-        JOIN mdl_quiz q
-            ON q.course = c.id
-
-        JOIN mdl_course_modules cm
-            ON cm.instance = q.id
-
-        JOIN mdl_modules m
-            ON m.id = cm.module
-           AND m.name = 'quiz'
-
+            f.id AS fileid,
+            f.filename,
+            f.contenthash,
+            f.filearea,
+            f.mimetype,
+            f.filesize,
+            f.timecreated,
+            f.itemid,
+            u.id AS userid,
+            u.username,
+            u.firstname,
+            u.lastname,
+            q.id AS quizid,
+            q.name AS examen,
+            c.id AS courseid,
+            c.fullname AS curso,
+            {columnas_grupo}
+        FROM mdl_files f
         JOIN mdl_context ctx
-            ON ctx.instanceid = cm.id
-           AND ctx.contextlevel = 70
-
-        JOIN mdl_files f
-            ON f.contextid = ctx.id
-
+          ON ctx.id = f.contextid
+         AND ctx.contextlevel = 70
+        JOIN mdl_course_modules cm
+          ON cm.id = ctx.instanceid
+        JOIN mdl_modules m
+          ON m.id = cm.module
+         AND m.name = 'quiz'
+        JOIN mdl_quiz q
+          ON q.id = cm.instance
+         AND q.id = %s
+         AND q.course = %s
+        JOIN mdl_course c
+          ON c.id = q.course
+        JOIN mdl_user u
+          ON u.id = f.userid
+        {join_grupo}
         WHERE f.component = 'quizaccess_proctoring'
           AND f.filearea IN ('picture', 'face_image')
           AND f.filename <> '.'
           AND f.mimetype LIKE 'image/%%'
-
-        ORDER BY c.fullname, c.id
+          AND f.filesize > 0
+          AND u.deleted = 0
+          AND u.suspended = 0
+          AND EXISTS (
+              SELECT 1
+              FROM mdl_quiz_attempts qa
+              WHERE qa.quiz = q.id
+                AND qa.userid = u.id
+                AND qa.preview = 0
+          )
+          AND EXISTS (
+              SELECT 1
+              FROM mdl_quizaccess_proctoring_logs pl
+              WHERE pl.courseid = c.id
+                AND pl.quizid = cm.id
+                AND pl.userid = u.id
+          )
+        ORDER BY u.username, f.timecreated, f.id
     """
 
-    cursor.execute(consulta)
-    return cursor.fetchall()
-
-
-def obtener_grupos(cursor, courseid):
-    """
-    Obtiene todos los grupos existentes dentro del curso.
-
-    Si devuelve una lista vacía, significa que el curso
-    no tiene grupos y se debe pasar directamente al menú
-    de exámenes.
-    """
-    consulta = """
-        SELECT DISTINCT
-            g.id,
-            g.name,
-            g.courseid
-        FROM mdl_groups g
-        WHERE g.courseid = %s
-        ORDER BY g.name, g.id
-    """
-
-    cursor.execute(consulta, (courseid,))
-    return cursor.fetchall()
-
-
-def obtener_examenes(cursor, courseid, groupid=None):
-    """
-    Obtiene los exámenes del curso.
-
-    Si groupid contiene un ID:
-        obtiene exámenes con imágenes de usuarios del grupo.
-
-    Si groupid es None:
-        obtiene exámenes con imágenes sin aplicar filtro de grupo.
-    """
-
+    parametros = [quizid, courseid]
     if groupid is not None:
-        consulta = """
-            SELECT DISTINCT
-                q.id AS quizid,
-                q.name,
-                q.course AS courseid,
-                cm.id AS coursemodule,
-                ctx.id AS contextid
+        parametros.append(groupid)
 
-            FROM mdl_quiz q
-
-            JOIN mdl_course_modules cm
-                ON cm.instance = q.id
-
-            JOIN mdl_modules m
-                ON m.id = cm.module
-               AND m.name = 'quiz'
-
-            JOIN mdl_context ctx
-                ON ctx.instanceid = cm.id
-               AND ctx.contextlevel = 70
-
-            JOIN mdl_files f
-                ON f.contextid = ctx.id
-
-            JOIN mdl_groups_members gm
-                ON gm.userid = f.userid
-               AND gm.groupid = %s
-
-            WHERE q.course = %s
-              AND f.component = 'quizaccess_proctoring'
-              AND f.filearea IN ('picture', 'face_image')
-              AND f.filename <> '.'
-              AND f.mimetype LIKE 'image/%%'
-              AND EXISTS (
-                  SELECT 1
-                  FROM mdl_quiz_attempts qa
-                  WHERE qa.quiz = q.id
-                    AND qa.userid = f.userid
-                    AND qa.preview = 0
-              )
-
-            ORDER BY q.name, q.id
-        """
-
-        cursor.execute(
-            consulta,
-            (groupid, courseid)
-        )
-
-    else:
-        consulta = """
-            SELECT DISTINCT
-                q.id AS quizid,
-                q.name,
-                q.course AS courseid,
-                cm.id AS coursemodule,
-                ctx.id AS contextid
-
-            FROM mdl_quiz q
-
-            JOIN mdl_course_modules cm
-                ON cm.instance = q.id
-
-            JOIN mdl_modules m
-                ON m.id = cm.module
-               AND m.name = 'quiz'
-
-            JOIN mdl_context ctx
-                ON ctx.instanceid = cm.id
-               AND ctx.contextlevel = 70
-
-            JOIN mdl_files f
-                ON f.contextid = ctx.id
-
-            WHERE q.course = %s
-              AND f.component = 'quizaccess_proctoring'
-              AND f.filearea IN ('picture', 'face_image')
-              AND f.filename <> '.'
-              AND f.mimetype LIKE 'image/%%'
-              AND EXISTS (
-                  SELECT 1
-                  FROM mdl_quiz_attempts qa
-                  WHERE qa.quiz = q.id
-                    AND qa.userid = f.userid
-                    AND qa.preview = 0
-              )
-
-            ORDER BY q.name, q.id
-        """
-
-        cursor.execute(
-            consulta,
-            (courseid,)
-        )
-
-    return cursor.fetchall()
-
-
-def obtener_imagenes(cursor, courseid, quizid, groupid=None):
-    """
-    Obtiene las imágenes del examen.
-
-    Con grupo:
-        solo imágenes de usuarios pertenecientes al grupo.
-
-    Sin grupo:
-        imágenes de todos los usuarios que presentaron el examen.
-    """
-
-    if groupid is not None:
-        consulta = """
-            SELECT DISTINCT
-                f.id AS fileid,
-                f.filename,
-                f.contenthash,
-                f.filearea,
-                f.mimetype,
-                f.filesize,
-                f.timecreated,
-                f.timemodified,
-
-                u.id AS userid,
-                u.username,
-                u.firstname,
-                u.lastname,
-
-                q.id AS quizid,
-                q.name AS examen,
-
-                c.id AS courseid,
-                c.fullname AS curso,
-
-                g.id AS groupid,
-                g.name AS grupo,
-
-                cm.id AS coursemodule,
-                ctx.id AS contextid
-
-            FROM mdl_files f
-
-            JOIN mdl_context ctx
-                ON ctx.id = f.contextid
-               AND ctx.contextlevel = 70
-
-            JOIN mdl_course_modules cm
-                ON cm.id = ctx.instanceid
-
-            JOIN mdl_modules m
-                ON m.id = cm.module
-               AND m.name = 'quiz'
-
-            JOIN mdl_quiz q
-                ON q.id = cm.instance
-               AND q.id = %s
-               AND q.course = %s
-
-            JOIN mdl_course c
-                ON c.id = q.course
-
-            JOIN mdl_user u
-                ON u.id = f.userid
-
-            JOIN mdl_groups_members gm
-                ON gm.userid = u.id
-               AND gm.groupid = %s
-
-            JOIN mdl_groups g
-                ON g.id = gm.groupid
-               AND g.courseid = c.id
-
-            WHERE f.component = 'quizaccess_proctoring'
-              AND f.filearea IN ('picture', 'face_image')
-              AND f.filename <> '.'
-              AND f.mimetype LIKE 'image/%%'
-              AND u.deleted = 0
-              AND EXISTS (
-                  SELECT 1
-                  FROM mdl_quiz_attempts qa
-                  WHERE qa.quiz = q.id
-                    AND qa.userid = u.id
-                    AND qa.preview = 0
-              )
-
-            ORDER BY
-                u.username,
-                f.timecreated,
-                f.id
-        """
-
-        cursor.execute(
-            consulta,
-            (quizid, courseid, groupid)
-        )
-
-    else:
-        consulta = """
-            SELECT DISTINCT
-                f.id AS fileid,
-                f.filename,
-                f.contenthash,
-                f.filearea,
-                f.mimetype,
-                f.filesize,
-                f.timecreated,
-                f.timemodified,
-
-                u.id AS userid,
-                u.username,
-                u.firstname,
-                u.lastname,
-
-                q.id AS quizid,
-                q.name AS examen,
-
-                c.id AS courseid,
-                c.fullname AS curso,
-
-                NULL AS groupid,
-                NULL AS grupo,
-
-                cm.id AS coursemodule,
-                ctx.id AS contextid
-
-            FROM mdl_files f
-
-            JOIN mdl_context ctx
-                ON ctx.id = f.contextid
-               AND ctx.contextlevel = 70
-
-            JOIN mdl_course_modules cm
-                ON cm.id = ctx.instanceid
-
-            JOIN mdl_modules m
-                ON m.id = cm.module
-               AND m.name = 'quiz'
-
-            JOIN mdl_quiz q
-                ON q.id = cm.instance
-               AND q.id = %s
-               AND q.course = %s
-
-            JOIN mdl_course c
-                ON c.id = q.course
-
-            JOIN mdl_user u
-                ON u.id = f.userid
-
-            WHERE f.component = 'quizaccess_proctoring'
-              AND f.filearea IN ('picture', 'face_image')
-              AND f.filename <> '.'
-              AND f.mimetype LIKE 'image/%%'
-              AND u.deleted = 0
-              AND EXISTS (
-                  SELECT 1
-                  FROM mdl_quiz_attempts qa
-                  WHERE qa.quiz = q.id
-                    AND qa.userid = u.id
-                    AND qa.preview = 0
-              )
-
-            ORDER BY
-                u.username,
-                f.timecreated,
-                f.id
-        """
-
-        cursor.execute(
-            consulta,
-            (quizid, courseid)
-        )
-
+    cursor.execute(consulta, tuple(parametros))
     return cursor.fetchall()
 
 
 # ============================================================
-# PROCESO PRINCIPAL
+# VALIDACIÓN DE LÍMITES
 # ============================================================
 
-def main():
+
+def validar_limites(imagenes) -> None:
+    cantidad = len(imagenes)
+
+    if cantidad > MAX_ARCHIVOS:
+        raise HTTPException(
+            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+            detail=(
+                "La descarga excede el número máximo de archivos permitido."
+            ),
+        )
+
+    total_bytes = 0
+
+    for imagen in imagenes:
+        try:
+            filesize = int(imagen.get("filesize") or 0)
+        except (TypeError, ValueError):
+            filesize = 0
+
+        if filesize < 0:
+            filesize = 0
+
+        total_bytes += filesize
+
+        if total_bytes > MAX_BYTES:
+            raise HTTPException(
+                status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+                detail="La descarga excede el tamaño máximo permitido.",
+            )
+
+
+# ============================================================
+# CREAR ZIP
+# ============================================================
+
+
+def generar_zip(
+    courseid: int,
+    quizid: int,
+    userid_solicitante: int,
+    groupid: Optional[int] = None,
+):
     conexion = None
     cursor = None
-
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
-
-    registro_path = os.path.join(
-        OUTPUT_DIR,
-        "registro_descargas.txt"
-    )
-
-    print("=" * 75)
-    print("DESCARGA DE EVIDENCIAS DE PROCTORING DE MOODLE")
-    print("=" * 75)
-    print(f"Moodledata: {MOODLEDATA_FILEDIR}")
-    print(f"Salida:     {OUTPUT_DIR}")
+    carpeta_temporal = None
 
     try:
-        # ----------------------------------------------------
-        # Conexión con la base de datos
-        # ----------------------------------------------------
-        conexion = mysql.connector.connect(**DB_CONFIG)
+        conexion = obtener_conexion()
         cursor = conexion.cursor(dictionary=True)
 
-        print("\nConexión con la base de datos establecida.")
-
-        # ----------------------------------------------------
-        # 1. Seleccionar curso
-        # ----------------------------------------------------
-        cursos = obtener_cursos(cursor)
-
-        curso = seleccionar_elemento(
-            cursos,
-            "CURSOS CON EVIDENCIAS DISPONIBLES",
-            "fullname"
-        )
-
-        if curso is None:
-            print("Proceso cancelado.")
-            return
-
-        courseid = curso["id"]
-        nombre_curso = curso["fullname"]
-
-        # ----------------------------------------------------
-        # 2. Detectar grupos
-        # ----------------------------------------------------
-        grupos = obtener_grupos(cursor, courseid)
-
-        if grupos:
-            print(
-                f"\nEl curso '{nombre_curso}' tiene "
-                f"{len(grupos)} grupo(s)."
+        # Autorización: primero se verifica que el solicitante pueda ver
+        # evidencias del curso indicado.
+        if not usuario_puede_descargar_curso(
+            cursor,
+            userid_solicitante,
+            courseid,
+        ):
+            logger.warning(
+                "Descarga rechazada: userid=%s courseid=%s quizid=%s",
+                userid_solicitante,
+                courseid,
+                quizid,
+            )
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="No tienes permisos para descargar evidencias de este curso.",
             )
 
-            grupo = seleccionar_elemento(
-                grupos,
-                f"GRUPOS DEL CURSO: {nombre_curso}",
-                "name"
+        examen = obtener_examen(cursor, courseid, quizid)
+        if not examen:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="No se encontró el examen indicado.",
             )
 
-            if grupo is None:
-                print("Proceso cancelado.")
-                return
+        nombre_curso = examen["curso"]
+        nombre_examen = examen["examen"]
 
-            groupid = grupo["id"]
+        nombre_grupo = None
+        if groupid is not None:
+            grupo = obtener_grupo(cursor, courseid, groupid)
+            if not grupo:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="El grupo indicado no existe dentro del curso.",
+                )
             nombre_grupo = grupo["name"]
 
-        else:
-            print(
-                f"\nEl curso '{nombre_curso}' no tiene grupos."
-            )
-            print(
-                "Se mostrarán directamente los exámenes disponibles."
-            )
-
-            groupid = None
-            nombre_grupo = None
-
-        grupo_registro = (
-            nombre_grupo
-            if nombre_grupo
-            else "Curso sin grupos"
-        )
-
-        # ----------------------------------------------------
-        # 3. Seleccionar examen
-        # ----------------------------------------------------
-        examenes = obtener_examenes(
-            cursor,
-            courseid,
-            groupid
-        )
-
-        if nombre_grupo:
-            titulo_examenes = (
-                f"EXÁMENES DEL CURSO: {nombre_curso}\n"
-                f"GRUPO: {nombre_grupo}"
-            )
-        else:
-            titulo_examenes = (
-                f"EXÁMENES DEL CURSO: {nombre_curso}"
-            )
-
-        examen = seleccionar_elemento(
-            examenes,
-            titulo_examenes,
-            "name"
-        )
-
-        if examen is None:
-            print("Proceso cancelado.")
-            return
-
-        quizid = examen["quizid"]
-        nombre_examen = examen["name"]
-
-        # ----------------------------------------------------
-        # 4. Crear estructura de carpetas
-        # ----------------------------------------------------
-        carpeta_curso = os.path.join(
-            OUTPUT_DIR,
-            limpiar_nombre(nombre_curso)
-        )
-
-        if nombre_grupo:
-            carpeta_grupo = os.path.join(
-                carpeta_curso,
-                limpiar_nombre(nombre_grupo)
-            )
-
-            carpeta_examen = os.path.join(
-                carpeta_grupo,
-                limpiar_nombre(nombre_examen)
-            )
-
-            carpeta_zip = carpeta_grupo
-
-        else:
-            carpeta_grupo = None
-
-            carpeta_examen = os.path.join(
-                carpeta_curso,
-                limpiar_nombre(nombre_examen)
-            )
-
-            carpeta_zip = carpeta_curso
-
-        if (
-            LIMPIAR_CARPETA_SELECCIONADA
-            and os.path.isdir(carpeta_examen)
-        ):
-            print(
-                "\nEliminando descarga anterior del examen..."
-            )
-            shutil.rmtree(carpeta_examen)
-
-        os.makedirs(carpeta_examen, exist_ok=True)
-
-        # ----------------------------------------------------
-        # 5. Obtener imágenes
-        # ----------------------------------------------------
         imagenes = obtener_imagenes(
             cursor,
             courseid,
             quizid,
-            groupid
+            groupid,
         )
 
-        print("\n" + "-" * 75)
-        print(f"Curso:  {nombre_curso}")
-
-        if nombre_grupo:
-            print(f"Grupo:  {nombre_grupo}")
-        else:
-            print("Grupo:  Curso sin grupos")
-
-        print(f"Examen: {nombre_examen}")
-        print(f"Imágenes encontradas: {len(imagenes)}")
-        print("-" * 75)
-
         if not imagenes:
-            print(
-                "\nNo se encontraron imágenes para la selección."
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="No se encontraron evidencias para este examen.",
             )
 
-            if os.path.isdir(carpeta_examen):
-                try:
-                    os.rmdir(carpeta_examen)
-                except OSError:
-                    pass
+        validar_limites(imagenes)
 
-            return
+        if not MOODLEDATA_FILEDIR.is_dir():
+            logger.error("MOODLEDATA_FILEDIR no existe o no es directorio.")
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="El almacenamiento de evidencias no está disponible.",
+            )
+
+        carpeta_temporal = Path(
+            tempfile.mkdtemp(prefix="moodle_evidencias_")
+        ).resolve()
+
+        carpeta_evidencias = ruta_segura_dentro(
+            carpeta_temporal,
+            limpiar_nombre(nombre_examen),
+        )
+        carpeta_evidencias.mkdir(parents=True, exist_ok=True)
 
         copiadas = 0
-        no_encontradas = 0
-        errores = 0
-        usuarios = set()
+        bytes_reales = 0
 
-        # ----------------------------------------------------
-        # 6. Copiar imágenes
-        # ----------------------------------------------------
         for imagen in imagenes:
             usuario = imagen["username"]
-            fileid = imagen["fileid"]
+            fileid = int(imagen["fileid"])
             filename = imagen["filename"]
-            contenthash = imagen["contenthash"]
-            filearea = imagen["filearea"]
 
-            usuarios.add(usuario)
+            try:
+                archivo_origen = obtener_ruta_origen(imagen["contenthash"])
+            except ValueError:
+                logger.warning(
+                    "Se omitió fileid=%s por contenthash inválido.",
+                    fileid,
+                )
+                continue
 
-            carpeta_usuario = os.path.join(
-                carpeta_examen,
-                limpiar_nombre(usuario)
+            if not archivo_origen.is_file():
+                # No se expone la ruta física en la respuesta HTTP.
+                logger.warning(
+                    "Archivo físico no disponible para fileid=%s.",
+                    fileid,
+                )
+                continue
+
+            # Revalida contra el tamaño físico real para evitar confiar sólo
+            # en metadatos de la base de datos.
+            try:
+                tamano_real = archivo_origen.stat().st_size
+            except OSError:
+                logger.warning("No se pudo leer fileid=%s.", fileid)
+                continue
+
+            if tamano_real <= 0:
+                continue
+
+            if bytes_reales + tamano_real > MAX_BYTES:
+                raise HTTPException(
+                    status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+                    detail="La descarga excede el tamaño máximo permitido.",
+                )
+
+            carpeta_usuario = ruta_segura_dentro(
+                carpeta_evidencias,
+                limpiar_nombre(usuario),
             )
-
-            os.makedirs(carpeta_usuario, exist_ok=True)
-
-            archivo_origen = obtener_ruta_origen(contenthash)
+            carpeta_usuario.mkdir(parents=True, exist_ok=True)
 
             archivo_destino = obtener_ruta_destino_unica(
                 carpeta_usuario,
                 filename,
-                fileid
+                fileid,
             )
 
-            try:
-                if not os.path.isfile(archivo_origen):
-                    no_encontradas += 1
+            shutil.copyfile(archivo_origen, archivo_destino)
 
-                    mensaje = (
-                        f"NO ENCONTRADO | "
-                        f"Curso: {nombre_curso} | "
-                        f"Grupo: {grupo_registro} | "
-                        f"Examen: {nombre_examen} | "
-                        f"Usuario: {usuario} | "
-                        f"Archivo: {filename} | "
-                        f"Contenthash: {contenthash} | "
-                        f"Ruta: {archivo_origen}"
-                    )
+            copiadas += 1
+            bytes_reales += tamano_real
 
-                    print(f"No encontrado: {archivo_origen}")
-                    escribir_registro(registro_path, mensaje)
+            if copiadas > MAX_ARCHIVOS:
+                raise HTTPException(
+                    status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+                    detail=(
+                        "La descarga excede el número máximo de archivos permitido."
+                    ),
+                )
+
+        if copiadas == 0:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=(
+                    "Las evidencias están registradas, pero no hay archivos "
+                    "físicos disponibles para descargar."
+                ),
+            )
+
+        partes_nombre = [limpiar_nombre(nombre_curso)]
+        if nombre_grupo:
+            partes_nombre.append(limpiar_nombre(nombre_grupo))
+        partes_nombre.append(limpiar_nombre(nombre_examen))
+
+        nombre_zip = "_".join(partes_nombre) + ".zip"
+        zip_path = ruta_segura_dentro(carpeta_temporal, nombre_zip)
+
+        with zipfile.ZipFile(
+            zip_path,
+            "w",
+            compression=zipfile.ZIP_DEFLATED,
+            compresslevel=6,
+            allowZip64=True,
+        ) as archivo_zip:
+            for ruta_completa in carpeta_evidencias.rglob("*"):
+                if not ruta_completa.is_file():
                     continue
 
-                shutil.copy2(
-                    archivo_origen,
-                    archivo_destino
+                # Las rutas del ZIP siempre son relativas a la carpeta raíz.
+                ruta_zip = ruta_completa.relative_to(carpeta_evidencias)
+                archivo_zip.write(
+                    ruta_completa,
+                    arcname=ruta_zip.as_posix(),
                 )
 
-                copiadas += 1
+        logger.info(
+            "Descarga autorizada: userid=%s courseid=%s quizid=%s "
+            "groupid=%s archivos=%s bytes=%s",
+            userid_solicitante,
+            courseid,
+            quizid,
+            groupid,
+            copiadas,
+            bytes_reales,
+        )
 
-                print(
-                    f"Copiada [{filearea}]: "
-                    f"{usuario}/"
-                    f"{os.path.basename(archivo_destino)}"
-                )
+        return {
+            "zip_path": str(zip_path),
+            "zip_name": nombre_zip,
+            "temp_dir": str(carpeta_temporal),
+            "imagenes": copiadas,
+        }
 
-                mensaje = (
-                    f"COPIADO | "
-                    f"Curso: {nombre_curso} | "
-                    f"Grupo: {grupo_registro} | "
-                    f"Examen: {nombre_examen} | "
-                    f"Usuario: {usuario} | "
-                    f"Área: {filearea} | "
-                    f"Archivo: {filename} | "
-                    f"Destino: {archivo_destino}"
-                )
+    except HTTPException:
+        if carpeta_temporal:
+            eliminar_temporal(carpeta_temporal)
+        raise
 
-                escribir_registro(registro_path, mensaje)
+    except Error:
+        if carpeta_temporal:
+            eliminar_temporal(carpeta_temporal)
 
-            except OSError as error:
-                errores += 1
+        logger.exception("Error de Moodle/MySQL al generar el ZIP.")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="No fue posible generar la descarga.",
+        )
 
-                mensaje = (
-                    f"ERROR | "
-                    f"Curso: {nombre_curso} | "
-                    f"Grupo: {grupo_registro} | "
-                    f"Examen: {nombre_examen} | "
-                    f"Usuario: {usuario} | "
-                    f"Archivo: {filename} | "
-                    f"Detalle: {error}"
-                )
+    except Exception:
+        if carpeta_temporal:
+            eliminar_temporal(carpeta_temporal)
 
-                print(f"Error copiando {filename}: {error}")
-                escribir_registro(registro_path, mensaje)
-
-        # ----------------------------------------------------
-        # 7. Crear ZIP
-        # ----------------------------------------------------
-        zip_path = None
-
-        if CREAR_ZIP and copiadas > 0:
-            if nombre_grupo:
-                nombre_zip = (
-                    f"{limpiar_nombre(nombre_curso)}_"
-                    f"{limpiar_nombre(nombre_grupo)}_"
-                    f"{limpiar_nombre(nombre_examen)}.zip"
-                )
-            else:
-                nombre_zip = (
-                    f"{limpiar_nombre(nombre_curso)}_"
-                    f"{limpiar_nombre(nombre_examen)}.zip"
-                )
-
-            zip_path = os.path.join(
-                carpeta_zip,
-                nombre_zip
-            )
-
-            print("\nCreando archivo ZIP...")
-
-            crear_zip(
-                carpeta_examen,
-                zip_path
-            )
-
-            print(f"ZIP creado: {zip_path}")
-
-            escribir_registro(
-                registro_path,
-                (
-                    f"ZIP CREADO | "
-                    f"Curso: {nombre_curso} | "
-                    f"Grupo: {grupo_registro} | "
-                    f"Examen: {nombre_examen} | "
-                    f"Ruta: {zip_path}"
-                )
-            )
-
-        # ----------------------------------------------------
-        # 8. Resumen
-        # ----------------------------------------------------
-        print("\n" + "=" * 75)
-        print("PROCESO FINALIZADO")
-        print("=" * 75)
-        print(f"Curso:                 {nombre_curso}")
-        print(f"Grupo:                 {grupo_registro}")
-        print(f"Examen:                {nombre_examen}")
-        print(f"Usuarios encontrados: {len(usuarios)}")
-        print(f"Imágenes copiadas:     {copiadas}")
-        print(f"No encontradas:        {no_encontradas}")
-        print(f"Errores:                {errores}")
-        print(f"Carpeta:                {carpeta_examen}")
-
-        if zip_path:
-            print(f"ZIP:                    {zip_path}")
-
-        print(f"Registro:               {registro_path}")
-
-    except Error as error:
-        print("\nError al conectarse o consultar la base de datos:")
-        print(error)
-
-    except KeyboardInterrupt:
-        print("\n\nProceso cancelado por el usuario.")
-
-    except Exception as error:
-        print("\nOcurrió un error inesperado:")
-        print(error)
+        logger.exception("Error interno al generar el ZIP.")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error interno al generar la descarga.",
+        )
 
     finally:
         if cursor is not None:
-            cursor.close()
+            try:
+                cursor.close()
+            except Exception:
+                logger.exception("No se pudo cerrar el cursor MySQL.")
 
-        if conexion is not None and conexion.is_connected():
-            conexion.close()
+        if conexion is not None:
+            try:
+                if conexion.is_connected():
+                    conexion.close()
+            except Exception:
+                logger.exception("No se pudo cerrar la conexión MySQL.")
 
-        print("\nConexión con la base de datos cerrada.")
+
+
+# ============================================================
+# SELECCIÓN INTERACTIVA
+# ============================================================
+
+def obtener_usuario_por_username(cursor, username: str):
+    cursor.execute(
+        """
+        SELECT id, username, firstname, lastname
+        FROM mdl_user
+        WHERE username = %s
+          AND deleted = 0
+          AND suspended = 0
+        LIMIT 1
+        """,
+        (username.strip(),),
+    )
+    return cursor.fetchone()
+
+
+def obtener_cursos_docente(cursor, userid: int):
+    # Administrador: puede ver todos los cursos.
+    if usuario_es_admin_moodle(cursor, userid):
+        cursor.execute(
+            """
+            SELECT id, fullname
+            FROM mdl_course
+            WHERE id > 1
+            ORDER BY fullname
+            """
+        )
+        return cursor.fetchall()
+
+    roles = sorted(ROLES_PROFESOR)
+    placeholders = ",".join(["%s"] * len(roles))
+
+    consulta = f"""
+        SELECT DISTINCT c.id, c.fullname
+        FROM mdl_course c
+        JOIN mdl_context coursectx
+          ON coursectx.contextlevel = 50
+         AND coursectx.instanceid = c.id
+        JOIN mdl_context assignedctx
+          ON coursectx.path LIKE CONCAT(assignedctx.path, '/%%')
+          OR coursectx.id = assignedctx.id
+        JOIN mdl_role_assignments ra
+          ON ra.contextid = assignedctx.id
+         AND ra.userid = %s
+        JOIN mdl_role r
+          ON r.id = ra.roleid
+        WHERE c.id > 1
+          AND LOWER(r.shortname) IN ({placeholders})
+        ORDER BY c.fullname
+    """
+    cursor.execute(consulta, (userid, *roles))
+    return cursor.fetchall()
+
+
+def obtener_quizzes_curso(cursor, courseid: int):
+    cursor.execute(
+        """
+        SELECT q.id, q.name
+        FROM mdl_quiz q
+        WHERE q.course = %s
+        ORDER BY q.name
+        """,
+        (courseid,),
+    )
+    return cursor.fetchall()
+
+
+def obtener_grupos_curso(cursor, courseid: int):
+    cursor.execute(
+        """
+        SELECT id, name
+        FROM mdl_groups
+        WHERE courseid = %s
+        ORDER BY name
+        """,
+        (courseid,),
+    )
+    return cursor.fetchall()
+
+
+def seleccionar_de_lista(titulo: str, elementos, etiqueta):
+    if not elementos:
+        return None
+
+    print()
+    print(titulo)
+    print("-" * 60)
+    for i, elemento in enumerate(elementos, start=1):
+        print(f"{i}. {etiqueta(elemento)}")
+
+    while True:
+        valor = input("Selecciona una opción: ").strip()
+        try:
+            indice = int(valor)
+            if 1 <= indice <= len(elementos):
+                return elementos[indice - 1]
+        except ValueError:
+            pass
+        print("Opción inválida. Intenta nuevamente.")
+
+
+def seleccionar_datos_interactivamente():
+    conexion = None
+    cursor = None
+    try:
+        conexion = obtener_conexion()
+        cursor = conexion.cursor(dictionary=True)
+
+        print("=" * 60)
+        print("DESCARGA DE EVIDENCIAS MOODLE")
+        print("=" * 60)
+
+        username = input("Usuario de Moodle: ").strip()
+        if not username:
+            raise SystemExit("ERROR: Debes indicar tu usuario de Moodle.")
+
+        usuario = obtener_usuario_por_username(cursor, username)
+        if not usuario:
+            raise SystemExit("ERROR: No se encontró un usuario Moodle activo con ese nombre.")
+
+        userid = int(usuario["id"])
+
+        cursos = obtener_cursos_docente(cursor, userid)
+        if not cursos:
+            raise SystemExit("ERROR: El usuario no tiene cursos disponibles para descargar.")
+
+        curso = seleccionar_de_lista(
+            "Cursos disponibles:",
+            cursos,
+            lambda x: x["fullname"],
+        )
+
+        quizzes = obtener_quizzes_curso(cursor, int(curso["id"]))
+        if not quizzes:
+            raise SystemExit("ERROR: El curso seleccionado no tiene exámenes tipo quiz.")
+
+        quiz = seleccionar_de_lista(
+            "Exámenes disponibles:",
+            quizzes,
+            lambda x: x["name"],
+        )
+
+        grupos = obtener_grupos_curso(cursor, int(curso["id"]))
+        groupid = None
+
+        if grupos:
+            print()
+            print("Grupos disponibles")
+            print("-" * 60)
+            print("0. Todos los grupos / sin filtro")
+            for i, grupo in enumerate(grupos, start=1):
+                print(f"{i}. {grupo['name']}")
+
+            while True:
+                valor = input("Selecciona un grupo: ").strip()
+                try:
+                    indice = int(valor)
+                    if indice == 0:
+                        groupid = None
+                        break
+                    if 1 <= indice <= len(grupos):
+                        groupid = int(grupos[indice - 1]["id"])
+                        break
+                except ValueError:
+                    pass
+                print("Opción inválida. Intenta nuevamente.")
+
+        return {
+            "userid": userid,
+            "courseid": int(curso["id"]),
+            "quizid": int(quiz["id"]),
+            "groupid": groupid,
+        }
+
+    finally:
+        if cursor is not None:
+            try:
+                cursor.close()
+            except Exception:
+                pass
+        if conexion is not None:
+            try:
+                if conexion.is_connected():
+                    conexion.close()
+            except Exception:
+                pass
+
+
+# ============================================================
+# EJECUCIÓN POR CONSOLA
+# ============================================================
+
+def main():
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description="Descarga evidencias de Moodle y genera un archivo ZIP."
+    )
+    parser.add_argument("--courseid", type=int, help="ID del curso Moodle.")
+    parser.add_argument("--quizid", type=int, help="ID del quiz Moodle.")
+    parser.add_argument("--groupid", type=int, default=None, help="ID opcional del grupo.")
+    parser.add_argument("--userid", type=int, help="ID Moodle del profesor/administrador.")
+    parser.add_argument(
+        "--salida",
+        default=None,
+        help="Ruta o nombre del ZIP de salida. Si se omite, usa el nombre generado.",
+    )
+    args = parser.parse_args()
+
+    # Si no se proporcionan todos los IDs esenciales, se usa el modo interactivo.
+    if not (args.courseid and args.quizid and args.userid):
+        seleccion = seleccionar_datos_interactivamente()
+        courseid = seleccion["courseid"]
+        quizid = seleccion["quizid"]
+        userid = seleccion["userid"]
+        groupid = seleccion["groupid"]
+    else:
+        courseid = args.courseid
+        quizid = args.quizid
+        userid = args.userid
+        groupid = args.groupid
+
+    resultado = None
+    try:
+        resultado = generar_zip(
+            courseid=courseid,
+            quizid=quizid,
+            groupid=groupid,
+            userid_solicitante=userid,
+        )
+
+        origen = Path(resultado["zip_path"]).resolve()
+        if args.salida:
+            destino = Path(args.salida).expanduser().resolve()
+            if destino.is_dir():
+                destino = destino / resultado["zip_name"]
+        else:
+            destino = Path.cwd() / resultado["zip_name"]
+
+        destino.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(origen, destino)
+
+        print()
+        print("=" * 60)
+        print("DESCARGA COMPLETADA")
+        print("=" * 60)
+        print(f"Archivo ZIP: {destino}")
+        print(f"Imágenes incluidas: {resultado['imagenes']}")
+
+    except HTTPException as exc:
+        logger.error("No se pudo generar la descarga: %s", exc.detail)
+        raise SystemExit(f"ERROR: {exc.detail}")
+    except Exception:
+        logger.exception("Error inesperado durante la descarga.")
+        raise SystemExit("ERROR: No fue posible generar la descarga.")
+    finally:
+        if resultado and resultado.get("temp_dir"):
+            eliminar_temporal(resultado["temp_dir"])
 
 
 if __name__ == "__main__":

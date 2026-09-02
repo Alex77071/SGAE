@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MoodleAuthController;
+use App\Http\Controllers\EvidenciasController;
 
 
 /*
@@ -322,41 +323,87 @@ Route::get('/inicio', function (Request $request) {
 |--------------------------------------------------------------------------
 | DESCARGAR EVIDENCIAS
 |--------------------------------------------------------------------------
-|
-| Esta ruta se agrega porque inicio/index.blade.php utiliza:
-|
-| route('evidencias.descargar')
-|
-| Por ahora devuelve una pantalla de prueba.
-| Después aquí conectaremos la descarga real desde Moodle.
-|
 */
 
-Route::get('/evidencias/descargar', function () {
 
-    /*
-     * Solo usuarios autenticados con Moodle pueden acceder.
-     */
+/*
+|--------------------------------------------------------------------------
+| PANTALLA PRINCIPAL
+|--------------------------------------------------------------------------
+*/
 
-    if (!session('moodle_authenticated')) {
+Route::get(
+    '/evidencias/descargar',
+    [EvidenciasController::class, 'index']
+)->name('evidencias.descargar');
 
-        return redirect()->route('login');
 
-    }
+/*
+|--------------------------------------------------------------------------
+| OBTENER CURSOS DEL PROFESOR
+|--------------------------------------------------------------------------
+*/
 
-    return view('evidencias.descargar');
+Route::get(
+    '/evidencias/cursos',
+    [EvidenciasController::class, 'cursos']
+)->name('evidencias.cursos');
 
-})->name('evidencias.descargar');
+
+/*
+|--------------------------------------------------------------------------
+| OBTENER GRUPOS DEL CURSO
+|--------------------------------------------------------------------------
+*/
+
+Route::get(
+    '/evidencias/grupos',
+    [EvidenciasController::class, 'grupos']
+)->name('evidencias.grupos');
+
+
+/*
+|--------------------------------------------------------------------------
+| OBTENER EXÁMENES DEL CURSO
+|--------------------------------------------------------------------------
+*/
+
+Route::get(
+    '/evidencias/examenes',
+    [EvidenciasController::class, 'examenes']
+)->name('evidencias.examenes');
+
+
+/*
+|--------------------------------------------------------------------------
+| EJECUTAR DESCARGA
+|--------------------------------------------------------------------------
+*/
+
+Route::post(
+    '/evidencias/descargar',
+    [EvidenciasController::class, 'descargar']
+)->name('evidencias.descargar.ejecutar');
+
+
+/*
+|--------------------------------------------------------------------------
+| PANTALLA DE PROGRESO DE DESCARGA
+|--------------------------------------------------------------------------
+*/
 
 Route::get('/evidencias/descarga', function () {
 
     if (!session('moodle_authenticated')) {
+
         return redirect()->route('login');
+
     }
 
     return view('evidencias.descarga');
 
 })->name('evidencias.descarga');
+
 
 Route::get('/recursos/manuales', function () {
 
@@ -719,3 +766,21 @@ Route::post(
     '/logout',
     [MoodleAuthController::class, 'logout']
 )->name('logout');
+
+
+Route::get('/debug-sesion', function () {
+
+    return response()->json([
+
+        'moodle_authenticated' =>
+            session('moodle_authenticated') === true,
+
+        'tiene_user_id' =>
+            !empty(session('moodle_user_id')),
+
+        'tiene_token' =>
+            !empty(session('moodle_token')),
+
+    ]);
+
+});

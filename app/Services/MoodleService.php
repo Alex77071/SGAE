@@ -389,4 +389,222 @@ class MoodleService
                 ),
         ];
     }
+
+
+        /*
+    |--------------------------------------------------------------------------
+    | OBTENER CURSOS DEL PROFESOR
+    |--------------------------------------------------------------------------
+    |
+    | Utiliza la misma validación que ya se usa durante el login.
+    |
+    */
+
+    public function getTeacherCourses(
+        string $token,
+        int $userId
+    ): array {
+
+        $teacherResponse =
+            $this->checkTeacher(
+                $token,
+                $userId
+            );
+
+
+        if (!$teacherResponse['success']) {
+
+            return [
+                'success' => false,
+
+                'message' =>
+                    $teacherResponse['message']
+                    ?? 'No fue posible obtener los cursos.',
+
+                'data' => [],
+            ];
+
+        }
+
+
+        $courses =
+            $teacherResponse['courses']
+            ?? [];
+
+
+        $resultado = [];
+
+
+        foreach ($courses as $course) {
+
+            if (empty($course['id'])) {
+                continue;
+            }
+
+
+            $resultado[] = [
+
+                'id' =>
+                    (int) $course['id'],
+
+                'nombre' =>
+                    $course['name']
+                    ?? 'Curso',
+
+            ];
+
+        }
+
+
+        return [
+            'success' => true,
+            'data' => $resultado,
+        ];
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | OBTENER GRUPOS DEL CURSO
+    |--------------------------------------------------------------------------
+    */
+
+    public function getCourseGroups(
+        string $token,
+        int $courseId
+    ): array {
+
+        $response =
+            $this->call(
+                $token,
+                'core_group_get_course_groups',
+                [
+                    'courseid' =>
+                        $courseId,
+                ]
+            );
+
+
+        if (!$response['success']) {
+
+            return [
+                'success' => false,
+
+                'message' =>
+                    $response['message']
+                    ?? 'No fue posible obtener los grupos.',
+
+                'data' => [],
+            ];
+
+        }
+
+
+        $groups =
+            $response['data']
+            ?? [];
+
+
+        $resultado = [];
+
+
+        foreach ($groups as $group) {
+
+            if (empty($group['id'])) {
+                continue;
+            }
+
+
+            $resultado[] = [
+
+                'id' =>
+                    (int) $group['id'],
+
+                'nombre' =>
+                    $group['name']
+                    ?? 'Grupo',
+
+            ];
+
+        }
+
+
+        return [
+            'success' => true,
+            'data' => $resultado,
+        ];
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | OBTENER EXÁMENES DEL CURSO
+    |--------------------------------------------------------------------------
+    */
+
+    public function getCourseQuizzes(
+        string $token,
+        int $courseId
+    ): array {
+
+        $response =
+            $this->call(
+                $token,
+                'mod_quiz_get_quizzes_by_courses',
+                [
+                    'courseids[0]' =>
+                        $courseId,
+                ]
+            );
+
+
+        if (!$response['success']) {
+
+            return [
+                'success' => false,
+
+                'message' =>
+                    $response['message']
+                    ?? 'No fue posible obtener los exámenes.',
+
+                'data' => [],
+            ];
+
+        }
+
+
+        $quizzes =
+            $response['data']['quizzes']
+            ?? [];
+
+
+        $resultado = [];
+
+
+        foreach ($quizzes as $quiz) {
+
+            if (empty($quiz['id'])) {
+                continue;
+            }
+
+
+            $resultado[] = [
+
+                'id' =>
+                    (int) $quiz['id'],
+
+                'nombre' =>
+                    $quiz['name']
+                    ?? 'Examen',
+
+            ];
+
+        }
+
+
+        return [
+            'success' => true,
+            'data' => $resultado,
+        ];
+    }
 }

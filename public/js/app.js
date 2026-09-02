@@ -2087,3 +2087,582 @@ document.addEventListener('DOMContentLoaded', function () {
     );
 
 });
+
+
+/*
+|--------------------------------------------------------------------------
+| FILTROS DINÁMICOS - DESCARGAR EVIDENCIAS
+|--------------------------------------------------------------------------
+*/
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const page =
+        document.getElementById('downloadEvidencePage');
+
+    const courseSelect =
+        document.getElementById('curso');
+
+    const groupSelect =
+        document.getElementById('grupo');
+
+    const examSelect =
+        document.getElementById('examen');
+        const resultsBody =
+    document.getElementById(
+        'downloadResultsBody'
+    );
+
+
+    /*
+     * Este código solamente se ejecuta
+     * en Descargar evidencias.
+     */
+  if (
+    !page ||
+    !courseSelect ||
+    !groupSelect ||
+    !examSelect ||
+    !resultsBody
+) {
+    return;
+}
+
+    const coursesUrl =
+        page.dataset.coursesUrl;
+
+    const groupsUrl =
+        page.dataset.groupsUrl;
+
+    const examsUrl =
+        page.dataset.examsUrl;
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | FUNCIÓN AUXILIAR
+    |--------------------------------------------------------------------------
+    */
+
+    async function obtenerJson(url) {
+
+        const response = await fetch(
+            url,
+            {
+                method: 'GET',
+
+                headers: {
+                    'Accept': 'application/json'
+                },
+
+                credentials: 'same-origin'
+            }
+        );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                'No fue posible consultar la información.'
+            );
+
+        }
+
+
+        return await response.json();
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | CARGAR CURSOS DEL PROFESOR
+    |--------------------------------------------------------------------------
+    */
+
+    async function cargarCursos() {
+
+        courseSelect.disabled = true;
+
+        courseSelect.innerHTML = `
+            <option value="">
+                Cargando cursos...
+            </option>
+        `;
+
+
+        try {
+
+            const data =
+                await obtenerJson(
+                    coursesUrl
+                );
+
+
+            if (!data.ok) {
+
+                throw new Error(
+                    data.message ||
+                    'No fue posible obtener los cursos.'
+                );
+
+            }
+
+
+            courseSelect.innerHTML = `
+                <option value="" selected disabled>
+                    Selecciona un curso
+                </option>
+            `;
+
+
+            data.cursos.forEach(function (curso) {
+
+                const option =
+                    document.createElement('option');
+
+
+                option.value =
+                    curso.id;
+
+
+                option.textContent =
+                    curso.nombre;
+
+
+                courseSelect.appendChild(
+                    option
+                );
+
+            });
+
+
+            courseSelect.disabled =
+                false;
+
+
+        } catch (error) {
+
+            console.error(
+                'Error cargando cursos:',
+                error
+            );
+
+
+            courseSelect.innerHTML = `
+                <option value="">
+                    No fue posible cargar los cursos
+                </option>
+            `;
+
+        }
+
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | CARGAR GRUPOS
+    |--------------------------------------------------------------------------
+    */
+
+    async function cargarGrupos(courseId) {
+
+        groupSelect.disabled = true;
+
+        groupSelect.innerHTML = `
+            <option value="">
+                Cargando grupos...
+            </option>
+        `;
+
+
+        try {
+
+            const url =
+                new URL(
+                    groupsUrl,
+                    window.location.origin
+                );
+
+
+            url.searchParams.set(
+                'courseid',
+                courseId
+            );
+
+
+            const data =
+                await obtenerJson(
+                    url.toString()
+                );
+
+
+            if (!data.ok) {
+
+                throw new Error(
+                    data.message ||
+                    'No fue posible obtener los grupos.'
+                );
+
+            }
+
+
+            /*
+             * Siempre permitimos descargar
+             * sin filtrar por grupo.
+             */
+            groupSelect.innerHTML = `
+                <option value="">
+                    Todos los grupos
+                </option>
+            `;
+
+
+            data.grupos.forEach(function (grupo) {
+
+                const option =
+                    document.createElement('option');
+
+
+                option.value =
+                    grupo.id;
+
+
+                option.textContent =
+                    grupo.nombre;
+
+
+                groupSelect.appendChild(
+                    option
+                );
+
+            });
+
+
+            groupSelect.disabled =
+                false;
+
+
+        } catch (error) {
+
+            console.error(
+                'Error cargando grupos:',
+                error
+            );
+
+
+            groupSelect.innerHTML = `
+                <option value="">
+                    No fue posible cargar los grupos
+                </option>
+            `;
+
+        }
+
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | CARGAR EXÁMENES
+    |--------------------------------------------------------------------------
+    */
+
+    async function cargarExamenes(courseId) {
+
+        examSelect.disabled = true;
+
+        examSelect.innerHTML = `
+            <option value="">
+                Cargando exámenes...
+            </option>
+        `;
+
+
+        try {
+
+            const url =
+                new URL(
+                    examsUrl,
+                    window.location.origin
+                );
+
+
+            url.searchParams.set(
+                'courseid',
+                courseId
+            );
+
+
+            const data =
+                await obtenerJson(
+                    url.toString()
+                );
+
+
+            if (!data.ok) {
+
+                throw new Error(
+                    data.message ||
+                    'No fue posible obtener los exámenes.'
+                );
+
+            }
+
+
+            examSelect.innerHTML = `
+                <option value="" selected disabled>
+                    Selecciona un examen
+                </option>
+            `;
+
+
+            data.examenes.forEach(function (examen) {
+
+                const option =
+                    document.createElement('option');
+
+
+                option.value =
+                    examen.id;
+
+
+                option.textContent =
+                    examen.nombre;
+
+
+                examSelect.appendChild(
+                    option
+                );
+
+            });
+
+
+            examSelect.disabled =
+                false;
+
+
+        } catch (error) {
+
+            console.error(
+                'Error cargando exámenes:',
+                error
+            );
+
+
+            examSelect.innerHTML = `
+                <option value="">
+                    No fue posible cargar los exámenes
+                </option>
+            `;
+
+        }
+
+    }
+
+
+    /*
+|--------------------------------------------------------------------------
+| MOSTRAR RESULTADO SELECCIONADO
+|--------------------------------------------------------------------------
+*/
+
+function actualizarTablaResultados() {
+
+    const courseId =
+        courseSelect.value;
+
+    const quizId =
+        examSelect.value;
+
+    if (!courseId || !quizId) {
+        return;
+    }
+
+
+    const courseOption =
+        courseSelect.options[
+            courseSelect.selectedIndex
+        ];
+
+    const groupOption =
+        groupSelect.options[
+            groupSelect.selectedIndex
+        ];
+
+    const examOption =
+        examSelect.options[
+            examSelect.selectedIndex
+        ];
+
+
+    const courseName =
+        courseOption.textContent.trim();
+
+    const examName =
+        examOption.textContent.trim();
+
+
+    let groupName =
+        'Todos los grupos';
+
+    if (
+        groupSelect.value &&
+        groupOption
+    ) {
+        groupName =
+            groupOption.textContent.trim();
+    }
+
+
+    resultsBody.innerHTML = `
+        <tr>
+
+            <td class="download-table__exam">
+                ${examName}
+            </td>
+
+            <td>
+                ${groupName}
+            </td>
+
+            <td>
+                ${courseName}
+            </td>
+
+            <td>
+                —
+            </td>
+
+            <td>
+                —
+            </td>
+
+            <td>
+                —
+            </td>
+
+            <td>
+
+                <button
+                    type="button"
+                    class="download-details-button"
+                >
+
+                    <span
+                        class="download-details-button__icon"
+                        aria-hidden="true"
+                    >
+                        •••
+                    </span>
+
+                    <span>
+                        Detalles
+                    </span>
+
+                </button>
+
+            </td>
+
+        </tr>
+    `;
+}
+
+/*
+|--------------------------------------------------------------------------
+| CUANDO CAMBIA EL EXAMEN
+|--------------------------------------------------------------------------
+*/
+
+examSelect.addEventListener(
+    'change',
+    function () {
+
+        actualizarTablaResultados();
+
+    }
+);
+
+
+/*
+|--------------------------------------------------------------------------
+| CUANDO CAMBIA EL GRUPO
+|--------------------------------------------------------------------------
+*/
+
+groupSelect.addEventListener(
+    'change',
+    function () {
+
+        if (examSelect.value) {
+
+            actualizarTablaResultados();
+
+        }
+
+    }
+);
+
+    /*
+    |--------------------------------------------------------------------------
+    | CUANDO CAMBIA EL CURSO
+    |--------------------------------------------------------------------------
+    */
+
+    courseSelect.addEventListener(
+        'change',
+        function () {
+
+            const courseId =
+                courseSelect.value;
+
+
+            /*
+             * Reiniciar filtros dependientes.
+             */
+            groupSelect.innerHTML = `
+                <option value="">
+                    Cargando grupos...
+                </option>
+            `;
+
+
+            examSelect.innerHTML = `
+                <option value="">
+                    Cargando exámenes...
+                </option>
+            `;
+
+
+            groupSelect.disabled = true;
+
+            examSelect.disabled = true;
+
+
+            if (!courseId) {
+                return;
+            }
+
+
+            cargarGrupos(
+                courseId
+            );
+
+
+            cargarExamenes(
+                courseId
+            );
+
+        }
+    );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | INICIAR
+    |--------------------------------------------------------------------------
+    */
+
+    cargarCursos();
+
+});
