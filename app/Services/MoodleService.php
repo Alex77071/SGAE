@@ -586,21 +586,26 @@ public function getCourseQuizzes(
         }
 
 
-        $resultado[] = [
+       $resultado[] = [
 
-            'id' =>
-                (int) $quiz['id'],
+    'id' =>
+        (int) $quiz['id'],
 
-            'nombre' =>
-                $quiz['name']
-                ?? 'Examen',
+    'cmid' =>
+        isset($quiz['coursemodule'])
+            ? (int) $quiz['coursemodule']
+            : 0,
 
-            'fecha_hora' =>
-                isset($quiz['timeopen'])
-                    ? (int) $quiz['timeopen']
-                    : 0,
+    'nombre' =>
+        $quiz['name']
+        ?? 'Examen',
 
-        ];
+    'fecha_hora' =>
+        isset($quiz['timeopen'])
+            ? (int) $quiz['timeopen']
+            : 0,
+
+];
     }
 
 
@@ -652,6 +657,8 @@ public function getQuizStudents(
     $alumnosTotal = 0;
 
     $alumnosConIntento = 0;
+
+    $alumnosConIntentoIds = [];
 
 
     /*
@@ -728,10 +735,184 @@ public function getQuizStudents(
             $attemptsResponse['data']['attempts']
             ?? [];
 
+if (!empty($intentos)) {
 
-        if (!empty($intentos)) {
+    $alumnosConIntento++;
 
-            $alumnosConIntento++;
+    $alumnosConIntentoIds[] =
+        (int) $usuario['id'];
+
+}
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| RESPUESTA DE ALUMNOS
+|--------------------------------------------------------------------------
+*/
+return [
+    'success' => true,
+
+    'data' => [
+
+        'alumnos_total' =>
+            $alumnosTotal,
+
+        'alumnos_con_intento' =>
+            $alumnosConIntento,
+
+        'alumnos_ids' =>
+            $alumnosConIntentoIds,
+
+    ],
+];
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| OBTENER CAPTURAS DE PROCTORING
+|--------------------------------------------------------------------------
+*/
+
+public function getProctoringCamshots(
+    string $token,
+    int $courseId,
+    int $cmid,
+    int $userId
+): array {
+
+    return $this->call(
+        $token,
+        'quizaccess_proctoring_get_camshots',
+        [
+            'courseid' =>
+                $courseId,
+
+            'quizid' =>
+                $cmid,
+
+            'userid' =>
+                $userId,
+        ]
+    );
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| FIN DE MOODLE SERVICE
+|--------------------------------------------------------------------------
+*/
+
+
+/*
+|--------------------------------------------------------------------------
+| CONTAR IMÁGENES DE PROCTORING DEL EXAMEN
+|--------------------------------------------------------------------------
+*/
+
+public function countProctoringImages(
+    string $token,
+    int $courseId,
+    int $cmid,
+    array $userIds
+): array {
+
+    $imagenesUnicas = [];
+
+
+    foreach ($userIds as $userId) {
+
+        $userId =
+            (int) $userId;
+
+
+        if ($userId <= 0) {
+            continue;
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | OBTENER CAPTURAS DEL ALUMNO
+        |--------------------------------------------------------------------------
+        */
+
+        $response =
+            $this->getProctoringCamshots(
+                $token,
+                $courseId,
+                $cmid,
+                $userId
+            );
+
+
+        if (!$response['success']) {
+
+            return [
+                'success' => false,
+
+                'message' =>
+                    $response['message']
+                    ?? 'No fue posible obtener las capturas de proctoring.',
+
+                'data' => [
+                    'imagenes' => 0,
+                ],
+            ];
+        }
+
+
+        $camshots =
+            $response['data']['camshots']
+            ?? [];
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | CONTAR SOLO CAPTURAS DEL EXAMEN CORRECTO
+        |--------------------------------------------------------------------------
+        */
+
+        foreach ($camshots as $camshot) {
+
+            $camshotCourseId =
+                (int) ($camshot['courseid'] ?? 0);
+
+            $camshotQuizId =
+                (int) ($camshot['quizid'] ?? 0);
+
+            $camshotUserId =
+                (int) ($camshot['userid'] ?? 0);
+
+            $url =
+                trim(
+                    $camshot['webcampicture']
+                    ?? ''
+                );
+
+
+            if (
+                $camshotCourseId !== $courseId
+                ||
+                $camshotQuizId !== $cmid
+                ||
+                $camshotUserId !== $userId
+                ||
+                $url === ''
+            ) {
+                continue;
+            }
+
+
+            /*
+             * Usamos la URL como llave para evitar
+             * contar dos veces la misma captura.
+             */
+            $imagenesUnicas[$url] = true;
         }
     }
 
@@ -740,13 +921,8 @@ public function getQuizStudents(
         'success' => true,
 
         'data' => [
-
-            'alumnos_total' =>
-                $alumnosTotal,
-
-            'alumnos_con_intento' =>
-                $alumnosConIntento,
-
+            'imagenes' =>
+                count($imagenesUnicas),
         ],
     ];
 }
