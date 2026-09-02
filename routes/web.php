@@ -467,6 +467,33 @@ Route::get('/evidencias/analizar', function () {
     return view('evidencias.analizar');
 
 })->name('evidencias.analizar');
+
+Route::post(
+    '/evidencias/analizar/iniciar',
+    [
+        EvidenciasController::class,
+        'iniciarAnalisis'
+    ]
+)->name('evidencias.analisis.iniciar');
+
+
+Route::get(
+    '/evidencias/analizar/progreso',
+    [
+        EvidenciasController::class,
+        'progresoAnalisis'
+    ]
+)->name('evidencias.analisis.progreso');
+
+
+Route::get(
+    '/evidencias/reporte-actual',
+    [
+        EvidenciasController::class,
+        'reporteActual'
+    ]
+)->name('evidencias.reporte.actual');
+
 /*
 |--------------------------------------------------------------------------
 | DESCARGAR REPORTE PDF DE PRUEBA
