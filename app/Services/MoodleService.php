@@ -535,6 +535,138 @@ class MoodleService
         ];
     }
 
+/*
+|--------------------------------------------------------------------------
+| OBTENER USUARIOS DE UN GRUPO
+|--------------------------------------------------------------------------
+|
+| Esta función devuelve los IDs de todos los usuarios
+| que pertenecen al grupo seleccionado.
+|
+*/
+
+public function getGroupUserIds(
+    string $token,
+    int $groupId
+): array {
+
+    /*
+    |--------------------------------------------------------------------------
+    | CONSULTAR MOODLE
+    |--------------------------------------------------------------------------
+    */
+
+    $response =
+        $this->call(
+            $token,
+            'core_group_get_group_members',
+            [
+                'groupids[0]' =>
+                    $groupId,
+            ]
+        );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | ERROR
+    |--------------------------------------------------------------------------
+    */
+
+    if (!$response['success']) {
+
+        return [
+            'success' => false,
+
+            'message' =>
+                $response['message']
+                ?? 'No fue posible obtener los integrantes del grupo.',
+
+            'data' => [],
+        ];
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | RESPUESTA DE MOODLE
+    |--------------------------------------------------------------------------
+    */
+
+    $grupos =
+        $response['data']
+        ?? [];
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | BUSCAR EL GRUPO SOLICITADO
+    |--------------------------------------------------------------------------
+    */
+
+    foreach ($grupos as $grupo) {
+
+        if (
+            (int) ($grupo['groupid'] ?? 0)
+            !==
+            $groupId
+        ) {
+            continue;
+        }
+
+
+        /*
+         * Moodle devuelve los integrantes
+         * dentro de userids.
+         */
+        $userIds =
+            $grupo['userids']
+            ?? [];
+
+
+        /*
+         * Convertir todos los IDs a enteros.
+         */
+        $userIds =
+            array_map(
+                function ($userId) {
+
+                    return (int) $userId;
+
+                },
+                $userIds
+            );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | RESPUESTA
+        |--------------------------------------------------------------------------
+        */
+
+        return [
+            'success' => true,
+
+            'data' =>
+                array_values(
+                    array_unique(
+                        $userIds
+                    )
+                ),
+        ];
+    }
+
+
+    /*
+     * Si el grupo existe pero no tiene usuarios.
+     */
+    return [
+        'success' => true,
+
+        'data' => [],
+    ];
+}
+
 
     /*
     |--------------------------------------------------------------------------

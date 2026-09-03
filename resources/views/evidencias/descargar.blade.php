@@ -12,9 +12,10 @@
     data-exams-url="{{ route('evidencias.examenes') }}"
     data-exam-data-url="{{ route('evidencias.datos-examen') }}"
     data-captures-url="{{ route('evidencias.capturas') }}"
-
+    data-download-url="{{ route('evidencias.descargar.ejecutar') }}"
+    data-csrf-token="{{ csrf_token() }}"
+    data-download-progress-url="{{ route('evidencias.descarga') }}"
 >
-
 
     {{-- =====================================================
          TÍTULO
@@ -83,9 +84,10 @@
     name="courseid"
     class="download-select__control"
 >
-    <option value="" selected disabled>
-        Cargando cursos...
-    </option>
+<option value="" selected disabled>
+    Cargando cursos...
+</option>
+
 </select>
 
                 </div>
@@ -269,13 +271,14 @@
         </div>
 
 
-       {{-- DESCARGAR SELECCIONADOS --}}
+      {{-- DESCARGAR SELECCIONADOS --}}
 
 <div class="download-results__action">
 
-    <a
-        href="{{ route('evidencias.descarga') }}"
+    <button
+        type="button"
         class="download-selected-button"
+        id="downloadSelectedButton"
     >
 
         <span
@@ -296,14 +299,13 @@
             </svg>
         </span>
 
-        <span>
+        <span id="downloadSelectedButtonText">
             Descargar seleccionados
         </span>
 
-    </a>
+    </button>
 
 </div>
-
 </section>
 
 
