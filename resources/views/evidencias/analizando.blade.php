@@ -24,14 +24,23 @@
         </h2>
 
 
+        {{-- =================================================
+             ARCHIVO SELECCIONADO
+        ================================================== --}}
+
         <div class="analysis-process-exam">
 
             <strong>
-                Examen final
+                {{
+                    session(
+                        'analisis_archivo',
+                        'Archivo seleccionado'
+                    )
+                }}
             </strong>
 
             <span>
-                Programación | Grupo A
+                Archivo seleccionado para análisis
             </span>
 
         </div>
@@ -80,10 +89,10 @@
              CONTADOR DE IMÁGENES
         ================================================== --}}
 
-        <p 
-            class="analysis-image-counter" 
-            id="analysisImageCounter" 
-        > 
+        <p
+            class="analysis-image-counter"
+            id="analysisImageCounter"
+        >
             Imagen 0 de 0
         </p>
 
@@ -118,55 +127,55 @@
              AVISO
         ================================================== --}}
 
-       <div class="analysis-warning">
+        <div class="analysis-warning">
 
-    <span
-        class="analysis-warning__icon"
-        aria-hidden="true"
+            <span
+                class="analysis-warning__icon"
+                aria-hidden="true"
+            >
+
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+
+                    <circle
+                        cx="12"
+                        cy="12"
+                        r="9"
+                    ></circle>
+
+                    <path d="M12 7v6"></path>
+
+                    <path d="M12 17h.01"></path>
+
+                </svg>
+
+            </span>
+
+
+            <span>
+                No cierre la ventana mientras el análisis está en proceso.
+            </span>
+
+        </div>
+
+    </div>
+
+
+    {{-- =====================================================
+         ESTADO: ANÁLISIS COMPLETADO
+    ====================================================== --}}
+
+    <div
+        class="analysis-finished-card"
+        id="analysisComplete"
+        hidden
     >
-        <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-        >
-            <circle
-                cx="12"
-                cy="12"
-                r="9"
-            ></circle>
-
-            <path d="M12 7v6"></path>
-
-            <path d="M12 17h.01"></path>
-        </svg>
-    </span>
-
-    <span>
-        No cierre la ventana mientras el análisis está en proceso.
-    </span>
-
-</div>
-
-
-{{-- =====================================================
-     CERRAR TARJETA: ANALIZANDO
-====================================================== --}}
-
-</div>
-
-
-{{-- =====================================================
-     ESTADO: ANÁLISIS COMPLETADO
-====================================================== --}}
-
-<div
-    class="analysis-finished-card"
-    id="analysisComplete"
-    hidden
->
 
         {{-- =================================================
              ICONO CHECK
@@ -216,7 +225,8 @@
 
         <div class="analysis-finished-summary">
 
-            {{-- EXAMEN --}}
+            {{-- ARCHIVO ANALIZADO --}}
+
             <div
                 class="
                     analysis-finished-summary__item
@@ -225,11 +235,16 @@
             >
 
                 <strong>
-                    Examen final
+                    {{
+                        session(
+                            'analisis_archivo',
+                            'Archivo seleccionado'
+                        )
+                    }}
                 </strong>
 
                 <span>
-                    Programación | Grupo A
+                    Archivo analizado
                 </span>
 
             </div>
@@ -241,35 +256,17 @@
             ></div>
 
 
-            {{-- CARPETAS --}}
-            <div class="analysis-finished-summary__item">
+            {{-- IMÁGENES ANALIZADAS --}}
 
-                <strong>
-                    32
-                </strong>
-                <span>
-                    Carpetas de alumnos
-                </span>
-
-            </div>
-
-
-            <div
-                class="analysis-finished-summary__divider"
-                aria-hidden="true"
-            ></div>
-
-
-            {{-- IMÁGENES --}}
             <div class="analysis-finished-summary__item">
 
                 <strong id="analysisFinishedImages">
-    0
-</strong>
+                    0
+                </strong>
 
-<span>
-    Imágenes
-</span>
+                <span>
+                    Imágenes
+                </span>
 
             </div>
 
@@ -295,7 +292,9 @@
                     stroke-linecap="round"
                     stroke-linejoin="round"
                 >
+
                     <path d="M5 12l4 4L19 6"></path>
+
                 </svg>
 
             </span>
@@ -315,41 +314,49 @@
         <div class="analysis-finished-actions">
 
             {{-- VER RESULTADOS --}}
-<a
-    href="{{ route('evidencias.resultados') }}"
-    class="
-        analysis-finished-button
-        analysis-finished-button--primary
-    "
->
 
-    <span
-        class="analysis-finished-button__icon"
-        aria-hidden="true"
-    >
+            <a
+                href="{{ route('evidencias.resultados') }}"
+                class="
+                    analysis-finished-button
+                    analysis-finished-button--primary
+                "
+            >
 
-        <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-        >
-            <path d="M4 19V5"></path>
-            <path d="M4 19H20"></path>
-            <path d="M7 15l4-4 3 2 5-6"></path>
-        </svg>
+                <span
+                    class="analysis-finished-button__icon"
+                    aria-hidden="true"
+                >
 
-    </span>
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
 
-    <span>
-        Ver resultados
-    </span>
+                        <path d="M4 19V5"></path>
 
-</a>
+                        <path d="M4 19H20"></path>
 
-            {{-- VOLVER A LA LISTA --}}
+                        <path d="M7 15l4-4 3 2 5-6"></path>
+
+                    </svg>
+
+                </span>
+
+
+                <span>
+                    Ver resultados
+                </span>
+
+            </a>
+
+
+            {{-- ANALIZAR OTRO ARCHIVO --}}
+
             <a
                 href="{{ route('evidencias.analizar') }}"
                 class="
@@ -371,6 +378,7 @@
                         stroke-linecap="round"
                         stroke-linejoin="round"
                     >
+
                         <rect
                             x="5"
                             y="3"
@@ -380,8 +388,11 @@
                         ></rect>
 
                         <path d="M9 8h6"></path>
+
                         <path d="M9 12h6"></path>
+
                         <path d="M9 16h6"></path>
+
                     </svg>
 
                 </span>
