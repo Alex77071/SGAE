@@ -7,6 +7,7 @@
 <section
     class="analysis-process-page"
     id="analysisProcessPage"
+    data-progress-url="{{ route('evidencias.analisis.progreso') }}"
 >
 
     {{-- =====================================================
@@ -79,11 +80,11 @@
              CONTADOR DE IMÁGENES
         ================================================== --}}
 
-        <p
-            class="analysis-image-counter"
-            id="analysisImageCounter"
-        >
-            Imagen 0 de 1,248
+        <p 
+            class="analysis-image-counter" 
+            id="analysisImageCounter" 
+        > 
+            Imagen 0 de 0
         </p>
 
 
@@ -262,13 +263,13 @@
             {{-- IMÁGENES --}}
             <div class="analysis-finished-summary__item">
 
-                <strong>
-                    1,248
-                </strong>
+                <strong id="analysisFinishedImages">
+    0
+</strong>
 
-                <span>
-                    Imágenes
-                </span>
+<span>
+    Imágenes
+</span>
 
             </div>
 

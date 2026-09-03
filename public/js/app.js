@@ -271,184 +271,430 @@ document.addEventListener('DOMContentLoaded', function () {
 
 /*
 |--------------------------------------------------------------------------
-| SIMULACIÓN DEL ANÁLISIS DE EVIDENCIAS
+| PROGRESO REAL DEL ANÁLISIS DE EVIDENCIAS
 |--------------------------------------------------------------------------
 */
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    const analysisPage =
-        document.getElementById('analysisProcessPage');
+    const page =
+        document.getElementById(
+            'analysisProcessPage'
+        );
 
-    const analysisRunning =
-        document.getElementById('analysisRunning');
-
-    const analysisComplete =
-        document.getElementById('analysisComplete');
-
-    const progressBar =
-        document.getElementById('analysisProgressBar');
-
-    const percentage =
-        document.getElementById('analysisPercentage');
-
-    const circle =
-        document.getElementById('analysisCircleProgress');
-
-    const imageCounter =
-        document.getElementById('analysisImageCounter');
-
-    const currentFile =
-        document.getElementById('analysisCurrentFile');
-
-
-    /*
-     * Si no estamos en la pantalla de análisis,
-     * no ejecutamos este código.
-     */
-    if (
-        !analysisPage ||
-        !analysisRunning ||
-        !analysisComplete ||
-        !progressBar ||
-        !percentage ||
-        !circle ||
-        !imageCounter ||
-        !currentFile
-    ) {
+    if (!page) {
         return;
     }
 
 
-    const reportUrl =
-        analysisPage.dataset.reportUrl;
+    const progressUrl =
+        page.dataset.progressUrl;
 
-    const totalImages = 1248;
-
-    const circumference =
-        2 * Math.PI * 50;
-
-    let progress = 0;
+    if (!progressUrl) {
+        return;
+    }
 
 
-    circle.style.strokeDasharray =
-        circumference;
+    const runningState =
+        document.getElementById(
+            'analysisRunning'
+        );
 
-    circle.style.strokeDashoffset =
-        circumference;
+    const completeState =
+        document.getElementById(
+            'analysisComplete'
+        );
+
+    const percentageElement =
+        document.getElementById(
+            'analysisPercentage'
+        );
+
+    const circleElement =
+        document.getElementById(
+            'analysisCircleProgress'
+        );
+
+    const imageCounter =
+        document.getElementById(
+            'analysisImageCounter'
+        );
+
+    const progressBar =
+        document.getElementById(
+            'analysisProgressBar'
+        );
+
+    const currentFile =
+        document.getElementById(
+            'analysisCurrentFile'
+        );
+
+    const finishedImages =
+        document.getElementById(
+            'analysisFinishedImages'
+        );
 
 
-    const analysisInterval = setInterval(function () {
+    /*
+     * =========================================================
+     * CÍRCULO DE PROGRESO
+     * =========================================================
+     */
+
+    let circumference = 0;
+
+
+    if (circleElement) {
+
+        const radius =
+            circleElement.r.baseVal.value;
+
+        circumference =
+            2 * Math.PI * radius;
+
+
+        circleElement.style.strokeDasharray =
+            `${circumference} ${circumference}`;
+
 
         /*
-         * Simulación temporal.
+         * El círculo inicia en 0 %.
          */
-        const increment =
-            Math.floor(Math.random() * 3) + 1;
+        circleElement.style.strokeDashoffset =
+            circumference;
+    }
 
-        progress += increment;
 
+    function actualizarCirculo(
+        porcentaje
+    ) {
 
-        if (progress >= 100) {
-            progress = 100;
+        if (
+            !circleElement
+            ||
+            !circumference
+        ) {
+            return;
         }
 
 
-        /*
-         * Porcentaje.
-         */
-        percentage.textContent =
-            progress + ' %';
-
-
-        /*
-         * Barra horizontal.
-         */
-        progressBar.style.width =
-            progress + '%';
-
-
-        /*
-         * Círculo de progreso.
-         */
         const offset =
-            circumference -
-            (progress / 100) * circumference;
+            circumference
+            -
+            (
+                porcentaje / 100
+            )
+            *
+            circumference;
 
-        circle.style.strokeDashoffset =
+
+        circleElement.style.strokeDashoffset =
             offset;
+    }
 
 
-        /*
-         * Número de imagen procesada.
-         */
-        const currentImage =
-            Math.min(
-                totalImages,
-                Math.round(
-                    totalImages *
-                    (progress / 100)
+    /*
+     * =========================================================
+     * MOSTRAR ESTADO COMPLETADO
+     * =========================================================
+     */
+
+    function mostrarCompletado()
+    {
+
+        if (runningState) {
+
+            runningState.hidden =
+                true;
+
+            runningState.style.display =
+                'none';
+        }
+
+
+        if (completeState) {
+
+            completeState.hidden =
+                false;
+
+            completeState.removeAttribute(
+                'hidden'
+            );
+
+
+            completeState.classList.add(
+                'analysis-finished-card--visible'
+            );
+
+
+            completeState.style.display =
+                'flex';
+
+            completeState.style.visibility =
+                'visible';
+
+            completeState.style.opacity =
+                '1';
+        }
+    }
+
+
+    /*
+     * =========================================================
+     * ACTUALIZAR LA PANTALLA
+     * =========================================================
+     */
+
+    function actualizarInterfaz(
+        datos
+    ) {
+
+        const porcentaje =
+            Math.max(
+                0,
+                Math.min(
+                    100,
+                    Number(
+                        datos.porcentaje
+                        ?? 0
+                    )
                 )
             );
 
 
-        imageCounter.textContent =
-            'Imagen ' +
-            currentImage.toLocaleString('es-MX') +
-            ' de ' +
-            totalImages.toLocaleString('es-MX');
+        /*
+         * PORCENTAJE
+         */
+        if (percentageElement) {
+
+            percentageElement.textContent =
+                `${porcentaje}%`;
+        }
 
 
         /*
-         * Nombre temporal de la imagen.
+         * CÍRCULO
          */
-        currentFile.textContent =
-            'ciwa_' +
-            String(currentImage).padStart(4, '0') +
-            '.jpg';
+        actualizarCirculo(
+            porcentaje
+        );
 
 
         /*
-         * Final del análisis.
+         * BARRA HORIZONTAL
          */
-        if (progress >= 100) {
+        if (progressBar) {
 
-    clearInterval(analysisInterval);
+            progressBar.style.width =
+                `${porcentaje}%`;
+        }
+
+
+        /*
+         * IMAGEN X DE Y
+         */
+        if (imageCounter) {
+
+            const actual =
+                Number(
+                    datos.indice_actual
+                    ?? 0
+                );
+
+            const total =
+                Number(
+                    datos.total_imagenes
+                    ?? 0
+                );
+
+
+            imageCounter.textContent =
+                `Imagen ${actual.toLocaleString('es-MX')} de ${total.toLocaleString('es-MX')}`;
+        }
+
+
+        /*
+         * ARCHIVO ACTUAL
+         */
+        if (currentFile) {
+
+            if (datos.imagen_actual) {
+
+                currentFile.textContent =
+                    datos.imagen_actual;
+
+            } else if (datos.fase) {
+
+                currentFile.textContent =
+                    datos.fase;
+            }
+        }
+
+
+        /*
+         * =====================================================
+         * ANÁLISIS COMPLETADO
+         * =====================================================
+         */
+
+        if (
+            datos.estado ===
+            'completado'
+        ) {
+
+            if (percentageElement) {
+
+                percentageElement.textContent =
+                    '100%';
+            }
+
+
+            if (progressBar) {
+
+                progressBar.style.width =
+                    '100%';
+            }
+
+
+            actualizarCirculo(
+                100
+            );
+
+
+            if (finishedImages) {
+
+                const total =
+                    Number(
+                        datos.total_imagenes
+                        ?? 0
+                    );
+
+                finishedImages.textContent =
+                    total.toLocaleString(
+                        'es-MX'
+                    );
+            }
+
+
+            mostrarCompletado();
+
+
+            return true;
+        }
+
+
+        /*
+         * =====================================================
+         * ERROR
+         * =====================================================
+         */
+
+        if (
+            datos.estado === 'error'
+        ) {
+
+            if (currentFile) {
+
+                currentFile.textContent =
+                    datos.error
+                    ||
+                    datos.mensaje
+                    ||
+                    'Ocurrió un error durante el análisis.';
+            }
+
+
+            return true;
+        }
+
+
+        return false;
+    }
 
 
     /*
-     * OCULTAR PANTALLA DE ANÁLISIS
+     * =========================================================
+     * CONSULTAR PROGRESO EN LARAVEL
+     * =========================================================
      */
-    analysisRunning.hidden = true;
 
-    analysisRunning.style.display = 'none';
+    async function consultarProgreso()
+    {
+
+        try {
+
+            const response =
+                await fetch(
+                    progressUrl,
+                    {
+                        method:
+                            'GET',
+
+                        headers: {
+                            'Accept':
+                                'application/json'
+                        },
+
+                        credentials:
+                            'same-origin',
+
+                        cache:
+                            'no-store'
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    'No fue posible consultar el progreso.'
+                );
+            }
+
+
+            const datos =
+                await response.json();
+
+
+            const terminado =
+                actualizarInterfaz(
+                    datos
+                );
+
+
+            if (!terminado) {
+
+                setTimeout(
+                    consultarProgreso,
+                    750
+                );
+            }
+
+
+        } catch (error) {
+
+            console.error(
+                'Error consultando progreso:',
+                error
+            );
+
+
+            setTimeout(
+                consultarProgreso,
+                1500
+            );
+        }
+    }
 
 
     /*
-     * MOSTRAR PANTALLA DE ANÁLISIS COMPLETADO
+     * =========================================================
+     * INICIAR PROGRESO REAL
+     * =========================================================
      */
-    analysisComplete.hidden = false;
 
-    analysisComplete.removeAttribute('hidden');
-
-    analysisComplete.classList.add(
-        'analysis-finished-card--visible'
-    );
-
-
-    /*
-     * Forzar visibilidad por si algún estilo
-     * quedó duplicado después del merge.
-     */
-    analysisComplete.style.display = 'flex';
-
-    analysisComplete.style.visibility = 'visible';
-
-    analysisComplete.style.opacity = '1';
-
-}
-
-    }, 220);
+    consultarProgreso();
 
 });
 
