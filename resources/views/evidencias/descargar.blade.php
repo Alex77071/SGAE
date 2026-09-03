@@ -414,6 +414,67 @@
 
         </div>
 
+        {{-- =====================================================
+     VISOR DE IMAGEN AMPLIADA
+====================================================== --}}
+
+<div
+    class="evidence-image-viewer"
+    id="evidenceImageViewer"
+    aria-hidden="true"
+    hidden
+>
+
+    <div
+        class="evidence-image-viewer__backdrop"
+        data-close-evidence-viewer
+    ></div>
+
+
+    <div
+        class="evidence-image-viewer__content"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Vista ampliada de evidencia"
+    >
+
+        <button
+            type="button"
+            class="evidence-image-viewer__close"
+            id="evidenceImageViewerClose"
+            aria-label="Cerrar imagen"
+        >
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+            >
+                <path d="M6 6l12 12"></path>
+                <path d="M18 6 6 18"></path>
+            </svg>
+        </button>
+
+
+        <img
+            class="evidence-image-viewer__image"
+            id="evidenceImageViewerImage"
+            src=""
+            alt="Evidencia ampliada"
+        >
+
+
+        <div
+            class="evidence-image-viewer__information"
+            id="evidenceImageViewerInformation"
+        >
+        </div>
+
+    </div>
+
+</div>
+
 
         {{-- =============================================
              ESTADO DE CARGA

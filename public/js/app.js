@@ -105,14 +105,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     });
 
+/*
+|--------------------------------------------------------------------------
+| CERRAR CON ESC
+|--------------------------------------------------------------------------
+*/
 
-    /*
-    |--------------------------------------------------------------------------
-    | CERRAR CON ESC
-    |--------------------------------------------------------------------------
-    */
-
-    document.addEventListener('keydown', function (event) {
+document.addEventListener(
+    'keydown',
+    function (event) {
 
         if (event.key === 'Escape') {
 
@@ -120,7 +121,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         }
 
-    });
+    }
+);
 
 });
 
@@ -2415,6 +2417,35 @@ const evidenceCloseButton =
         'evidenceGalleryCloseButton'
     );
 
+
+    /*
+|--------------------------------------------------------------------------
+| VISOR DE IMAGEN AMPLIADA
+|--------------------------------------------------------------------------
+*/
+
+const evidenceImageViewer =
+    document.getElementById(
+        'evidenceImageViewer'
+    );
+
+
+const evidenceImageViewerImage =
+    document.getElementById(
+        'evidenceImageViewerImage'
+    );
+
+
+const evidenceImageViewerClose =
+    document.getElementById(
+        'evidenceImageViewerClose'
+    );
+
+
+const evidenceImageViewerInformation =
+    document.getElementById(
+        'evidenceImageViewerInformation'
+    );
     /*
      * Este código solamente se ejecuta
      * en Descargar evidencias.
@@ -3052,6 +3083,112 @@ imagenes =
 |--------------------------------------------------------------------------
 */
 
+/*
+|--------------------------------------------------------------------------
+| ABRIR IMAGEN AMPLIADA
+|--------------------------------------------------------------------------
+*/
+
+function abrirImagenAmpliada(imagen) {
+
+    if (
+        !evidenceImageViewer ||
+        !evidenceImageViewerImage ||
+        !imagen ||
+        !imagen.url
+    ) {
+        return;
+    }
+
+
+    evidenceImageViewerImage.src =
+        imagen.url;
+
+
+    /*
+     * Mostrar fecha de la captura.
+     */
+    if (
+        evidenceImageViewerInformation
+    ) {
+
+        let texto =
+            'Evidencia del examen';
+
+
+        if (imagen.fecha) {
+
+            const fecha =
+                new Date(
+                    Number(imagen.fecha) * 1000
+                );
+
+
+            texto =
+                fecha.toLocaleString(
+                    'es-MX',
+                    {
+                        dateStyle: 'medium',
+                        timeStyle: 'medium'
+                    }
+                );
+
+        }
+
+
+        evidenceImageViewerInformation
+            .textContent =
+                texto;
+
+    }
+
+
+    evidenceImageViewer.hidden =
+        false;
+
+
+    evidenceImageViewer.setAttribute(
+        'aria-hidden',
+        'false'
+    );
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| CERRAR IMAGEN AMPLIADA
+|--------------------------------------------------------------------------
+*/
+
+function cerrarImagenAmpliada() {
+
+    if (!evidenceImageViewer) {
+        return;
+    }
+
+
+    evidenceImageViewer.hidden =
+        true;
+
+
+    evidenceImageViewer.setAttribute(
+        'aria-hidden',
+        'true'
+    );
+
+
+    if (evidenceImageViewerImage) {
+
+        /*
+         * Liberar la imagen cuando se cierre.
+         */
+        evidenceImageViewerImage.src =
+            '';
+
+    }
+
+}
+
 function agregarImagenGaleria(imagen) {
 
     if (!imagen || !imagen.url) {
@@ -3105,6 +3242,20 @@ function agregarImagenGaleria(imagen) {
         }
     );
 
+
+    /*
+ * Abrir evidencia en tamaño grande.
+ */
+item.addEventListener(
+    'click',
+    function () {
+
+        abrirImagenAmpliada(
+            imagen
+        );
+
+    }
+);
 
     item.appendChild(
         img
@@ -3615,29 +3766,6 @@ if (evidenceModal) {
 
 /*
 |--------------------------------------------------------------------------
-| CERRAR CON ESC
-|--------------------------------------------------------------------------
-*/
-
-document.addEventListener(
-    'keydown',
-    function (event) {
-
-        if (
-            event.key === 'Escape' &&
-            evidenceModal &&
-            !evidenceModal.hidden
-        ) {
-
-            cerrarModalEvidencias();
-
-        }
-
-    }
-);
-
-/*
-|--------------------------------------------------------------------------
 | CUANDO CAMBIA EL EXAMEN
 |--------------------------------------------------------------------------
 */
@@ -3732,5 +3860,93 @@ groupSelect.addEventListener(
     */
 
     cargarCursos();
+
+    /*
+|--------------------------------------------------------------------------
+| CERRAR IMAGEN AMPLIADA CON X
+|--------------------------------------------------------------------------
+*/
+
+if (evidenceImageViewerClose) {
+
+    evidenceImageViewerClose.addEventListener(
+        'click',
+        cerrarImagenAmpliada
+    );
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| CERRAR AL TOCAR EL FONDO
+|--------------------------------------------------------------------------
+*/
+
+if (evidenceImageViewer) {
+
+    evidenceImageViewer.addEventListener(
+        'click',
+        function (event) {
+
+            if (
+                event.target.matches(
+                    '[data-close-evidence-viewer]'
+                )
+            ) {
+
+                cerrarImagenAmpliada();
+
+            }
+
+        }
+    );
+
+}
+/*
+|--------------------------------------------------------------------------
+| CERRAR VISOR / MODAL CON ESC
+|--------------------------------------------------------------------------
+*/
+
+document.addEventListener(
+    'keydown',
+    function (event) {
+
+        if (event.key !== 'Escape') {
+            return;
+        }
+
+
+        /*
+         * Si está abierta la fotografía grande,
+         * cerrar solamente la fotografía.
+         */
+        if (
+            evidenceImageViewer &&
+            !evidenceImageViewer.hidden
+        ) {
+
+            cerrarImagenAmpliada();
+
+            return;
+        }
+
+
+        /*
+         * Si no hay fotografía ampliada,
+         * cerrar el modal de evidencias.
+         */
+        if (
+            evidenceModal &&
+            !evidenceModal.hidden
+        ) {
+
+            cerrarModalEvidencias();
+
+        }
+
+    }
+);
 
 });
