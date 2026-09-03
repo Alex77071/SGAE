@@ -792,6 +792,8 @@ public function getQuizStudents(
 
     $alumnosConIntentoIds = [];
 
+    $usuariosConIntento = [];
+
 
     /*
     |--------------------------------------------------------------------------
@@ -871,9 +873,47 @@ if (!empty($intentos)) {
 
     $alumnosConIntento++;
 
-    $alumnosConIntentoIds[] =
+
+    $alumnoId =
         (int) $usuario['id'];
 
+
+    $alumnosConIntentoIds[] =
+        $alumnoId;
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | GUARDAR USERNAME DEL ALUMNO
+    |--------------------------------------------------------------------------
+    */
+
+    $username =
+        trim(
+            (string) (
+                $usuario['username']
+                ?? ''
+            )
+        );
+
+
+    /*
+     * Si Moodle no entrega el username,
+     * conservamos alumno_ID como respaldo.
+     */
+    if ($username === '') {
+
+        $username =
+            'alumno_'
+            .
+            $alumnoId;
+    }
+
+
+    $usuariosConIntento[
+        $alumnoId
+    ] =
+        $username;
 }
 
 }
@@ -897,6 +937,9 @@ return [
 
         'alumnos_ids' =>
             $alumnosConIntentoIds,
+
+        'usuarios' =>
+            $usuariosConIntento,
 
     ],
 ];

@@ -1558,6 +1558,9 @@ private function obtenerArchivoMoodle(
         $alumnos['data']['alumnos_ids']
         ?? [];
 
+    $usuariosAlumnos =
+        $alumnos['data']['usuarios']
+        ?? [];
 
     /*
     |--------------------------------------------------------------------------
@@ -1975,11 +1978,58 @@ private function obtenerArchivoMoodle(
         | CARPETA DEL ALUMNO DENTRO DEL ZIP
         |--------------------------------------------------------------------------
         */
+/*
+|--------------------------------------------------------------------------
+| USERNAME DEL ALUMNO
+|--------------------------------------------------------------------------
+*/
 
-        $carpetaAlumno =
-            'alumno_'
-            .
-            $alumnoId;
+$usernameAlumno =
+    trim(
+        (string) (
+            $usuariosAlumnos[
+                $alumnoId
+            ]
+            ?? ''
+        )
+    );
+
+
+/*
+|--------------------------------------------------------------------------
+| LIMPIAR USERNAME PARA USARLO COMO CARPETA
+|--------------------------------------------------------------------------
+|
+| Evitamos caracteres que puedan causar
+| problemas en Windows/macOS.
+|
+*/
+
+$usernameSeguro =
+    preg_replace(
+        '/[^A-Za-z0-9._-]+/',
+        '_',
+        $usernameAlumno
+    );
+
+
+$usernameSeguro =
+    trim(
+        (string) $usernameSeguro,
+        '._-'
+    );
+
+
+/*
+|--------------------------------------------------------------------------
+| NOMBRE DE LA CARPETA
+|--------------------------------------------------------------------------
+*/
+
+$carpetaAlumno =
+    $usernameSeguro !== ''
+        ? $usernameSeguro
+        : 'alumno_' . $alumnoId;
 
 
         /*
