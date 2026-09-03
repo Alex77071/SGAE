@@ -456,14 +456,31 @@
             </svg>
         </button>
 
+<button
+    type="button"
+    class="evidence-image-viewer__nav evidence-image-viewer__nav--prev"
+    id="evidenceImageViewerPrev"
+    aria-label="Imagen anterior"
+>
+    &lt;
+</button>
 
-        <img
-            class="evidence-image-viewer__image"
-            id="evidenceImageViewerImage"
-            src=""
-            alt="Evidencia ampliada"
-        >
+       <img
+    class="evidence-image-viewer__image"
+    id="evidenceImageViewerImage"
+    src=""
+    alt="Evidencia ampliada"
+>
 
+
+        <button
+    type="button"
+    class="evidence-image-viewer__nav evidence-image-viewer__nav--next"
+    id="evidenceImageViewerNext"
+    aria-label="Imagen siguiente"
+>
+    &gt;
+</button>
 
         <div
             class="evidence-image-viewer__information"

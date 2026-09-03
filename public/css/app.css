@@ -12330,16 +12330,51 @@ body.app-body {
 
     margin-top: 24px;
 
-    padding-right: 5px;
+    padding-right: 6px;
 
     display: grid;
 
+    /*
+     * Las miniaturas se acomodan automáticamente.
+     */
     grid-template-columns:
-        repeat(6, minmax(0, 1fr));
+        repeat(
+            auto-fill,
+            minmax(125px, 1fr)
+        );
 
     gap: 10px;
 
     overflow-y: auto;
+}
+
+/*
+|--------------------------------------------------------------------------
+| MINIATURAS - TAMAÑO MEDIO
+|--------------------------------------------------------------------------
+*/
+
+.evidence-gallery--medium {
+    grid-template-columns:
+        repeat(
+            auto-fill,
+            minmax(100px, 1fr)
+        );
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| MINIATURAS - TAMAÑO COMPACTO
+|--------------------------------------------------------------------------
+*/
+
+.evidence-gallery--compact {
+    grid-template-columns:
+        repeat(
+            auto-fill,
+            minmax(82px, 1fr)
+        );
 }
 
 
@@ -12354,12 +12389,9 @@ body.app-body {
     width: 100%;
 
     /*
-     * Las capturas de webcam suelen ser
-     * más anchas que altas.
+     * Tamaño proporcional de webcam.
      */
     aspect-ratio: 4 / 3;
-
-    padding: 0;
 
     border: 1px solid #dedbdd;
     border-radius: 10px;
@@ -12369,8 +12401,18 @@ body.app-body {
     background: #f2f1f1;
 
     cursor: pointer;
+
+    transition:
+        border-color 0.2s ease,
+        transform 0.2s ease;
 }
 
+
+.evidence-gallery__item:hover {
+    border-color: var(--primary);
+
+    transform: translateY(-1px);
+}
 
 .evidence-gallery__image {
     width: 100%;
@@ -12380,15 +12422,11 @@ body.app-body {
 
     /*
      * IMPORTANTE:
-     * contain muestra TODA la fotografía
-     * sin cortar cabeza, rostro, escritorio, etc.
+     * contain evita cortar la fotografía.
      */
     object-fit: contain;
 
     background: #f2f1f1;
-
-    transition:
-        transform 0.2s ease;
 }
 
 .evidence-gallery__item:hover
@@ -12760,8 +12798,88 @@ body.app-body {
     color: #222222;
 
     cursor: pointer;
+
+    /* ==========================================================
+   NAVEGACIÓN DE IMAGEN AMPLIADA
+========================================================== */
+
+.evidence-image-viewer__nav {
+    position: absolute;
+
+    top: 50%;
+
+    transform:
+        translateY(-50%);
+
+    z-index: 4;
+
+    width: 52px;
+    height: 52px;
+
+    padding: 0;
+
+    border: 1px solid #b86b6b;
+    border-radius: 50%;
+
+    background:
+        rgba(255, 255, 255, 0.94);
+
+    color: var(--primary);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-family: inherit;
+    font-size: 30px;
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        opacity 0.2s ease;
 }
 
+
+.evidence-image-viewer__nav:hover:not(:disabled) {
+    background: #ffffff;
+}
+
+
+.evidence-image-viewer__nav--prev {
+    left: 18px;
+}
+
+
+.evidence-image-viewer__nav--next {
+    right: 18px;
+}
+
+
+.evidence-image-viewer__nav:disabled {
+    opacity: 0.25;
+
+    cursor: default;
+}
+}
+
+.evidence-image-viewer__nav {
+    width: 42px;
+    height: 42px;
+
+    font-size: 24px;
+}
+
+
+.evidence-image-viewer__nav--prev {
+    left: 7px;
+}
+
+
+.evidence-image-viewer__nav--next {
+    right: 7px;
+}
 
 .evidence-image-viewer__close:hover {
     color: var(--primary);
