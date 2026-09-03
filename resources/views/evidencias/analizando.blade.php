@@ -260,13 +260,13 @@
 
             <div class="analysis-finished-summary__item">
 
-                <strong id="analysisFinishedImages">
-                    0
-                </strong>
+                <strong id="analysisFinishedFolders">
+    0
+</strong>
 
-                <span>
-                    Imágenes
-                </span>
+<span>
+    Carpetas de alumnos analizadas
+</span>
 
             </div>
 

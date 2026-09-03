@@ -332,10 +332,10 @@ document.addEventListener('DOMContentLoaded', function () {
             'analysisCurrentFile'
         );
 
-    const finishedImages =
-        document.getElementById(
-            'analysisFinishedImages'
-        );
+   const finishedFolders =
+    document.getElementById(
+        'analysisFinishedFolders'
+    );
 
 
     /*
@@ -564,19 +564,19 @@ document.addEventListener('DOMContentLoaded', function () {
             );
 
 
-            if (finishedImages) {
+           if (finishedFolders) {
 
-                const total =
-                    Number(
-                        datos.total_imagenes
-                        ?? 0
-                    );
+    const totalAlumnos =
+        Number(
+            datos.total_alumnos
+            ?? 0
+        );
 
-                finishedImages.textContent =
-                    total.toLocaleString(
-                        'es-MX'
-                    );
-            }
+    finishedFolders.textContent =
+        totalAlumnos.toLocaleString(
+            'es-MX'
+        );
+}
 
 
             mostrarCompletado();

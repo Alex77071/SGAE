@@ -26,6 +26,20 @@
             ?? 0
         );
 
+        $totalAlumnos =
+        $resultado['total_alumnos']
+        ?? 0;
+
+         $porcentajeConfianza =
+        (int) (
+            $resultado['porcentaje_confianza_general']
+            ?? 0
+        );
+
+    $nivelConfianza =
+        $resultado['nivel_confianza_general']
+        ?? 'Mala/Crítica';
+
     $fechaAnalisis =
         $resultado['fecha_analisis']
         ?? null;
@@ -300,9 +314,14 @@
 
                 <div>
 
-                 <strong>
-    {{ number_format($totalImagenes) }}
-    imágenes analizadas
+<strong>
+    {{ number_format($totalAlumnos) }}
+
+    {{
+        $totalAlumnos === 1
+            ? 'carpeta de alumno analizada'
+            : 'carpetas de alumnos analizadas'
+    }}
 </strong>
 
 <p>
@@ -349,11 +368,13 @@
                     </strong>
 
                     <p>
-                        Nivel de confianza:
-                        Regular
-                        <span>|</span>
-                        70%
-                    </p>
+    Nivel de confianza:
+    {{ $nivelConfianza }}
+
+    <span>|</span>
+
+    {{ $porcentajeConfianza }}%
+</p>
 
                 </div>
 
