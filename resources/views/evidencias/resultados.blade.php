@@ -4,6 +4,56 @@
 
 @section('content')
 
+@php
+
+    $archivo =
+        $resultado['archivo']
+        ?? 'Análisis';
+
+    $nombreExamen =
+        pathinfo(
+            $archivo,
+            PATHINFO_FILENAME
+        );
+
+    $modelo =
+        $resultado['modelo']
+        ?? 'No disponible';
+
+    $totalImagenes =
+        (int) (
+            $resultado['total_imagenes']
+            ?? 0
+        );
+
+    $fechaAnalisis =
+        $resultado['fecha_analisis']
+        ?? null;
+
+    $nivelRevision =
+        $resumen['nivel_revision']
+        ?? 'No disponible';
+
+    $capturasRevision =
+        (int) (
+            $resumen['capturas_revision_visual']
+            ?? 0
+        );
+
+    $porcentajeRevision =
+        $totalImagenes > 0
+            ? round(
+                (
+                    $capturasRevision
+                    /
+                    $totalImagenes
+                )
+                * 100
+            )
+            : 0;
+
+@endphp
+
 <section class="analysis-result-page">
 
     {{-- =====================================================
@@ -158,14 +208,12 @@
                 <div>
 
                     <strong>
-                        Examen final
-                    </strong>
+    {{ $nombreExamen }}
+</strong>
 
-                    <p>
-                        Programación
-                        <span>|</span>
-                        Grupo A
-                    </p>
+<p>
+    {{ $archivo }}
+</p>
 
                 </div>
 
@@ -181,8 +229,20 @@
                 </strong>
 
                 <span>
-                    12 de agosto de 2026
-                </span>
+    @if ($fechaAnalisis)
+
+        {{
+            \Carbon\Carbon::parse(
+                $fechaAnalisis
+            )->format('d/m/Y H:i:s')
+        }}
+
+    @else
+
+        No disponible
+
+    @endif
+</span>
 
             </div>
 
@@ -196,8 +256,12 @@
                 </strong>
 
                 <span>
-                    Completado
-                </span>
+    {{
+        ($resultado['estado'] ?? '') === 'ok'
+            ? 'Completado'
+            : 'No disponible'
+    }}
+</span>
 
             </div>
 
@@ -237,11 +301,14 @@
                 <div>
 
                  <strong>
-    32 archivos de alumnos analizados
+    {{ number_format($totalImagenes) }}
+    imágenes analizadas
 </strong>
 
-                    <p>
-    Imágenes analizadas con MiniCPM-V 4.5:8B mediante Ollama 0.32.15
+<p>
+    Imágenes analizadas con
+    {{ $modelo }}
+    mediante Ollama
 </p>
 
                 </div>
@@ -296,7 +363,10 @@
             {{-- DESCARGAR --}}
 
             <a
-                href="{{ route('evidencias.reporte.prueba') }}"
+                href="{{ route(
+    'evidencias.reporte.actual',
+    ['download' => 1]
+) }}"
                 class="analysis-result-download"
             >
 
@@ -395,7 +465,7 @@
     </button>
 
     <iframe
-        src="{{ route('evidencias.reporte.prueba') }}"
+        src="{{ route('evidencias.reporte.actual') }}"
         title="Vista previa del reporte de análisis"
         class="analysis-result-viewer__frame"
     ></iframe>

@@ -585,7 +585,30 @@ Route::get('/evidencias/resultados', function () {
         return redirect()->route('login');
     }
 
-    return view('evidencias.resultados');
+    $resultado =
+        session('analisis_resultado');
+
+    if (!$resultado) {
+
+        return redirect()
+            ->route('evidencias.analizar')
+            ->withErrors([
+                'archivo' =>
+                    'No existe un análisis completado disponible.'
+            ]);
+    }
+
+    $resumen =
+        $resultado['resumen']
+        ?? [];
+
+    return view(
+        'evidencias.resultados',
+        compact(
+            'resultado',
+            'resumen'
+        )
+    );
 
 })->name('evidencias.resultados');
 
