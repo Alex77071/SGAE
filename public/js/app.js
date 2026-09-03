@@ -2359,6 +2359,72 @@ document.addEventListener('DOMContentLoaded', function () {
         const resultsBody =
     document.getElementById(
         'downloadResultsBody'
+
+);
+        /*
+|--------------------------------------------------------------------------
+| NAVEGACIÓN CON TECLADO
+|--------------------------------------------------------------------------
+*/
+
+document.addEventListener(
+    'keydown',
+    function (event) {
+
+        /*
+         * Solamente funciona si la
+         * imagen grande está abierta.
+         */
+        if (
+            !evidenceImageViewer ||
+            evidenceImageViewer.hidden
+        ) {
+            return;
+        }
+
+
+        /*
+         * Flecha izquierda.
+         */
+        if (
+            event.key ===
+            'ArrowLeft'
+        ) {
+
+            mostrarImagenAnterior();
+
+            return;
+        }
+
+
+        /*
+         * Flecha derecha.
+         */
+        if (
+            event.key ===
+            'ArrowRight'
+        ) {
+
+            mostrarImagenSiguiente();
+
+            return;
+        }
+
+
+        /*
+         * ESC.
+         */
+        if (
+            event.key ===
+            'Escape'
+        ) {
+
+            cerrarImagenAmpliada();
+
+        }
+
+    }
+
     );
 
     /*
@@ -2445,6 +2511,18 @@ const evidenceImageViewerClose =
 const evidenceImageViewerInformation =
     document.getElementById(
         'evidenceImageViewerInformation'
+    );
+
+
+    const evidenceImageViewerPrev =
+    document.getElementById(
+        'evidenceImageViewerPrev'
+    );
+
+
+const evidenceImageViewerNext =
+    document.getElementById(
+        'evidenceImageViewerNext'
     );
     /*
      * Este código solamente se ejecuta
@@ -2829,6 +2907,16 @@ let evidenceHasMore = false;
 
 let evidenceLoading = false;
 
+/*
+|--------------------------------------------------------------------------
+| IMÁGENES CARGADAS EN EL MODAL
+|--------------------------------------------------------------------------
+*/
+
+let evidenceImages = [];
+
+let evidenceCurrentIndex = -1;
+
 async function actualizarTablaResultados() {
 
     const courseId =
@@ -3077,36 +3165,54 @@ imagenes =
     `;
 }
 
-/*
-|--------------------------------------------------------------------------
-| CREAR UNA MINIATURA
-|--------------------------------------------------------------------------
-*/
 
-/*
-|--------------------------------------------------------------------------
-| ABRIR IMAGEN AMPLIADA
-|--------------------------------------------------------------------------
-*/
+// abrir imagen ampliada
 
-function abrirImagenAmpliada(imagen) {
+function abrirImagenAmpliada(indice) {
 
     if (
         !evidenceImageViewer ||
-        !evidenceImageViewerImage ||
-        !imagen ||
-        !imagen.url
+        !evidenceImageViewerImage
     ) {
         return;
     }
 
 
+    /*
+     * Verificar que el índice exista.
+     */
+    if (
+        indice < 0 ||
+        indice >= evidenceImages.length
+    ) {
+        return;
+    }
+
+
+    evidenceCurrentIndex =
+        indice;
+
+
+    const imagen =
+        evidenceImages[
+            evidenceCurrentIndex
+        ];
+
+
+    if (!imagen || !imagen.url) {
+        return;
+    }
+
+
+    /*
+     * Mostrar imagen.
+     */
     evidenceImageViewerImage.src =
         imagen.url;
 
 
     /*
-     * Mostrar fecha de la captura.
+     * Mostrar fecha.
      */
     if (
         evidenceImageViewerInformation
@@ -3120,7 +3226,9 @@ function abrirImagenAmpliada(imagen) {
 
             const fecha =
                 new Date(
-                    Number(imagen.fecha) * 1000
+                    Number(
+                        imagen.fecha
+                    ) * 1000
                 );
 
 
@@ -3128,21 +3236,41 @@ function abrirImagenAmpliada(imagen) {
                 fecha.toLocaleString(
                     'es-MX',
                     {
-                        dateStyle: 'medium',
-                        timeStyle: 'medium'
+                        dateStyle:
+                            'medium',
+
+                        timeStyle:
+                            'medium'
                     }
                 );
 
         }
 
 
+        /*
+         * También indicamos cuál imagen
+         * estamos viendo.
+         */
         evidenceImageViewerInformation
             .textContent =
+                'Imagen ' +
+                (
+                    evidenceCurrentIndex + 1
+                ).toLocaleString('es-MX')
+                +
+                ' de ' +
+                evidenceImages.length
+                    .toLocaleString('es-MX')
+                +
+                ' · ' +
                 texto;
 
     }
 
 
+    /*
+     * Mostrar visor.
+     */
     evidenceImageViewer.hidden =
         false;
 
@@ -3151,6 +3279,83 @@ function abrirImagenAmpliada(imagen) {
         'aria-hidden',
         'false'
     );
+
+
+    /*
+     * Actualizar flechas.
+     */
+    actualizarNavegacionImagen();
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| ACTUALIZAR FLECHAS DEL VISOR
+|--------------------------------------------------------------------------
+*/
+
+function actualizarNavegacionImagen() {
+
+    if (evidenceImageViewerPrev) {
+
+        evidenceImageViewerPrev.disabled =
+            evidenceCurrentIndex <= 0;
+
+    }
+
+
+    if (evidenceImageViewerNext) {
+
+        evidenceImageViewerNext.disabled =
+            evidenceCurrentIndex >=
+            evidenceImages.length - 1;
+
+    }
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| IMAGEN ANTERIOR
+|--------------------------------------------------------------------------
+*/
+
+function mostrarImagenAnterior() {
+
+    if (evidenceCurrentIndex <= 0) {
+        return;
+    }
+
+
+    abrirImagenAmpliada(
+        evidenceCurrentIndex - 1
+    );
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| IMAGEN SIGUIENTE
+|--------------------------------------------------------------------------
+*/
+
+function mostrarImagenSiguiente() {
+
+    if (
+        evidenceCurrentIndex >=
+        evidenceImages.length - 1
+    ) {
+        return;
+    }
+
+
+    abrirImagenAmpliada(
+        evidenceCurrentIndex + 1
+    );
+
 }
 
 
@@ -3196,16 +3401,47 @@ function agregarImagenGaleria(imagen) {
     }
 
 
+    /*
+     * Guardar la posición de esta fotografía.
+     *
+     * Ejemplo:
+     * primera imagen  = 0
+     * segunda imagen  = 1
+     * tercera imagen  = 2
+     */
+    const indice =
+        evidenceImages.length;
+
+
+    /*
+     * Guardar la fotografía en memoria.
+     */
+    evidenceImages.push(
+        imagen
+    );
+
+
+    /*
+     * Crear miniatura.
+     */
     const item =
-        document.createElement('div');
+        document.createElement(
+            'div'
+        );
 
 
     item.className =
         'evidence-gallery__item';
 
 
+    item.dataset.evidenceIndex =
+        indice;
+
+
     const img =
-        document.createElement('img');
+        document.createElement(
+            'img'
+        );
 
 
     img.className =
@@ -3217,20 +3453,19 @@ function agregarImagenGaleria(imagen) {
 
 
     img.alt =
-        'Evidencia del examen';
+        'Evidencia ' +
+        (
+            indice + 1
+        );
 
 
-    /*
-     * Evita cargar físicamente todas las imágenes
-     * antes de que sean necesarias.
-     */
     img.loading =
         'lazy';
 
 
     /*
-     * Si una imagen falla, ocultamos únicamente
-     * esa miniatura.
+     * Si falla solamente esa imagen,
+     * ocultamos su miniatura.
      */
     img.addEventListener(
         'error',
@@ -3244,18 +3479,19 @@ function agregarImagenGaleria(imagen) {
 
 
     /*
- * Abrir evidencia en tamaño grande.
- */
-item.addEventListener(
-    'click',
-    function () {
+     * Abrir en grande.
+     */
+    item.addEventListener(
+        'click',
+        function () {
 
-        abrirImagenAmpliada(
-            imagen
-        );
+            abrirImagenAmpliada(
+                indice
+            );
 
-    }
-);
+        }
+    );
+
 
     item.appendChild(
         img
@@ -3265,6 +3501,7 @@ item.addEventListener(
     evidenceGallery.appendChild(
         item
     );
+
 }
 
 
@@ -3308,6 +3545,19 @@ async function cargarCapturas(
 
         evidenceHasMore = false;
 
+        evidenceImages =
+    [];
+
+
+evidenceCurrentIndex =
+    -1;
+
+
+evidenceGallery.classList.remove(
+    'evidence-gallery--medium',
+    'evidence-gallery--compact'
+);
+
         evidenceGallery.innerHTML =
             '';
 
@@ -3339,11 +3589,42 @@ async function cargarCapturas(
     }
 
 
-    if (evidenceLoadMore) {
+   if (evidenceLoadMore) {
 
-        evidenceLoadMore.disabled =
-            true;
+    /*
+     * Evitar doble clic mientras Moodle responde.
+     */
+    evidenceLoadMore.disabled =
+        true;
+
+
+    /*
+     * Si NO es la carga inicial,
+     * mostrar estado de carga en el botón.
+     */
+    if (!reiniciar) {
+
+        evidenceLoadMore.classList.add(
+            'is-loading'
+        );
+
+
+        const textoBoton =
+            evidenceLoadMore.querySelector(
+                'span'
+            );
+
+
+        if (textoBoton) {
+
+            textoBoton.textContent =
+                'Cargando imágenes...';
+
+        }
+
     }
+
+}
 
 
     try {
@@ -3509,21 +3790,47 @@ async function cargarCapturas(
 
     } finally {
 
-        evidenceLoading =
+    evidenceLoading =
+        false;
+
+
+    if (evidenceLoadMore) {
+
+        /*
+         * Volver a habilitar.
+         */
+        evidenceLoadMore.disabled =
             false;
 
 
-        if (evidenceLoadMore) {
+        /*
+         * Quitar estado visual.
+         */
+        evidenceLoadMore.classList.remove(
+            'is-loading'
+        );
 
-            evidenceLoadMore.disabled =
-                false;
+
+        /*
+         * Restaurar texto.
+         */
+        const textoBoton =
+            evidenceLoadMore.querySelector(
+                'span'
+            );
+
+
+        if (textoBoton) {
+
+            textoBoton.textContent =
+                'Cargar más imágenes';
 
         }
 
     }
 
 }
-
+}
 
 
 /*
@@ -3876,6 +4183,48 @@ if (evidenceImageViewerClose) {
 
 }
 
+/*
+|--------------------------------------------------------------------------
+| FLECHA ANTERIOR
+|--------------------------------------------------------------------------
+*/
+
+if (evidenceImageViewerPrev) {
+
+    evidenceImageViewerPrev.addEventListener(
+        'click',
+        function (event) {
+
+            event.stopPropagation();
+
+            mostrarImagenAnterior();
+
+        }
+    );
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| FLECHA SIGUIENTE
+|--------------------------------------------------------------------------
+*/
+
+if (evidenceImageViewerNext) {
+
+    evidenceImageViewerNext.addEventListener(
+        'click',
+        function (event) {
+
+            event.stopPropagation();
+
+            mostrarImagenSiguiente();
+
+        }
+    );
+
+}
 
 /*
 |--------------------------------------------------------------------------

@@ -12324,22 +12324,78 @@ body.app-body {
 /* ==========================================================
    GALERÍA
 ========================================================== */
-
 .evidence-gallery {
-    min-height: 0;
+    position: relative;
 
-    margin-top: 24px;
+    /*
+     * IMPORTANTE:
+     * La galería ya no seguirá creciendo hacia abajo.
+     */
+    height: 315px;
+    max-height: 315px;
+    min-height: 315px;
 
-    padding-right: 5px;
+    margin-top: 20px;
+
+    padding:
+        4px
+        10px
+        4px
+        2px;
 
     display: grid;
 
+    /*
+     * Se mantienen siempre 6 miniaturas por fila.
+     */
     grid-template-columns:
         repeat(6, minmax(0, 1fr));
 
+    /*
+     * Las filas conservan su tamaño normal.
+     */
+    grid-auto-rows: max-content;
+
+    align-content: start;
+
     gap: 10px;
 
+    /*
+     * Aquí aparece el scroll interno.
+     */
     overflow-y: auto;
+    overflow-x: hidden;
+
+    scrollbar-gutter: stable;
+}
+
+/*
+|--------------------------------------------------------------------------
+| MINIATURAS - TAMAÑO MEDIO
+|--------------------------------------------------------------------------
+*/
+
+.evidence-gallery--medium {
+    grid-template-columns:
+        repeat(
+            auto-fill,
+            minmax(100px, 1fr)
+        );
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| MINIATURAS - TAMAÑO COMPACTO
+|--------------------------------------------------------------------------
+*/
+
+.evidence-gallery--compact {
+    grid-template-columns:
+        repeat(
+            auto-fill,
+            minmax(82px, 1fr)
+        );
 }
 
 
@@ -12348,27 +12404,43 @@ body.app-body {
 | TARJETA DE CADA IMAGEN
 |--------------------------------------------------------------------------
 */
+
 .evidence-gallery__item {
     position: relative;
 
     width: 100%;
 
-    /*
-     * Las capturas de webcam suelen ser
-     * más anchas que altas.
-     */
     aspect-ratio: 4 / 3;
 
-    padding: 0;
+    border:
+        1px solid #dedbdd;
 
-    border: 1px solid #dedbdd;
     border-radius: 10px;
 
     overflow: hidden;
 
-    background: #f2f1f1;
+    background:
+        #f2f1f1;
 
     cursor: pointer;
+
+    transition:
+        transform 0.18s ease,
+        border-color 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+
+.evidence-gallery__item:hover {
+    transform:
+        translateY(-2px);
+
+    border-color:
+        #b77777;
+
+    box-shadow:
+        0 4px 12px
+        rgba(130, 50, 51, 0.10);
 }
 
 
@@ -12378,17 +12450,10 @@ body.app-body {
 
     display: block;
 
-    /*
-     * IMPORTANTE:
-     * contain muestra TODA la fotografía
-     * sin cortar cabeza, rostro, escritorio, etc.
-     */
     object-fit: contain;
 
-    background: #f2f1f1;
-
-    transition:
-        transform 0.2s ease;
+    background:
+        #f2f1f1;
 }
 
 .evidence-gallery__item:hover
@@ -12445,6 +12510,80 @@ body.app-body {
         background-color 0.2s ease;
 }
 
+/* ==========================================================
+   BOTÓN "CARGAR MÁS" - ESTADO CARGANDO
+========================================================== */
+
+.evidence-gallery-load-more.is-loading {
+    cursor:
+        wait;
+
+    opacity:
+        0.82;
+
+    background:
+        rgba(130, 50, 51, 0.045);
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| SPINNER
+|--------------------------------------------------------------------------
+*/
+
+.evidence-gallery-load-more.is-loading::before {
+    content: "";
+
+    width: 18px;
+    height: 18px;
+
+    flex-shrink: 0;
+
+    border:
+        2px solid
+        rgba(130, 50, 51, 0.22);
+
+    border-top-color:
+        var(--primary);
+
+    border-radius:
+        50%;
+
+    animation:
+        evidence-loading-spin
+        0.75s
+        linear
+        infinite;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| OCULTAR FLECHA MIENTRAS CARGA
+|--------------------------------------------------------------------------
+*/
+
+.evidence-gallery-load-more.is-loading svg {
+    display:
+        none;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| ANIMACIÓN
+|--------------------------------------------------------------------------
+*/
+
+@keyframes evidence-loading-spin {
+
+    to {
+        transform:
+            rotate(360deg);
+    }
+
+}
 
 .evidence-gallery-load-more:hover {
     background:
@@ -12520,23 +12659,33 @@ body.app-body {
 ========================================================== */
 
 .evidence-gallery::-webkit-scrollbar {
-    width: 7px;
+    width: 6px;
 }
 
 
 .evidence-gallery::-webkit-scrollbar-track {
-    background: #f0eeee;
+    background:
+        #f2eeee;
 
     border-radius: 999px;
 }
 
 
 .evidence-gallery::-webkit-scrollbar-thumb {
-    background: #c7b1b1;
+    background:
+        #c8aaaa;
 
     border-radius: 999px;
+
+    border:
+        1px solid #f2eeee;
 }
 
+
+.evidence-gallery::-webkit-scrollbar-thumb:hover {
+    background:
+        var(--primary);
+}
 
 /* ==========================================================
    TABLET
@@ -12760,8 +12909,88 @@ body.app-body {
     color: #222222;
 
     cursor: pointer;
+
+    /* ==========================================================
+   NAVEGACIÓN DE IMAGEN AMPLIADA
+========================================================== */
+
+.evidence-image-viewer__nav {
+    position: absolute;
+
+    top: 50%;
+
+    transform:
+        translateY(-50%);
+
+    z-index: 4;
+
+    width: 52px;
+    height: 52px;
+
+    padding: 0;
+
+    border: 1px solid #b86b6b;
+    border-radius: 50%;
+
+    background:
+        rgba(255, 255, 255, 0.94);
+
+    color: var(--primary);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-family: inherit;
+    font-size: 30px;
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        opacity 0.2s ease;
 }
 
+
+.evidence-image-viewer__nav:hover:not(:disabled) {
+    background: #ffffff;
+}
+
+
+.evidence-image-viewer__nav--prev {
+    left: 18px;
+}
+
+
+.evidence-image-viewer__nav--next {
+    right: 18px;
+}
+
+
+.evidence-image-viewer__nav:disabled {
+    opacity: 0.25;
+
+    cursor: default;
+}
+}
+
+.evidence-image-viewer__nav {
+    width: 42px;
+    height: 42px;
+
+    font-size: 24px;
+}
+
+
+.evidence-image-viewer__nav--prev {
+    left: 7px;
+}
+
+
+.evidence-image-viewer__nav--next {
+    right: 7px;
+}
 
 .evidence-image-viewer__close:hover {
     color: var(--primary);
@@ -12818,4 +13047,117 @@ body.app-body {
         max-height: 70vh;
     }
 
+}
+
+/* ==========================================================
+   FLECHAS LATERALES - VISOR DE EVIDENCIAS
+========================================================== */
+
+.evidence-image-viewer__content {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: min(100%, 1000px);
+
+    max-height: 90vh;
+
+    padding:
+        55px
+        90px;
+
+    overflow: hidden;
+}
+
+
+/* ==========================================================
+   IMAGEN CENTRAL
+========================================================== */
+
+.evidence-image-viewer__image {
+    display: block;
+
+    width: auto;
+    height: auto;
+
+    max-width: 100%;
+    max-height: 68vh;
+
+    object-fit: contain;
+
+    margin: 0 auto;
+
+    border-radius: 10px;
+}
+
+
+/* ==========================================================
+   BOTONES < Y >
+========================================================== */
+
+.evidence-image-viewer__nav {
+    position: absolute;
+
+    top: 50%;
+
+    transform:
+        translateY(-50%);
+
+    z-index: 10;
+
+    width: 52px;
+    height: 52px;
+
+    padding: 0;
+
+    border:
+        1px solid #b86b6b;
+
+    border-radius: 50%;
+
+    background: #ffffff;
+
+    color: var(--primary);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-family: inherit;
+
+    font-size: 30px;
+    line-height: 1;
+
+    cursor: pointer;
+}
+
+
+/* ==========================================================
+   BOTÓN <
+========================================================== */
+
+.evidence-image-viewer__nav--prev {
+    left: 22px;
+}
+
+
+/* ==========================================================
+   BOTÓN >
+========================================================== */
+
+.evidence-image-viewer__nav--next {
+    right: 22px;
+}
+
+
+/* ==========================================================
+   BOTÓN DESHABILITADO
+========================================================== */
+
+.evidence-image-viewer__nav:disabled {
+    opacity: 0.25;
+
+    cursor: default;
 }
