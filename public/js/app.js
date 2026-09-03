@@ -3165,65 +3165,6 @@ imagenes =
     `;
 }
 
-/*
-|--------------------------------------------------------------------------
-| CREAR UNA MINIATURA
-|--------------------------------------------------------------------------
-*/
-
-/*
-|--------------------------------------------------------------------------
-| AJUSTAR TAMAÑO DE MINIATURAS
-|--------------------------------------------------------------------------
-*/
-
-function actualizarTamanoMiniaturas() {
-
-    if (!evidenceGallery) {
-        return;
-    }
-
-
-    const total =
-        evidenceImages.length;
-
-
-    /*
-     * Primero quitar estados anteriores.
-     */
-    evidenceGallery.classList.remove(
-        'evidence-gallery--medium',
-        'evidence-gallery--compact'
-    );
-
-
-    /*
-     * 72 o más:
-     * miniaturas pequeñas.
-     */
-    if (total >= 72) {
-
-        evidenceGallery.classList.add(
-            'evidence-gallery--compact'
-        );
-
-        return;
-    }
-
-
-    /*
-     * 48 a 71:
-     * miniaturas medianas.
-     */
-    if (total >= 48) {
-
-        evidenceGallery.classList.add(
-            'evidence-gallery--medium'
-        );
-
-    }
-
-}
 
 // abrir imagen ampliada
 
@@ -3561,13 +3502,6 @@ function agregarImagenGaleria(imagen) {
         item
     );
 
-
-    /*
-     * Conforme se agregan fotografías,
-     * ajustar el tamaño de todas.
-     */
-    actualizarTamanoMiniaturas();
-
 }
 
 
@@ -3655,11 +3589,42 @@ evidenceGallery.classList.remove(
     }
 
 
-    if (evidenceLoadMore) {
+   if (evidenceLoadMore) {
 
-        evidenceLoadMore.disabled =
-            true;
+    /*
+     * Evitar doble clic mientras Moodle responde.
+     */
+    evidenceLoadMore.disabled =
+        true;
+
+
+    /*
+     * Si NO es la carga inicial,
+     * mostrar estado de carga en el botón.
+     */
+    if (!reiniciar) {
+
+        evidenceLoadMore.classList.add(
+            'is-loading'
+        );
+
+
+        const textoBoton =
+            evidenceLoadMore.querySelector(
+                'span'
+            );
+
+
+        if (textoBoton) {
+
+            textoBoton.textContent =
+                'Cargando imágenes...';
+
+        }
+
     }
+
+}
 
 
     try {
@@ -3825,21 +3790,47 @@ evidenceGallery.classList.remove(
 
     } finally {
 
-        evidenceLoading =
+    evidenceLoading =
+        false;
+
+
+    if (evidenceLoadMore) {
+
+        /*
+         * Volver a habilitar.
+         */
+        evidenceLoadMore.disabled =
             false;
 
 
-        if (evidenceLoadMore) {
+        /*
+         * Quitar estado visual.
+         */
+        evidenceLoadMore.classList.remove(
+            'is-loading'
+        );
 
-            evidenceLoadMore.disabled =
-                false;
+
+        /*
+         * Restaurar texto.
+         */
+        const textoBoton =
+            evidenceLoadMore.querySelector(
+                'span'
+            );
+
+
+        if (textoBoton) {
+
+            textoBoton.textContent =
+                'Cargar más imágenes';
 
         }
 
     }
 
 }
-
+}
 
 
 /*
