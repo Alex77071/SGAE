@@ -414,83 +414,94 @@
 
         </div>
 
-        {{-- =====================================================
-     VISOR DE IMAGEN AMPLIADA
-====================================================== --}}
 
-<div
-    class="evidence-image-viewer"
-    id="evidenceImageViewer"
-    aria-hidden="true"
-    hidden
->
-
-    <div
-        class="evidence-image-viewer__backdrop"
-        data-close-evidence-viewer
-    ></div>
-
-
-    <div
-        class="evidence-image-viewer__content"
-        role="dialog"
-        aria-modal="true"
-        aria-label="Vista ampliada de evidencia"
-    >
-
-        <button
-            type="button"
-            class="evidence-image-viewer__close"
-            id="evidenceImageViewerClose"
-            aria-label="Cerrar imagen"
-        >
-            <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.8"
-                stroke-linecap="round"
-            >
-                <path d="M6 6l12 12"></path>
-                <path d="M18 6 6 18"></path>
-            </svg>
-        </button>
-
-<button
-    type="button"
-    class="evidence-image-viewer__nav evidence-image-viewer__nav--prev"
-    id="evidenceImageViewerPrev"
-    aria-label="Imagen anterior"
->
-    &lt;
-</button>
-
-       <img
-    class="evidence-image-viewer__image"
-    id="evidenceImageViewerImage"
-    src=""
-    alt="Evidencia ampliada"
->
-
-
-        <button
-    type="button"
-    class="evidence-image-viewer__nav evidence-image-viewer__nav--next"
-    id="evidenceImageViewerNext"
-    aria-label="Imagen siguiente"
->
-    &gt;
-</button>
+                {{-- =====================================================
+             VISOR DE IMAGEN AMPLIADA
+        ====================================================== --}}
 
         <div
-            class="evidence-image-viewer__information"
-            id="evidenceImageViewerInformation"
+            class="evidence-image-viewer"
+            id="evidenceImageViewer"
+            aria-hidden="true"
+            hidden
         >
+
+            {{-- FONDO OSCURO --}}
+            <div
+                class="evidence-image-viewer__backdrop"
+                data-close-evidence-viewer
+            ></div>
+
+
+            {{-- CONTENIDO DEL VISOR --}}
+            <div
+                class="evidence-image-viewer__content"
+                role="dialog"
+                aria-modal="true"
+                aria-label="Vista ampliada de evidencia"
+            >
+
+                {{-- CERRAR --}}
+                <button
+                    type="button"
+                    class="evidence-image-viewer__close"
+                    id="evidenceImageViewerClose"
+                    aria-label="Cerrar imagen"
+                >
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                    >
+                        <path d="M6 6l12 12"></path>
+                        <path d="M18 6 6 18"></path>
+                    </svg>
+                </button>
+
+
+                {{-- IMAGEN ANTERIOR --}}
+                <button
+                    type="button"
+                    class="evidence-image-viewer__nav evidence-image-viewer__nav--prev"
+                    id="evidenceImageViewerPrev"
+                    aria-label="Imagen anterior"
+                >
+                    &lt;
+                </button>
+
+
+                {{-- IMAGEN AMPLIADA --}}
+                <img
+                    class="evidence-image-viewer__image"
+                    id="evidenceImageViewerImage"
+                    src=""
+                    alt="Evidencia ampliada"
+                >
+
+
+                {{-- IMAGEN SIGUIENTE --}}
+                <button
+                    type="button"
+                    class="evidence-image-viewer__nav evidence-image-viewer__nav--next"
+                    id="evidenceImageViewerNext"
+                    aria-label="Imagen siguiente"
+                >
+                    &gt;
+                </button>
+
+
+                {{-- INFORMACIÓN --}}
+                <div
+                    class="evidence-image-viewer__information"
+                    id="evidenceImageViewerInformation"
+                >
+                </div>
+
+            </div>
+
         </div>
-
-    </div>
-
-</div>
 
 
         {{-- =============================================

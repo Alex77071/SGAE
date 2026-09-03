@@ -12937,3 +12937,116 @@ body.app-body {
     }
 
 }
+
+/* ==========================================================
+   FLECHAS LATERALES - VISOR DE EVIDENCIAS
+========================================================== */
+
+.evidence-image-viewer__content {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: min(100%, 1000px);
+
+    max-height: 90vh;
+
+    padding:
+        55px
+        90px;
+
+    overflow: hidden;
+}
+
+
+/* ==========================================================
+   IMAGEN CENTRAL
+========================================================== */
+
+.evidence-image-viewer__image {
+    display: block;
+
+    width: auto;
+    height: auto;
+
+    max-width: 100%;
+    max-height: 68vh;
+
+    object-fit: contain;
+
+    margin: 0 auto;
+
+    border-radius: 10px;
+}
+
+
+/* ==========================================================
+   BOTONES < Y >
+========================================================== */
+
+.evidence-image-viewer__nav {
+    position: absolute;
+
+    top: 50%;
+
+    transform:
+        translateY(-50%);
+
+    z-index: 10;
+
+    width: 52px;
+    height: 52px;
+
+    padding: 0;
+
+    border:
+        1px solid #b86b6b;
+
+    border-radius: 50%;
+
+    background: #ffffff;
+
+    color: var(--primary);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-family: inherit;
+
+    font-size: 30px;
+    line-height: 1;
+
+    cursor: pointer;
+}
+
+
+/* ==========================================================
+   BOTÓN <
+========================================================== */
+
+.evidence-image-viewer__nav--prev {
+    left: 22px;
+}
+
+
+/* ==========================================================
+   BOTÓN >
+========================================================== */
+
+.evidence-image-viewer__nav--next {
+    right: 22px;
+}
+
+
+/* ==========================================================
+   BOTÓN DESHABILITADO
+========================================================== */
+
+.evidence-image-viewer__nav:disabled {
+    opacity: 0.25;
+
+    cursor: default;
+}
