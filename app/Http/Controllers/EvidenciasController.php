@@ -7,6 +7,9 @@ use Symfony\Component\Process\Process;
 use App\Services\MoodleService;
 use Illuminate\Support\Facades\Http;
 
+use App\AnalisisHistorial;
+use Illuminate\Support\Facades\Storage;
+
 class EvidenciasController extends Controller
 {
         private $moodleService;
@@ -2704,13 +2707,19 @@ public function progresoAnalisis()
                     ->successful()
             ) {
 
-                session([
+                $resultado =
+    $respuestaResultado
+        ->json();
 
-                    'analisis_resultado' =>
-                        $respuestaResultado
-                            ->json(),
+session([
+    'analisis_resultado' =>
+        $resultado,
+]);
 
-                ]);
+$this->guardarAnalisisHistorial(
+    $jobId,
+    $resultado
+);
             }
 
 
@@ -2737,6 +2746,156 @@ public function progresoAnalisis()
     );
 }
 
+private function guardarAnalisisHistorial(
+    string $jobId,
+    array $resultado
+): void {
+
+    /*
+     * Si este análisis ya fue guardado,
+     * no volver a registrarlo.
+     */
+    if (
+        AnalisisHistorial::where(
+            'job_id',
+            $jobId
+        )->exists()
+    ) {
+        return;
+    }
+
+
+    try {
+
+        /*
+         * Obtener el PDF generado por FastAPI.
+         */
+        $respuestaPdf =
+            Http::timeout(60)
+                ->get(
+                    'http://127.0.0.1:8000'
+                    .
+                    '/analizar/reporte/'
+                    .
+                    $jobId
+                );
+
+
+        if (!$respuestaPdf->successful()) {
+            return;
+        }
+
+
+        /*
+         * Nombre del ZIP analizado.
+         */
+        $nombreArchivo =
+            session(
+                'analisis_archivo',
+                $resultado['archivo']
+                    ?? 'Analisis.zip'
+            );
+
+
+        /*
+         * Nombre sin extensión.
+         */
+        $nombreCarpeta =
+            pathinfo(
+                $nombreArchivo,
+                PATHINFO_FILENAME
+            );
+
+
+        /*
+         * Nombre del PDF.
+         */
+        $nombrePdf =
+            $resultado['reporte']['nombre']
+            ??
+            (
+                'Reporte_'
+                .
+                $jobId
+                .
+                '.pdf'
+            );
+
+
+        /*
+         * Ruta permanente dentro de Laravel.
+         */
+        $rutaPdf =
+            'reportes/historial/'
+            .
+            $jobId
+            .
+            '/'
+            .
+            $nombrePdf;
+
+
+        /*
+         * Guardar copia física del PDF.
+         */
+        Storage::disk('local')->put(
+            $rutaPdf,
+            $respuestaPdf->body()
+        );
+
+
+        /*
+         * Guardar información en SQLite.
+         */
+        AnalisisHistorial::create([
+
+            'job_id' =>
+                $jobId,
+
+            'moodle_username' =>
+                session('moodle_username'),
+
+            'nombre_archivo' =>
+                $nombreArchivo,
+
+            'nombre_carpeta' =>
+                $nombreCarpeta,
+
+            'fecha_analisis' =>
+                $resultado['fecha_analisis']
+                ?? now(),
+
+            'total_imagenes' =>
+                $resultado['total_imagenes']
+                ?? 0,
+
+            'total_carpetas' =>
+                $resultado['total_alumnos']
+                ?? 0,
+
+            'nivel_confianza' =>
+                $resultado['nivel_confianza_general']
+                ?? null,
+
+            'porcentaje_confianza' =>
+                $resultado['porcentaje_confianza_general']
+                ?? null,
+
+            'ruta_pdf' =>
+                $rutaPdf,
+
+        ]);
+
+
+    } catch (\Throwable $error) {
+
+        /*
+         * Un error al guardar el historial
+         * no debe interrumpir el análisis.
+         */
+
+    }
+}
 
 /*
 |--------------------------------------------------------------------------
