@@ -214,9 +214,9 @@
 
             {{-- DESCARGAR --}}
             <a
-                href="{{ asset('documentos/diagrama_proceso.pdf') }}"
+                href="{{ asset('documentos/diagrama_proceso1.pdf') }}"
                 class="diagram-download-button"
-                download="diagrama_proceso.pdf"
+                download="diagrama_proceso1.pdf"
             >
                 <span class="diagram-download-button__icon">
                     <svg
@@ -288,7 +288,7 @@
             >
 
                 <iframe
-                    src="{{ asset('documentos/diagrama_proceso.pdf') }}#toolbar=0&navpanes=0&scrollbar=0&view=FitH"
+                    src="{{ asset('documentos/diagrama_proceso1.pdf') }}#toolbar=0&navpanes=0&scrollbar=0&view=FitH"
                     class="diagram-viewer__pdf"
                     title="Diagrama del proceso"
                 ></iframe>
