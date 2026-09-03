@@ -115,30 +115,13 @@
 
                 <div class="download-summary__item download-summary__item--exam">
 
-                    <strong>
-                        Examen final
-                    </strong>
+                   <strong id="downloadSummaryExam">
+    Examen
+</strong>
 
-                    <span>
-                        Programación | Grupo A
-                    </span>
-
-                </div>
-
-
-                <div class="download-summary__divider"></div>
-
-
-                <div class="download-summary__item">
-
-                    <strong>
-                        32
-                    </strong>
-
-                    <span>
-                        Carpetas de<br>
-                        alumnos
-                    </span>
+<span id="downloadSummaryCourseGroup">
+    Curso | Grupo
+</span>
 
                 </div>
 
@@ -148,13 +131,29 @@
 
                 <div class="download-summary__item">
 
-                    <strong>
-                        1,248
-                    </strong>
+                    <strong id="downloadSummaryStudents">
+    0
+</strong>
 
-                    <span>
-                        Imágenes
-                    </span>
+<span>
+    Carpetas de alumnos
+</span>
+
+                </div>
+
+
+                <div class="download-summary__divider"></div>
+
+
+                <div class="download-summary__item">
+
+                   <strong id="downloadSummaryImages">
+    0
+</strong>
+
+<span>
+    Imágenes
+</span>
 
                 </div>
 

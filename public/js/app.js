@@ -215,6 +215,30 @@ document.addEventListener(
             );
 
 
+            const summaryExam =
+    document.getElementById(
+        'downloadSummaryExam'
+    );
+
+
+const summaryCourseGroup =
+    document.getElementById(
+        'downloadSummaryCourseGroup'
+    );
+
+
+const summaryStudents =
+    document.getElementById(
+        'downloadSummaryStudents'
+    );
+
+
+const summaryImages =
+    document.getElementById(
+        'downloadSummaryImages'
+    );
+
+
         /*
          * Este código solamente debe ejecutarse
          * dentro de la pantalla:
@@ -301,6 +325,56 @@ document.addEventListener(
             return;
 
         }
+
+        /*
+|--------------------------------------------------------------------------
+| MOSTRAR DATOS REALES DEL EXAMEN
+|--------------------------------------------------------------------------
+*/
+
+if (summaryExam) {
+
+    summaryExam.textContent =
+        datosDescarga.examenNombre
+        || 'Examen';
+}
+
+
+if (summaryCourseGroup) {
+
+    const curso =
+        datosDescarga.cursoNombre
+        || 'Curso';
+
+
+    const grupo =
+        datosDescarga.grupoNombre
+        || 'Todos los grupos';
+
+
+    summaryCourseGroup.textContent =
+        curso
+        +
+        ' | '
+        +
+        grupo;
+}
+
+
+if (summaryStudents) {
+
+    summaryStudents.textContent =
+        datosDescarga.alumnos
+        || '0';
+}
+
+
+if (summaryImages) {
+
+    summaryImages.textContent =
+        datosDescarga.imagenes
+        || '0';
+}
 
 
         /*
@@ -3618,6 +3692,26 @@ async function actualizarTablaResultados() {
         return;
     }
 
+    /*
+|--------------------------------------------------------------------------
+| MOSTRAR ESTADO DE BÚSQUEDA
+|--------------------------------------------------------------------------
+*/
+
+resultsBody.innerHTML = `
+    <tr>
+        <td
+            colspan="7"
+            style="
+                text-align: center;
+                padding: 28px 20px;
+                font-weight: 500;
+            "
+        >
+            Buscando carpetas de evidencias...
+        </td>
+    </tr>
+`;
 
     /*
     |--------------------------------------------------------------------------
@@ -3916,46 +4010,159 @@ function descargarEvidenciasZip() {
     const datos =
         obtenerDatosDescarga();
 
+    
+    /*
+|--------------------------------------------------------------------------
+| DATOS VISIBLES DEL EXAMEN SELECCIONADO
+|--------------------------------------------------------------------------
+*/
+
+const courseOption =
+    courseSelect.options[
+        courseSelect.selectedIndex
+    ];
+
+
+const groupOption =
+    groupSelect.options[
+        groupSelect.selectedIndex
+    ];
+
+
+const examOption =
+    examSelect.options[
+        examSelect.selectedIndex
+    ];
+
+
+const cursoNombre =
+    courseOption
+        ? courseOption.textContent.trim()
+        : 'Curso';
+
+
+const grupoNombre =
+    (
+        groupOption
+        &&
+        groupOption.textContent
+    )
+        ? groupOption.textContent.trim()
+        : 'Todos los grupos';
+
+
+const examenNombre =
+    examOption
+        ? examOption.textContent.trim()
+        : 'Examen';
+
+
+/*
+|--------------------------------------------------------------------------
+| OBTENER ALUMNOS E IMÁGENES DE LA TABLA
+|--------------------------------------------------------------------------
+*/
+
+const filaResultado =
+    resultsBody.querySelector(
+        'tr'
+    );
+
+
+const celdasResultado =
+    filaResultado
+        ? filaResultado.querySelectorAll(
+            'td'
+        )
+        : [];
+
+
+let alumnosDescarga =
+    '0';
+
+
+let imagenesDescarga =
+    '0';
+
+
+if (
+    celdasResultado.length >= 5
+) {
 
     /*
-    |--------------------------------------------------------------------------
-    | GUARDAR TEMPORALMENTE LOS DATOS
-    |--------------------------------------------------------------------------
-    |
-    | sessionStorage pertenece al navegador.
-    | Nos permite cambiar a la pantalla de progreso
-    | sin perder curso, grupo y examen.
-    |
-    */
+     * La columna alumnos puede venir como:
+     *
+     * 32 / 33
+     *
+     * Para "Carpetas de alumnos"
+     * mostramos solamente los alumnos
+     * que tienen evidencias.
+     */
 
-    sessionStorage.setItem(
-        'sgae_download_data',
-        JSON.stringify({
-            courseid:
-                courseId,
+    const textoAlumnos =
+        celdasResultado[3]
+            .textContent
+            .trim();
 
-            quizid:
-                quizId,
 
-            groupid:
-                groupId || '',
+    alumnosDescarga =
+        textoAlumnos
+            .split('/')[0]
+            .trim();
 
-            curso:
-                datos.curso,
 
-            grupo:
-                datos.grupo,
+    imagenesDescarga =
+        celdasResultado[4]
+            .textContent
+            .trim();
+}
 
-            examen:
-                datos.examen,
 
-            downloadUrl:
-                downloadUrl,
+ sessionStorage.setItem(
+    'sgae_download_data',
+    JSON.stringify({
 
-            csrfToken:
-                csrfToken
-        })
-    );
+        courseid:
+            courseId,
+
+        quizid:
+            quizId,
+
+        groupid:
+            groupId || '',
+
+        cursoNombre:
+            cursoNombre,
+
+        grupoNombre:
+            grupoNombre,
+
+        examenNombre:
+            examenNombre,
+
+        alumnos:
+            alumnosDescarga,
+
+        imagenes:
+            imagenesDescarga,
+
+        curso:
+            datos.curso,
+
+        grupo:
+            datos.grupo,
+
+        examen:
+            datos.examen,
+
+        downloadUrl:
+            downloadUrl,
+
+        csrfToken:
+            csrfToken
+
+    })
+);
 
 
     /*
