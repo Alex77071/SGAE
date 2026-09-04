@@ -118,7 +118,7 @@
                         </th>
 
                         <th>
-                            Grupo
+                            Carpetas contenidas
                         </th>
 
                     </tr>
@@ -203,7 +203,7 @@
 
                             {{-- GRUPO --}}
                             <td>
-                                {{ $item['grupo'] }}
+                               {{ $item['carpetas'] }}
                             </td>
 
                         </tr>
