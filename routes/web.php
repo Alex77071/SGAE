@@ -612,51 +612,20 @@ Route::get('/evidencias/resultados', function () {
 
 })->name('evidencias.resultados');
 
+
 /*
 |--------------------------------------------------------------------------
 | HISTORIAL DE ANÁLISIS
 |--------------------------------------------------------------------------
 */
 
-Route::get('/evidencias/historial', function () {
-
-    if (!session('moodle_authenticated')) {
-        return redirect()->route('login');
-    }
-
-
-    /*
-     * DATOS TEMPORALES
-     *
-     * Después estos datos vendrán de la base de datos.
-     */
-    $analisis = [
-
-        [
-            'id' => 1,
-            'nombre' => 'Examen final',
-            'fecha' => '13/05/2026',
-            'imagenes' => 248,
-            'grupo' => 'Grupo A',
-        ],
-
-        [
-            'id' => 2,
-            'nombre' => 'Práctica 3',
-            'fecha' => '12/05/2026',
-            'imagenes' => 193,
-            'grupo' => 'Grupo A',
-        ],
-
-    ];
-
-
-    return view(
-        'evidencias.historial',
-        compact('analisis')
-    );
-
-})->name('evidencias.historial');
+Route::get(
+    '/evidencias/historial',
+    [
+        EvidenciasController::class,
+        'historial'
+    ]
+)->name('evidencias.historial');
 
 
 /*
@@ -667,76 +636,10 @@ Route::get('/evidencias/historial', function () {
 
 Route::get(
     '/evidencias/historial/reporte/{id}',
-    function ($id) {
-
-        if (!session('moodle_authenticated')) {
-            return redirect()->route('login');
-        }
-
-
-        /*
-         * PDFs DE EJEMPLO
-         */
-        $reportes = [
-
-            1 => public_path(
-                'documentos/reportes/examen_final.pdf'
-            ),
-
-            2 => public_path(
-                'documentos/reportes/practica_3.pdf'
-            ),
-
-        ];
-
-
-        /*
-         * Validar que exista un reporte
-         * asociado al ID seleccionado.
-         */
-        if (!isset($reportes[$id])) {
-
-            abort(
-                404,
-                'No se encontró el análisis seleccionado.'
-            );
-
-        }
-
-
-        $archivo = $reportes[$id];
-
-
-        /*
-         * Validar que el PDF exista físicamente.
-         */
-        if (!file_exists($archivo)) {
-
-            abort(
-                404,
-                'No se encontró el archivo PDF.'
-            );
-
-        }
-
-
-        /*
-         * Mostrar el PDF directamente
-         * en el navegador.
-         */
-        return response()->file(
-            $archivo,
-            [
-                'Content-Type' => 'application/pdf',
-
-                'Content-Disposition' =>
-                    'inline; filename="' .
-                    basename($archivo) .
-                    '"',
-            ]
-        );
-
-    }
+    [
+        EvidenciasController::class,
+        'reporteHistorial'
+    ]
 )->name('evidencias.historial.reporte');
 /*
 |--------------------------------------------------------------------------

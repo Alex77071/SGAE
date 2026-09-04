@@ -3033,4 +3033,120 @@ public function reporteActual(Request $request)
     );
 }
 
+public function historial()
+{
+    if (!session('moodle_authenticated')) {
+
+        return redirect()
+            ->route('login');
+    }
+
+
+    $username =
+        session('moodle_username');
+
+
+    $registros =
+        AnalisisHistorial::where(
+            'moodle_username',
+            $username
+        )
+        ->orderBy(
+            'fecha_analisis',
+            'desc'
+        )
+        ->get();
+
+
+    $analisis =
+        $registros
+            ->map(function ($item) {
+
+                return [
+
+                    'id' =>
+                        $item->id,
+
+                    'nombre' =>
+                        $item->nombre_carpeta,
+
+                    'fecha' =>
+                        $item->fecha_analisis
+                            ? $item
+                                ->fecha_analisis
+                                ->format('d/m/Y H:i')
+                            : '',
+
+                    'imagenes' =>
+                        $item->total_imagenes,
+
+                    'carpetas' =>
+                        $item->total_carpetas,
+
+                ];
+
+            })
+            ->all();
+
+
+    return view(
+        'evidencias.historial',
+        compact('analisis')
+    );
+}
+
+public function reporteHistorial($id)
+{
+    if (!session('moodle_authenticated')) {
+
+        return redirect()
+            ->route('login');
+    }
+
+
+    $registro =
+        AnalisisHistorial::where(
+            'id',
+            $id
+        )
+        ->where(
+            'moodle_username',
+            session('moodle_username')
+        )
+        ->firstOrFail();
+
+
+    $archivo =
+        storage_path(
+            'app/'
+            .
+            $registro->ruta_pdf
+        );
+
+
+    if (!is_file($archivo)) {
+
+        abort(
+            404,
+            'No se encontró el reporte PDF.'
+        );
+    }
+
+
+    return response()->file(
+        $archivo,
+        [
+            'Content-Type' =>
+                'application/pdf',
+
+            'Content-Disposition' =>
+                'inline; filename="'
+                .
+                basename($archivo)
+                .
+                '"',
+        ]
+    );
+}
+
 }

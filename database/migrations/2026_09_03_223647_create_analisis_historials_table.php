@@ -51,4 +51,6 @@ class CreateAnalisisHistorialsTable extends Migration
     {
         Schema::dropIfExists('analisis_historials');
     }
+
+    
 }
