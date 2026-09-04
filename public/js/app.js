@@ -3011,15 +3011,9 @@ const evidenceModalShown =
         'evidenceGalleryShown'
     );
 
-const evidenceModalMore =
-    document.getElementById(
-        'evidenceGalleryMore'
-    );
 
-const evidenceLoadMore =
-    document.getElementById(
-        'evidenceGalleryLoadMore'
-    );
+const evidenceScrollContainer =
+    evidenceGallery;
 
 const evidenceClose =
     document.getElementById(
@@ -4571,11 +4565,11 @@ evidenceGallery.classList.remove(
         evidenceGallery.innerHTML =
             '';
 
-        if (evidenceModalShown) {
+   if (evidenceModalShown) {
 
-            evidenceModalShown.textContent =
-                '';
-        }
+    evidenceModalShown.textContent =
+        '';
+}
 
     }
 
@@ -4599,43 +4593,7 @@ evidenceGallery.classList.remove(
     }
 
 
-   if (evidenceLoadMore) {
-
-    /*
-     * Evitar doble clic mientras Moodle responde.
-     */
-    evidenceLoadMore.disabled =
-        true;
-
-
-    /*
-     * Si NO es la carga inicial,
-     * mostrar estado de carga en el botón.
-     */
-    if (!reiniciar) {
-
-        evidenceLoadMore.classList.add(
-            'is-loading'
-        );
-
-
-        const textoBoton =
-            evidenceLoadMore.querySelector(
-                'span'
-            );
-
-
-        if (textoBoton) {
-
-            textoBoton.textContent =
-                'Cargando imágenes...';
-
-        }
-
-    }
-
-}
-
+ 
 
     try {
 
@@ -4728,11 +4686,44 @@ evidenceGallery.classList.remove(
             );
 
 
-        evidenceHasMore =
-            Boolean(
-                data.has_more
-            );
 
+            /*
+|--------------------------------------------------------------------------
+| SABER SI TODAVÍA EXISTEN MÁS IMÁGENES
+|--------------------------------------------------------------------------
+*/
+
+evidenceHasMore =
+    Boolean(
+        data.has_more
+    );
+/*
+|--------------------------------------------------------------------------
+| ACTUALIZAR CONTADOR
+|--------------------------------------------------------------------------
+*/
+
+if (evidenceModalShown) {
+
+    const mostradas =
+        Math.min(
+            evidenceOffset,
+            totalImagenesSeleccionadas
+        );
+
+
+    evidenceModalShown.textContent =
+        mostradas.toLocaleString(
+            'es-MX'
+        )
+        +
+        ' de '
+        +
+        totalImagenesSeleccionadas
+            .toLocaleString(
+                'es-MX'
+            );
+}
 
         /*
          * Texto inferior.
@@ -4750,17 +4741,6 @@ evidenceGallery.classList.remove(
                         'es-MX'
                     ) +
                 ' imágenes';
-
-        }
-
-
-        /*
-         * Mostrar u ocultar "Cargar más".
-         */
-        if (evidenceModalMore) {
-
-            evidenceModalMore.hidden =
-                !evidenceHasMore;
 
         }
 
@@ -4802,46 +4782,47 @@ evidenceGallery.classList.remove(
 
     evidenceLoading =
         false;
-
-
-    if (evidenceLoadMore) {
-
-        /*
-         * Volver a habilitar.
-         */
-        evidenceLoadMore.disabled =
-            false;
-
-
-        /*
-         * Quitar estado visual.
-         */
-        evidenceLoadMore.classList.remove(
-            'is-loading'
-        );
-
-
-        /*
-         * Restaurar texto.
-         */
-        const textoBoton =
-            evidenceLoadMore.querySelector(
-                'span'
-            );
-
-
-        if (textoBoton) {
-
-            textoBoton.textContent =
-                'Cargar más imágenes';
-
-        }
-
     }
-
 }
-}
+/*
+|--------------------------------------------------------------------------
+| CARGA AUTOMÁTICA AL HACER SCROLL
+|--------------------------------------------------------------------------
+*/
 
+if (evidenceScrollContainer) {
+
+    evidenceScrollContainer.addEventListener(
+        'scroll',
+        function () {
+
+            const distanciaAlFinal =
+                evidenceScrollContainer.scrollHeight
+                -
+                evidenceScrollContainer.scrollTop
+                -
+                evidenceScrollContainer.clientHeight;
+
+
+            /*
+             * Antes de llegar completamente abajo,
+             * solicitamos las siguientes 24.
+             */
+            if (
+                distanciaAlFinal <= 250
+                &&
+                evidenceHasMore
+                &&
+                !evidenceLoading
+            ) {
+
+                cargarCapturas(
+                    false
+                );
+            }
+        }
+    );
+}
 
 /*
 |--------------------------------------------------------------------------
@@ -4914,12 +4895,6 @@ function abrirModalEvidencias() {
             '';
     }
 
-
-    if (evidenceModalMore) {
-
-        evidenceModalMore.hidden =
-            true;
-    }
 
 
     /*
@@ -5026,45 +5001,6 @@ resultsBody.addEventListener(
 if (evidenceClose) {
 
     evidenceClose.addEventListener(
-        'click',
-        cerrarModalEvidencias
-    );
-
-}
-
-/*
-|--------------------------------------------------------------------------
-| CARGAR MÁS EVIDENCIAS
-|--------------------------------------------------------------------------
-*/
-
-if (evidenceLoadMore) {
-
-    evidenceLoadMore.addEventListener(
-        'click',
-        function () {
-
-            if (!evidenceHasMore) {
-                return;
-            }
-
-
-            cargarCapturas(false);
-
-        }
-    );
-
-}
-
-/*
-|--------------------------------------------------------------------------
-| BOTÓN CERRAR
-|--------------------------------------------------------------------------
-*/
-
-if (evidenceCloseButton) {
-
-    evidenceCloseButton.addEventListener(
         'click',
         cerrarModalEvidencias
     );
