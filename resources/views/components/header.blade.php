@@ -650,7 +650,7 @@
     <div class="about-supervisor__names">
 
         <p>
-            CEO Dr. Mario Alberto Moreno Rocha
+            CEO del UsaLab Dr. Mario Alberto Moreno Rocha
            
         </p>
 
@@ -764,16 +764,17 @@
 
 
                         <p class="about-developer__text">
-                            Este sistema fue diseñado y desarrollado por estudiantes en Estancias
-                            Profesionales de la Universidad del Mar durante el año 2026.<br>
+                            La primera versión de este sistema fue implementada por Alejandra Jiménez Venegas
+                            y Lizeth Elisa Sánchez Jiménez, de la Licenciatura en Informática de la Universidad del Mar,
+                            Campus Puerto Escondido, así como por Abdiel Cervantes Rosales, de Ingeniería en Computación 
+                            de la Universidad Tecnológica de la Mixteca.<br>
                         </p>
 
 
                         <p class="about-developer__text">
-                            El equipo está conformado por Iván Alexander Cortés Pérez,
-                            Allan Daniel Cruz Matias, Alejandra Jiménez Venegas y
-                            Lizeth Elisa Sánchez Jiménez, estudiantes de la
-                            Licenciatura en Informática de la Universidad del Mar.
+                          La segunda versión fue diseñada y desarrollada durante Estancias Profesionales por 
+                          Alejandra Jiménez Venegas, Lizeth Elisa Sánchez Jiménez, Iván Alexander Cortés Pérez 
+                          y Allan Daniel Cruz Matías, estudiantes de la Licenciatura en Informática de la Universidad del Mar.
                         </p>
 
                     </div>
