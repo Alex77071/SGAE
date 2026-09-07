@@ -163,11 +163,17 @@
             {{-- ACCIONES --}}
 <div class="download-complete-actions">
 
+    <form
+    action="{{ route('evidencias.analisis.iniciar') }}"
+    method="POST"
+    style="display: contents;"
+>
+    @csrf
+
     <button
-        type="button"
+        type="submit"
         class="download-complete-button download-complete-button--primary"
         id="goToAnalyzeButton"
-        data-url="{{ route('evidencias.analizando') }}"
     >
 
         <span class="download-complete-button__icon">
@@ -198,6 +204,8 @@
         </span>
 
     </button>
+
+</form>
 
 
                 <a
