@@ -399,7 +399,7 @@
 
 
                 <span>
-                    Analizar otro archivo
+                    Analizar otra carpeta
                 </span>
 
             </a>
