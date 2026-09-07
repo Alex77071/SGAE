@@ -743,6 +743,9 @@ Route::get(
     [EvidenciasController::class, 'datosExamen']
 )->name('evidencias.datos-examen');
 
+
+
+
 /*
 |--------------------------------------------------------------------------
 | OBTENER CAPTURAS DEL EXAMEN
@@ -753,6 +756,20 @@ Route::get(
     '/evidencias/capturas',
     [EvidenciasController::class, 'capturas']
 )->name('evidencias.capturas');
+
+/*
+|--------------------------------------------------------------------------
+| MOSTRAR IMAGEN DE EVIDENCIA
+|--------------------------------------------------------------------------
+*/
+
+Route::get(
+    '/evidencias/imagen',
+    [
+        EvidenciasController::class,
+        'imagen'
+    ]
+)->name('evidencias.imagen');
 
 /*
 |--------------------------------------------------------------------------

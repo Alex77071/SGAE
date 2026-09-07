@@ -3011,6 +3011,22 @@ const evidenceModalShown =
         'evidenceGalleryShown'
     );
 
+    const evidenceProgressBar =
+    document.getElementById(
+        'evidenceGalleryProgressBar'
+    );
+
+
+const evidenceProgressPercentage =
+    document.getElementById(
+        'evidenceGalleryProgressPercentage'
+    );
+
+
+const evidenceProgressLabel =
+    document.getElementById(
+        'evidenceGalleryProgressLabel'
+    );
 
 const evidenceScrollContainer =
     evidenceGallery;
@@ -3094,6 +3110,9 @@ const evidenceImageViewerNext =
 
     const capturesUrl =
     page.dataset.capturesUrl;
+
+    const evidenceImageUrl =
+    page.dataset.imageUrl;
 
     const downloadUrl =
     page.dataset.downloadUrl;
@@ -4208,11 +4227,21 @@ function abrirImagenAmpliada(indice) {
     }
 
 
-    /*
-     * Mostrar imagen.
-     */
-    evidenceImageViewerImage.src =
-        imagen.url;
+   const proxyUrl =
+    new URL(
+        evidenceImageUrl,
+        window.location.origin
+    );
+
+
+proxyUrl.searchParams.set(
+    'url',
+    imagen.url
+);
+
+
+evidenceImageViewerImage.src =
+    proxyUrl.toString();
 
 
     /*
@@ -4400,34 +4429,35 @@ function cerrarImagenAmpliada() {
 
 function agregarImagenGaleria(imagen) {
 
-    if (!imagen || !imagen.url) {
+    if (
+        !imagen ||
+        !imagen.url
+    ) {
         return;
     }
 
 
     /*
-     * Guardar la posición de esta fotografía.
-     *
-     * Ejemplo:
-     * primera imagen  = 0
-     * segunda imagen  = 1
-     * tercera imagen  = 2
-     */
+    |--------------------------------------------------------------------------
+    | POSICIÓN DE LA IMAGEN
+    |--------------------------------------------------------------------------
+    */
+
     const indice =
         evidenceImages.length;
 
 
-    /*
-     * Guardar la fotografía en memoria.
-     */
     evidenceImages.push(
         imagen
     );
 
 
     /*
-     * Crear miniatura.
-     */
+    |--------------------------------------------------------------------------
+    | CREAR CONTENEDOR
+    |--------------------------------------------------------------------------
+    */
+
     const item =
         document.createElement(
             'div'
@@ -4442,6 +4472,12 @@ function agregarImagenGaleria(imagen) {
         indice;
 
 
+    /*
+    |--------------------------------------------------------------------------
+    | CREAR IMAGEN
+    |--------------------------------------------------------------------------
+    */
+
     const img =
         document.createElement(
             'img'
@@ -4452,12 +4488,42 @@ function agregarImagenGaleria(imagen) {
         'evidence-gallery__image';
 
 
+    /*
+    |--------------------------------------------------------------------------
+    | PASAR LA IMAGEN POR LARAVEL
+    |--------------------------------------------------------------------------
+    */
+
+    if (!evidenceImageUrl) {
+
+        console.error(
+            'No se encontró data-image-url.'
+        );
+
+        return;
+    }
+
+
+    const proxyUrl =
+        new URL(
+            evidenceImageUrl,
+            window.location.origin
+        );
+
+
+    proxyUrl.searchParams.set(
+        'url',
+        imagen.url
+    );
+
+
     img.src =
-        imagen.url;
+        proxyUrl.toString();
 
 
     img.alt =
-        'Evidencia ' +
+        'Evidencia '
+        +
         (
             indice + 1
         );
@@ -4468,23 +4534,32 @@ function agregarImagenGaleria(imagen) {
 
 
     /*
-     * Si falla solamente esa imagen,
-     * ocultamos su miniatura.
-     */
+    |--------------------------------------------------------------------------
+    | ERROR INDIVIDUAL
+    |--------------------------------------------------------------------------
+    */
+
     img.addEventListener(
         'error',
         function () {
 
+            console.error(
+                'No fue posible cargar la evidencia:',
+                proxyUrl.toString()
+            );
+
             item.style.display =
                 'none';
-
         }
     );
 
 
     /*
-     * Abrir en grande.
-     */
+    |--------------------------------------------------------------------------
+    | ABRIR IMAGEN EN GRANDE
+    |--------------------------------------------------------------------------
+    */
+
     item.addEventListener(
         'click',
         function () {
@@ -4492,7 +4567,6 @@ function agregarImagenGaleria(imagen) {
             abrirImagenAmpliada(
                 indice
             );
-
         }
     );
 
@@ -4505,9 +4579,70 @@ function agregarImagenGaleria(imagen) {
     evidenceGallery.appendChild(
         item
     );
-
 }
 
+
+/*
+|--------------------------------------------------------------------------
+| ACTUALIZAR PROGRESO DE CARGA DE EVIDENCIAS
+|--------------------------------------------------------------------------
+*/
+
+function actualizarProgresoEvidencias() {
+
+    if (
+        !totalImagenesSeleccionadas
+        ||
+        totalImagenesSeleccionadas <= 0
+    ) {
+        return;
+    }
+
+
+    const imagenesCargadas =
+        Math.min(
+            evidenceOffset,
+            totalImagenesSeleccionadas
+        );
+
+
+    const porcentaje =
+        Math.min(
+            100,
+            Math.round(
+                (
+                    imagenesCargadas
+                    /
+                    totalImagenesSeleccionadas
+                )
+                *
+                100
+            )
+        );
+
+
+    if (evidenceProgressBar) {
+
+        evidenceProgressBar.style.width =
+            porcentaje + '%';
+    }
+
+
+    if (evidenceProgressPercentage) {
+
+        evidenceProgressPercentage.textContent =
+            porcentaje + '%';
+    }
+
+
+    if (evidenceProgressLabel) {
+
+        evidenceProgressLabel.textContent =
+            porcentaje >= 100
+                ? 'Evidencias cargadas'
+                : 'Cargando evidencias';
+    }
+}
 
 /*
 |--------------------------------------------------------------------------
@@ -4547,11 +4682,33 @@ async function cargarCapturas(
 
         evidenceOffset = 0;
 
+        if (evidenceProgressBar) {
+
+    evidenceProgressBar.style.width =
+        '0%';
+}
+
+
+if (evidenceProgressPercentage) {
+
+    evidenceProgressPercentage.textContent =
+        '0%';
+}
+
+
+if (evidenceProgressLabel) {
+
+    evidenceProgressLabel.textContent =
+        'Cargando evidencias';
+}
         evidenceHasMore = false;
+
 
         evidenceImages =
     [];
 
+    // actualizar barra de procesos
+    actualizarProgresoEvidencias();
 
 evidenceCurrentIndex =
     -1;
@@ -4697,33 +4854,15 @@ evidenceHasMore =
     Boolean(
         data.has_more
     );
+
+
 /*
 |--------------------------------------------------------------------------
-| ACTUALIZAR CONTADOR
+| ACTUALIZAR PROGRESO DE CARGA
 |--------------------------------------------------------------------------
 */
 
-if (evidenceModalShown) {
-
-    const mostradas =
-        Math.min(
-            evidenceOffset,
-            totalImagenesSeleccionadas
-        );
-
-
-    evidenceModalShown.textContent =
-        mostradas.toLocaleString(
-            'es-MX'
-        )
-        +
-        ' de '
-        +
-        totalImagenesSeleccionadas
-            .toLocaleString(
-                'es-MX'
-            );
-}
+actualizarProgresoEvidencias();
 
         /*
          * Texto inferior.
