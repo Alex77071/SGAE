@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use Symfony\Component\Process\Process;
 use App\Services\MoodleService;
 use Illuminate\Support\Facades\Http;
+use App\Jobs\PrepararDescargaEvidencias;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 use App\AnalisisHistorial;
 use Illuminate\Support\Facades\Storage;
@@ -1405,29 +1408,8 @@ private function obtenerArchivoMoodle(
     }
 }
 
-    /*
-    |--------------------------------------------------------------------------
-    | DESCARGAR EVIDENCIAS
-    |--------------------------------------------------------------------------
-    */
-
-
-
- public function descargar(Request $request)
+public function descargar(Request $request)
 {
-    /*
-    |--------------------------------------------------------------------------
-    | PERMITIR DESCARGAS GRANDES
-    |--------------------------------------------------------------------------
-    |
-    | Algunos exámenes pueden tener cientos
-    | o miles de evidencias.
-    |
-    */
-
-    @set_time_limit(0);
-
-
     /*
     |--------------------------------------------------------------------------
     | VALIDAR SESIÓN
@@ -1439,7 +1421,6 @@ private function obtenerArchivoMoodle(
         return response()->json(
             [
                 'ok' => false,
-
                 'message' =>
                     'La sesión de Moodle no es válida.',
             ],
@@ -1450,7 +1431,7 @@ private function obtenerArchivoMoodle(
 
     /*
     |--------------------------------------------------------------------------
-    | VALIDAR FILTROS
+    | VALIDAR DATOS
     |--------------------------------------------------------------------------
     */
 
@@ -1470,31 +1451,7 @@ private function obtenerArchivoMoodle(
 
     /*
     |--------------------------------------------------------------------------
-    | VERIFICAR SOPORTE ZIP
-    |--------------------------------------------------------------------------
-    */
-
-    if (
-        !class_exists(
-            \ZipArchive::class
-        )
-    ) {
-
-        return response()->json(
-            [
-                'ok' => false,
-
-                'message' =>
-                    'La extensión ZIP de PHP no está habilitada.',
-            ],
-            500
-        );
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | DATOS
+    | DATOS DE LA SOLICITUD
     |--------------------------------------------------------------------------
     */
 
@@ -1526,14 +1483,9 @@ private function obtenerArchivoMoodle(
             : 0;
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | VALIDAR TOKEN
-    |--------------------------------------------------------------------------
-    */
-
     if (
-        !$token ||
+        !$token
+        ||
         !$profesorId
     ) {
 
@@ -1551,7 +1503,7 @@ private function obtenerArchivoMoodle(
 
     /*
     |--------------------------------------------------------------------------
-    | VERIFICAR QUE EL PROFESOR TENGA EL CURSO
+    | VALIDAR ACCESO AL CURSO
     |--------------------------------------------------------------------------
     */
 
@@ -1577,7 +1529,7 @@ private function obtenerArchivoMoodle(
 
     /*
     |--------------------------------------------------------------------------
-    | OBTENER INFORMACIÓN DEL EXAMEN
+    | OBTENER EXAMEN
     |--------------------------------------------------------------------------
     */
 
@@ -1597,18 +1549,13 @@ private function obtenerArchivoMoodle(
 
                 'message' =>
                     $examenes['message']
-                    ?? 'No fue posible obtener el examen.',
+                    ??
+                    'No fue posible obtener el examen.',
             ],
             502
         );
     }
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | BUSCAR CMID Y NOMBRE
-    |--------------------------------------------------------------------------
-    */
 
     $cmid = 0;
 
@@ -1631,7 +1578,6 @@ private function obtenerArchivoMoodle(
         ) {
 
             continue;
-
         }
 
 
@@ -1644,8 +1590,10 @@ private function obtenerArchivoMoodle(
 
         $nombreExamen =
             trim(
-                $examen['nombre']
-                ?? 'Examen'
+                (string) (
+                    $examen['nombre']
+                    ?? 'Examen'
+                )
             );
 
 
@@ -1669,7 +1617,7 @@ private function obtenerArchivoMoodle(
 
     /*
     |--------------------------------------------------------------------------
-    | OBTENER ALUMNOS CON INTENTO
+    | OBTENER ALUMNOS
     |--------------------------------------------------------------------------
     */
 
@@ -1690,7 +1638,8 @@ private function obtenerArchivoMoodle(
 
                 'message' =>
                     $alumnos['message']
-                    ?? 'No fue posible obtener los alumnos.',
+                    ??
+                    'No fue posible obtener los alumnos.',
             ],
             502
         );
@@ -1701,19 +1650,16 @@ private function obtenerArchivoMoodle(
         $alumnos['data']['alumnos_ids']
         ?? [];
 
+
     $usuariosAlumnos =
         $alumnos['data']['usuarios']
         ?? [];
+
 
     /*
     |--------------------------------------------------------------------------
     | FILTRAR POR GRUPO
     |--------------------------------------------------------------------------
-    |
-    | Si groupid es 0 significa:
-    |
-    | Todos los grupos
-    |
     */
 
     if ($groupId > 0) {
@@ -1734,19 +1680,13 @@ private function obtenerArchivoMoodle(
 
                     'message' =>
                         $usuariosGrupo['message']
-                        ?? 'No fue posible obtener los alumnos del grupo.',
+                        ??
+                        'No fue posible obtener los alumnos del grupo.',
                 ],
                 502
             );
         }
 
-
-        /*
-         * Solo conservamos estudiantes que:
-         *
-         * 1. realizaron el examen
-         * 2. pertenecen al grupo
-         */
 
         $alumnosIds =
             array_values(
@@ -1758,12 +1698,6 @@ private function obtenerArchivoMoodle(
             );
     }
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | SIN ALUMNOS
-    |--------------------------------------------------------------------------
-    */
 
     if (empty($alumnosIds)) {
 
@@ -1781,70 +1715,7 @@ private function obtenerArchivoMoodle(
 
     /*
     |--------------------------------------------------------------------------
-    | OBTENER TODAS LAS EVIDENCIAS
-    |--------------------------------------------------------------------------
-    |
-    | El modal usa bloques de 24.
-    |
-    | Para el ZIP necesitamos todas.
-    |
-    */
-
-    $resultadoImagenes =
-        $this->moodleService
-            ->getProctoringImages(
-                $token,
-                $courseId,
-                $cmid,
-                $alumnosIds,
-                0,
-                PHP_INT_MAX
-            );
-
-
-    if (!$resultadoImagenes['success']) {
-
-        return response()->json(
-            [
-                'ok' => false,
-
-                'message' =>
-                    $resultadoImagenes['message']
-                    ?? 'No fue posible obtener las evidencias.',
-            ],
-            502
-        );
-    }
-
-
-    $imagenes =
-        $resultadoImagenes['data']['imagenes']
-        ?? [];
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | SIN IMÁGENES
-    |--------------------------------------------------------------------------
-    */
-
-    if (empty($imagenes)) {
-
-        return response()->json(
-            [
-                'ok' => false,
-
-                'message' =>
-                    'El examen seleccionado no contiene evidencias para descargar.',
-            ],
-            404
-        );
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | CARPETA TEMPORAL PARA ZIPS
+    | CARPETA DEL ZIP
     |--------------------------------------------------------------------------
     */
 
@@ -1856,17 +1727,16 @@ private function obtenerArchivoMoodle(
 
     if (!is_dir($carpetaTemporal)) {
 
-        $creada =
-            mkdir(
+        if (
+            !mkdir(
                 $carpetaTemporal,
                 0755,
                 true
-            );
-
-
-        if (
-            !$creada &&
-            !is_dir($carpetaTemporal)
+            )
+            &&
+            !is_dir(
+                $carpetaTemporal
+            )
         ) {
 
             return response()->json(
@@ -1874,7 +1744,7 @@ private function obtenerArchivoMoodle(
                     'ok' => false,
 
                     'message' =>
-                        'No fue posible crear la carpeta temporal del ZIP.',
+                        'No fue posible crear la carpeta temporal.',
                 ],
                 500
             );
@@ -1884,12 +1754,22 @@ private function obtenerArchivoMoodle(
 
     /*
     |--------------------------------------------------------------------------
-    | NOMBRE DEL EXAMEN SEGURO
+    | IDENTIFICADOR DEL PROCESO
+    |--------------------------------------------------------------------------
+    */
+
+    $jobId =
+        (string) Str::uuid();
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | NOMBRE DEL ZIP
     |--------------------------------------------------------------------------
     */
 
     $nombreSeguro =
-        \Illuminate\Support\Str::slug(
+        Str::slug(
             $nombreExamen,
             '_'
         );
@@ -1899,34 +1779,8 @@ private function obtenerArchivoMoodle(
 
         $nombreSeguro =
             'examen';
-
     }
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | NOMBRE FÍSICO TEMPORAL
-    |--------------------------------------------------------------------------
-    */
-
-    $rutaZip =
-        $carpetaTemporal
-        .
-        DIRECTORY_SEPARATOR
-        .
-        uniqid(
-            'sgae_',
-            true
-        )
-        .
-        '.zip';
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | NOMBRE QUE RECIBIRÁ EL USUARIO
-    |--------------------------------------------------------------------------
-    */
 
     $nombreZip =
         'Evidencias_'
@@ -1938,31 +1792,154 @@ private function obtenerArchivoMoodle(
 
     /*
     |--------------------------------------------------------------------------
-    | CREAR ZIP
+    | RUTA FÍSICA DEL ZIP
     |--------------------------------------------------------------------------
     */
 
-    $zip =
-        new \ZipArchive();
+    $rutaZip =
+        $carpetaTemporal
+        .
+        DIRECTORY_SEPARATOR
+        .
+        'sgae_'
+        .
+        $jobId
+        .
+        '.zip';
 
 
-    $resultadoZip =
-        $zip->open(
+    /*
+    |--------------------------------------------------------------------------
+    | PROGRESO INICIAL
+    |--------------------------------------------------------------------------
+    */
+
+    Cache::put(
+        'sgae_download_progress_'
+        .
+        $jobId,
+        [
+            'estado' =>
+                'pendiente',
+
+            'fase' =>
+                'Preparando descarga...',
+
+            'porcentaje' =>
+                0,
+
+            'actual' =>
+                0,
+
+            'total' =>
+                0,
+
+            'archivo_actual' =>
+                '',
+        ],
+        now()->addHours(
+            2
+        )
+    );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | INFORMACIÓN PRIVADA DEL PROCESO
+    |--------------------------------------------------------------------------
+    |
+    | Esto también nos permite verificar
+    | que otro profesor no pueda consultar
+    | o descargar este ZIP.
+    |
+    */
+
+    Cache::put(
+        'sgae_download_meta_'
+        .
+        $jobId,
+        [
+            'profesor_id' =>
+                $profesorId,
+
+            'courseid' =>
+                $courseId,
+
+            'quizid' =>
+                $quizId,
+
+            'groupid' =>
+                $groupId,
+
+            'cmid' =>
+                $cmid,
+
+            'nombre_zip' =>
+                $nombreZip,
+
+            'ruta_zip' =>
+                $rutaZip,
+        ],
+        now()->addHours(
+            2
+        )
+    );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | ENVIAR AL WORKER
+    |--------------------------------------------------------------------------
+    */
+
+    try {
+
+        PrepararDescargaEvidencias::dispatch(
+
+            $jobId,
+
+            encrypt(
+                $token
+            ),
+
+            $courseId,
+
+            $cmid,
+
+            $alumnosIds,
+
+            $usuariosAlumnos,
+
+            $nombreExamen,
+
             $rutaZip,
-            \ZipArchive::CREATE
-            |
-            \ZipArchive::OVERWRITE
+
+            $nombreZip
         );
 
 
-    if ($resultadoZip !== true) {
+    } catch (\Throwable $error) {
+
+        Cache::forget(
+            'sgae_download_progress_'
+            .
+            $jobId
+        );
+
+
+        Cache::forget(
+            'sgae_download_meta_'
+            .
+            $jobId
+        );
+
 
         return response()->json(
             [
                 'ok' => false,
 
                 'message' =>
-                    'No fue posible crear el archivo ZIP.',
+                    'No fue posible iniciar la descarga.',
             ],
             500
         );
@@ -1971,452 +1948,452 @@ private function obtenerArchivoMoodle(
 
     /*
     |--------------------------------------------------------------------------
-    | CONTADORES
+    | RESPONDER INMEDIATAMENTE
     |--------------------------------------------------------------------------
+    |
+    | Laravel ya no espera a que se descarguen
+    | las 2,000 o 3,000 imágenes.
+    |
+    | El Job continúa trabajando por separado.
+    |
     */
 
-    $contadorAlumno = [];
+    return response()->json([
+        'ok' =>
+            true,
 
-    $imagenesDescargadas = 0;
+        'job_id' =>
+            $jobId,
 
-    $imagenesFallidas = 0;
+        'message' =>
+            'La descarga fue iniciada.',
+    ]);
+}
 
-
+public function progresoDescarga(
+    string $jobId
+) {
     /*
     |--------------------------------------------------------------------------
-    | RECORRER EVIDENCIAS
+    | VALIDAR SESIÓN
     |--------------------------------------------------------------------------
     */
 
-    foreach ($imagenes as $imagen) {
-
-        $url =
-            trim(
-                $imagen['url']
-                ?? ''
-            );
-
-
-        $alumnoId =
-            (int) (
-                $imagen['userid']
-                ?? 0
-            );
-
-
-        if (
-            $url === ''
-            ||
-            $alumnoId <= 0
-        ) {
-
-            $imagenesFallidas++;
-
-            continue;
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | NUMERACIÓN POR ALUMNO
-        |--------------------------------------------------------------------------
-        */
-
-        if (
-            !isset(
-                $contadorAlumno[
-                    $alumnoId
-                ]
-            )
-        ) {
-
-            $contadorAlumno[
-                $alumnoId
-            ] = 0;
-        }
-
-
-        $contadorAlumno[
-            $alumnoId
-        ]++;
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | DESCARGAR DE MOODLE
-        |--------------------------------------------------------------------------
-        */
-
-        $archivo =
-            $this->obtenerArchivoMoodle(
-                $url,
-                $token
-            );
-
-
-        if (!$archivo['ok']) {
-
-            $imagenesFallidas++;
-
-            continue;
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | DETECTAR EXTENSIÓN
-        |--------------------------------------------------------------------------
-        */
-
-        $contentType =
-            strtolower(
-                $archivo['content_type']
-                ?? ''
-            );
-
-
-        if (
-            strpos(
-                $contentType,
-                'image/png'
-            ) !== false
-        ) {
-
-            $extension =
-                'png';
-
-        } elseif (
-            strpos(
-                $contentType,
-                'image/webp'
-            ) !== false
-        ) {
-
-            $extension =
-                'webp';
-
-        } elseif (
-            strpos(
-                $contentType,
-                'image/bmp'
-            ) !== false
-        ) {
-
-            $extension =
-                'bmp';
-
-        } else {
-
-            /*
-             * jpg y jpeg terminarán como jpg.
-             */
-            $extension =
-                'jpg';
-
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | CARPETA DEL ALUMNO DENTRO DEL ZIP
-        |--------------------------------------------------------------------------
-        */
-/*
-|--------------------------------------------------------------------------
-| USERNAME DEL ALUMNO
-|--------------------------------------------------------------------------
-*/
-
-$usernameAlumno =
-    trim(
-        (string) (
-            $usuariosAlumnos[
-                $alumnoId
-            ]
-            ?? ''
-        )
-    );
-
-
-/*
-|--------------------------------------------------------------------------
-| LIMPIAR USERNAME PARA USARLO COMO CARPETA
-|--------------------------------------------------------------------------
-|
-| Evitamos caracteres que puedan causar
-| problemas en Windows/macOS.
-|
-*/
-
-$usernameSeguro =
-    preg_replace(
-        '/[^A-Za-z0-9._-]+/',
-        '_',
-        $usernameAlumno
-    );
-
-
-$usernameSeguro =
-    trim(
-        (string) $usernameSeguro,
-        '._-'
-    );
-
-
-/*
-|--------------------------------------------------------------------------
-| NOMBRE DE LA CARPETA
-|--------------------------------------------------------------------------
-*/
-
-$carpetaAlumno =
-    $usernameSeguro !== ''
-        ? $usernameSeguro
-        : 'alumno_' . $alumnoId;
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | NOMBRE DE LA IMAGEN
-        |--------------------------------------------------------------------------
-        */
-
-        $nombreImagen =
-            sprintf(
-                'evidencia_%04d.%s',
-                $contadorAlumno[
-                    $alumnoId
-                ],
-                $extension
-            );
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | RUTA DENTRO DEL ZIP
-        |--------------------------------------------------------------------------
-        */
-
-        $rutaDentroZip =
-            $carpetaAlumno
-            .
-            '/'
-            .
-            $nombreImagen;
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | AGREGAR AL ZIP
-        |--------------------------------------------------------------------------
-        */
-
-        $agregada =
-            $zip->addFromString(
-                $rutaDentroZip,
-                $archivo['body']
-            );
-
-
-        if ($agregada) {
-
-            $imagenesDescargadas++;
-
-        } else {
-
-            $imagenesFallidas++;
-
-        }
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | AGREGAR RESUMEN
-    |--------------------------------------------------------------------------
-    */
-
-    $resumen =
-        "Sistema de Gestión y Análisis de Evidencias"
-        .
-        PHP_EOL
-        .
-        PHP_EOL
-        .
-        "Examen: "
-        .
-        $nombreExamen
-        .
-        PHP_EOL
-        .
-        "Alumnos procesados: "
-        .
-        count($contadorAlumno)
-        .
-        PHP_EOL
-        .
-        "Evidencias encontradas: "
-        .
-        count($imagenes)
-        .
-        PHP_EOL
-        .
-        "Evidencias descargadas: "
-        .
-        $imagenesDescargadas
-        .
-        PHP_EOL
-        .
-        "Evidencias no descargadas: "
-        .
-        $imagenesFallidas
-        .
-        PHP_EOL;
-
-
-    $zip->addFromString(
-        '_resumen_descarga.txt',
-        $resumen
-    );
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | CERRAR ZIP
-    |--------------------------------------------------------------------------
-    */
-
-    $zip->close();
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | VERIFICAR QUE HAYA IMÁGENES
-    |--------------------------------------------------------------------------
-    */
-
-    if ($imagenesDescargadas <= 0) {
-
-        if (file_exists($rutaZip)) {
-
-            @unlink(
-                $rutaZip
-            );
-
-        }
-
+    if (!session('moodle_authenticated')) {
 
         return response()->json(
             [
-                'ok' => false,
+                'estado' =>
+                    'error',
 
-                'message' =>
-                    'No fue posible descargar ninguna evidencia desde Moodle.',
+                'mensaje' =>
+                    'Sesión no válida.',
             ],
-            502
+            401
         );
     }
-/*
-|--------------------------------------------------------------------------
-| ELIMINAR ZIP TEMPORAL ANTERIOR
-|--------------------------------------------------------------------------
-|
-| Cada profesor solamente necesita conservar
-| el ZIP más reciente para poder analizarlo.
-|
-*/
-
-$zipAnterior =
-    session(
-        'evidencias_zip_actual'
-    );
 
 
-if ($zipAnterior) {
+    $profesorId =
+        (int) session(
+            'moodle_user_id'
+        );
 
-    $rutaAnterior =
-        $carpetaTemporal
-        .
-        DIRECTORY_SEPARATOR
-        .
-        basename(
-            (string) $zipAnterior
+
+    /*
+    |--------------------------------------------------------------------------
+    | METADATOS DEL PROCESO
+    |--------------------------------------------------------------------------
+    */
+
+    $meta =
+        Cache::get(
+            'sgae_download_meta_'
+            .
+            $jobId
         );
 
 
     if (
-        $rutaAnterior !== $rutaZip
-        &&
-        is_file($rutaAnterior)
+        !$meta
+        ||
+        (int) (
+            $meta['profesor_id']
+            ?? 0
+        )
+        !==
+        $profesorId
     ) {
 
-        @unlink(
-            $rutaAnterior
+        return response()->json(
+            [
+                'estado' =>
+                    'error',
+
+                'mensaje' =>
+                    'No se encontró esta descarga.',
+            ],
+            404
+        );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | PROGRESO
+    |--------------------------------------------------------------------------
+    */
+
+    $progreso =
+        Cache::get(
+            'sgae_download_progress_'
+            .
+            $jobId
         );
 
+
+    if (!$progreso) {
+
+        $progreso = [
+            'estado' =>
+                'pendiente',
+
+            'fase' =>
+                'Esperando inicio...',
+
+            'porcentaje' =>
+                0,
+
+            'actual' =>
+                0,
+
+            'total' =>
+                0,
+
+            'archivo_actual' =>
+                '',
+        ];
     }
-}
 
 
-/*
-|--------------------------------------------------------------------------
-| GUARDAR ZIP ACTUAL EN SESIÓN
-|--------------------------------------------------------------------------
-|
-| NO guardamos el ZIP dentro de la sesión.
-|
-| Solo guardamos el nombre físico del archivo
-| para poder localizarlo después desde Laravel.
-|
-*/
+    /*
+    |--------------------------------------------------------------------------
+    | SI TERMINÓ
+    |--------------------------------------------------------------------------
+    */
 
-session([
-    'evidencias_zip_actual' =>
-        basename($rutaZip),
+    if (
+        (
+            $progreso['estado']
+            ?? ''
+        )
+        ===
+        'completado'
+    ) {
 
-    'evidencias_zip_nombre' =>
-        $nombreZip,
-
-    'evidencias_zip_courseid' =>
-        $courseId,
-
-    'evidencias_zip_quizid' =>
-        $quizId,
-
-    'evidencias_zip_groupid' =>
-        $groupId,
-
-    'evidencias_zip_cmid' =>
-        $cmid,
-
-    'evidencias_zip_generado_en' =>
-        time(),
-]);
+        $rutaZip =
+            $progreso['ruta_zip']
+            ??
+            $meta['ruta_zip']
+            ??
+            null;
 
 
-/*
-|--------------------------------------------------------------------------
-| ENTREGAR ZIP AL NAVEGADOR
-|--------------------------------------------------------------------------
-|
-| IMPORTANTE:
-|
-| Ya NO usamos deleteFileAfterSend(true)
-| porque necesitaremos este mismo archivo
-| para el análisis.
-|
-*/
+        $nombreZip =
+            $progreso['nombre_zip']
+            ??
+            $meta['nombre_zip']
+            ??
+            'Evidencias.zip';
 
-return response()
-    ->download(
-        $rutaZip,
-        $nombreZip,
-        [
-            'Content-Type' =>
-                'application/zip',
-        ]
+
+        if (
+            $rutaZip
+            &&
+            is_file(
+                $rutaZip
+            )
+        ) {
+
+            /*
+            |--------------------------------------------------------------------------
+            | ELIMINAR ZIP ANTERIOR
+            |--------------------------------------------------------------------------
+            */
+
+            $zipAnterior =
+                session(
+                    'evidencias_zip_actual'
+                );
+
+
+            if ($zipAnterior) {
+
+                $rutaAnterior =
+                    storage_path(
+                        'app/evidencias_zip/'
+                        .
+                        basename(
+                            (string)
+                            $zipAnterior
+                        )
+                    );
+
+
+                if (
+                    $rutaAnterior !==
+                    $rutaZip
+                    &&
+                    is_file(
+                        $rutaAnterior
+                    )
+                ) {
+
+                    @unlink(
+                        $rutaAnterior
+                    );
+                }
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | GUARDAR ZIP PARA EL ANÁLISIS
+            |--------------------------------------------------------------------------
+            */
+
+            session([
+
+                'evidencias_zip_actual' =>
+                    basename(
+                        $rutaZip
+                    ),
+
+                'evidencias_zip_nombre' =>
+                    $nombreZip,
+
+                'evidencias_zip_courseid' =>
+                    $meta['courseid']
+                    ?? 0,
+
+                'evidencias_zip_quizid' =>
+                    $meta['quizid']
+                    ?? 0,
+
+                'evidencias_zip_groupid' =>
+                    $meta['groupid']
+                    ?? 0,
+
+                'evidencias_zip_cmid' =>
+                    $meta['cmid']
+                    ?? 0,
+
+                'evidencias_zip_generado_en' =>
+                    time(),
+            ]);
+
+
+            $progreso[
+                'archivo_disponible'
+            ] =
+                true;
+
+        } else {
+
+            $progreso[
+                'archivo_disponible'
+            ] =
+                false;
+        }
+    }
+
+
+    return response()->json(
+        $progreso
     );
 }
+
+
+public function archivoDescarga(
+    string $jobId
+) {
+    /*
+    |--------------------------------------------------------------------------
+    | VALIDAR SESIÓN
+    |--------------------------------------------------------------------------
+    */
+
+    if (!session('moodle_authenticated')) {
+        abort(401);
+    }
+
+
+    $profesorId =
+        (int) session(
+            'moodle_user_id'
+        );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | VALIDAR PROPIETARIO
+    |--------------------------------------------------------------------------
+    */
+
+    $meta =
+        Cache::get(
+            'sgae_download_meta_'
+            .
+            $jobId
+        );
+
+
+    if (
+        !$meta
+        ||
+        (int) (
+            $meta['profesor_id']
+            ?? 0
+        )
+        !==
+        $profesorId
+    ) {
+
+        abort(
+            404,
+            'No se encontró la descarga.'
+        );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | VALIDAR QUE TERMINÓ
+    |--------------------------------------------------------------------------
+    */
+
+    $progreso =
+        Cache::get(
+            'sgae_download_progress_'
+            .
+            $jobId
+        );
+
+
+    if (
+        !$progreso
+        ||
+        (
+            $progreso['estado']
+            ?? ''
+        )
+        !==
+        'completado'
+    ) {
+
+        abort(
+            409,
+            'La descarga todavía no está preparada.'
+        );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | ARCHIVO
+    |--------------------------------------------------------------------------
+    */
+
+    $rutaZip =
+        $progreso['ruta_zip']
+        ??
+        $meta['ruta_zip']
+        ??
+        null;
+
+
+    $nombreZip =
+        $progreso['nombre_zip']
+        ??
+        $meta['nombre_zip']
+        ??
+        'Evidencias.zip';
+
+
+    if (
+        !$rutaZip
+        ||
+        !is_file(
+            $rutaZip
+        )
+    ) {
+
+        abort(
+            404,
+            'El archivo ZIP ya no está disponible.'
+        );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | SEGURIDAD DE RUTA
+    |--------------------------------------------------------------------------
+    */
+
+    $directorioPermitido =
+        realpath(
+            storage_path(
+                'app/evidencias_zip'
+            )
+        );
+
+
+    $archivoReal =
+        realpath(
+            $rutaZip
+        );
+
+
+    if (
+        !$directorioPermitido
+        ||
+        !$archivoReal
+        ||
+        strpos(
+            $archivoReal,
+            $directorioPermitido
+            .
+            DIRECTORY_SEPARATOR
+        ) !== 0
+    ) {
+
+        abort(403);
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | ENTREGAR ZIP
+    |--------------------------------------------------------------------------
+    |
+    | NO se elimina porque después
+    | se utiliza para el análisis.
+    |
+    */
+
+    return response()
+        ->download(
+            $archivoReal,
+            $nombreZip,
+            [
+                'Content-Type' =>
+                    'application/zip',
+            ]
+        );
+}
+
+
 /*
 |--------------------------------------------------------------------------
 | INICIAR ANÁLISIS

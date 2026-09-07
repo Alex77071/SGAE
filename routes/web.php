@@ -337,6 +337,35 @@ Route::get(
     [EvidenciasController::class, 'index']
 )->name('evidencias.descargar');
 
+/*
+|--------------------------------------------------------------------------
+| PROGRESO REAL DE LA DESCARGA
+|--------------------------------------------------------------------------
+*/
+
+Route::get(
+    '/evidencias/descarga/progreso/{jobId}',
+    [
+        EvidenciasController::class,
+        'progresoDescarga'
+    ]
+)->name('evidencias.descarga.progreso');
+
+
+/*
+|--------------------------------------------------------------------------
+| DESCARGAR ZIP TERMINADO
+|--------------------------------------------------------------------------
+*/
+
+Route::get(
+    '/evidencias/descarga/archivo/{jobId}',
+    [
+        EvidenciasController::class,
+        'archivoDescarga'
+    ]
+)->name('evidencias.descarga.archivo');
+
 
 /*
 |--------------------------------------------------------------------------

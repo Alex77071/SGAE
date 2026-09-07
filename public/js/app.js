@@ -175,9 +175,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
+
 /*
 |--------------------------------------------------------------------------
-| PROGRESO DE DESCARGA DE EVIDENCIAS
+| PROGRESO REAL DE DESCARGA DE EVIDENCIAS
 |--------------------------------------------------------------------------
 */
 
@@ -187,7 +188,7 @@ document.addEventListener(
 
         /*
         |--------------------------------------------------------------------------
-        | ELEMENTOS DE LA PANTALLA
+        | ELEMENTOS
         |--------------------------------------------------------------------------
         */
 
@@ -196,18 +197,15 @@ document.addEventListener(
                 'downloadProgressState'
             );
 
-
         const completeState =
             document.getElementById(
                 'downloadCompleteState'
             );
 
-
         const progressBar =
             document.getElementById(
                 'downloadProgressBar'
             );
-
 
         const progressPercentage =
             document.getElementById(
@@ -215,51 +213,72 @@ document.addEventListener(
             );
 
 
-            const summaryExam =
-    document.getElementById(
-        'downloadSummaryExam'
-    );
+        const summaryExam =
+            document.getElementById(
+                'downloadSummaryExam'
+            );
 
+        const summaryCourseGroup =
+            document.getElementById(
+                'downloadSummaryCourseGroup'
+            );
 
-const summaryCourseGroup =
-    document.getElementById(
-        'downloadSummaryCourseGroup'
-    );
+        const summaryStudents =
+            document.getElementById(
+                'downloadSummaryStudents'
+            );
 
-
-const summaryStudents =
-    document.getElementById(
-        'downloadSummaryStudents'
-    );
-
-
-const summaryImages =
-    document.getElementById(
-        'downloadSummaryImages'
-    );
+        const summaryImages =
+            document.getElementById(
+                'downloadSummaryImages'
+            );
 
 
         /*
-         * Este código solamente debe ejecutarse
-         * dentro de la pantalla:
+         * Título y texto que YA existen
+         * en tu cuadro de progreso.
          *
-         * /evidencias/descarga
+         * No agregamos otra barra.
          */
+
+        const progressTitle =
+            progressState
+                ? progressState.querySelector(
+                    'h2'
+                )
+                : null;
+
+        const progressMessage =
+            progressState
+                ? progressState.querySelector(
+                    'p'
+                )
+                : null;
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | SOLO EN /evidencias/descarga
+        |--------------------------------------------------------------------------
+        */
+
         if (
-            !progressState ||
-            !completeState ||
-            !progressBar ||
+            !progressState
+            ||
+            !completeState
+            ||
+            !progressBar
+            ||
             !progressPercentage
         ) {
 
             return;
-
         }
 
 
         /*
         |--------------------------------------------------------------------------
-        | ACTUALIZAR PORCENTAJE
+        | ACTUALIZAR BARRA EXISTENTE
         |--------------------------------------------------------------------------
         */
 
@@ -267,19 +286,31 @@ const summaryImages =
             porcentaje
         ) {
 
+            const valor =
+                Math.max(
+                    0,
+                    Math.min(
+                        100,
+                        Number(
+                            porcentaje
+                            || 0
+                        )
+                    )
+                );
+
+
             progressBar.style.width =
-                porcentaje + '%';
+                valor + '%';
 
 
             progressPercentage.textContent =
-                porcentaje + '%';
-
+                valor + '%';
         }
 
 
         /*
         |--------------------------------------------------------------------------
-        | LEER DATOS GUARDADOS EN LA PANTALLA ANTERIOR
+        | LEER DATOS GUARDADOS
         |--------------------------------------------------------------------------
         */
 
@@ -296,7 +327,6 @@ const summaryImages =
             );
 
             return;
-
         }
 
 
@@ -323,70 +353,73 @@ const summaryImages =
             );
 
             return;
-
         }
-
-        /*
-|--------------------------------------------------------------------------
-| MOSTRAR DATOS REALES DEL EXAMEN
-|--------------------------------------------------------------------------
-*/
-
-if (summaryExam) {
-
-    summaryExam.textContent =
-        datosDescarga.examenNombre
-        || 'Examen';
-}
-
-
-if (summaryCourseGroup) {
-
-    const curso =
-        datosDescarga.cursoNombre
-        || 'Curso';
-
-
-    const grupo =
-        datosDescarga.grupoNombre
-        || 'Todos los grupos';
-
-
-    summaryCourseGroup.textContent =
-        curso
-        +
-        ' | '
-        +
-        grupo;
-}
-
-
-if (summaryStudents) {
-
-    summaryStudents.textContent =
-        datosDescarga.alumnos
-        || '0';
-}
-
-
-if (summaryImages) {
-
-    summaryImages.textContent =
-        datosDescarga.imagenes
-        || '0';
-}
 
 
         /*
         |--------------------------------------------------------------------------
-        | VALIDAR INFORMACIÓN
+        | MOSTRAR RESUMEN
+        |--------------------------------------------------------------------------
+        */
+
+        if (summaryExam) {
+
+            summaryExam.textContent =
+                datosDescarga.examenNombre
+                || 'Examen';
+        }
+
+
+        if (summaryCourseGroup) {
+
+            const curso =
+                datosDescarga.cursoNombre
+                || 'Curso';
+
+
+            const grupo =
+                datosDescarga.grupoNombre
+                || 'Todos los grupos';
+
+
+            summaryCourseGroup.textContent =
+                curso
+                +
+                ' | '
+                +
+                grupo;
+        }
+
+
+        if (summaryStudents) {
+
+            summaryStudents.textContent =
+                datosDescarga.alumnos
+                || '0';
+        }
+
+
+        if (summaryImages) {
+
+            summaryImages.textContent =
+                datosDescarga.imagenes
+                || '0';
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | VALIDAR DATOS
         |--------------------------------------------------------------------------
         */
 
         if (
-            !datosDescarga.courseid ||
-            !datosDescarga.quizid ||
-            !datosDescarga.downloadUrl ||
+            !datosDescarga.courseid
+            ||
+            !datosDescarga.quizid
+            ||
+            !datosDescarga.downloadUrl
+            ||
             !datosDescarga.csrfToken
         ) {
 
@@ -395,131 +428,411 @@ if (summaryImages) {
             );
 
             return;
-
         }
 
 
         /*
         |--------------------------------------------------------------------------
-        | INDICADOR DE ACTIVIDAD
+        | MOSTRAR ESTADO
         |--------------------------------------------------------------------------
-        |
-        | Laravel primero tiene que:
-        |
-        | 1. Consultar Moodle.
-        | 2. Descargar las imágenes.
-        | 3. Construir el ZIP.
-        |
-        | Mientras eso ocurre no conocemos todavía
-        | el porcentaje exacto.
-        |
-        | Por eso avanzamos lentamente hasta 85 %.
-        | Solamente llegará a 100 % cuando Laravel
-        | haya terminado realmente.
-        |
         */
 
-        let progresoActual = 0;
+        function mostrarEstado(
+            datos
+        ) {
+
+            const fase =
+                datos.fase
+                || 'Descargando evidencias...';
 
 
-        actualizarProgreso(
-            progresoActual
-        );
+            if (progressTitle) {
+
+                progressTitle.textContent =
+                    fase;
+            }
 
 
-        const intervaloProgreso =
-            setInterval(
-                function () {
+            /*
+            |--------------------------------------------------------------------------
+            | NOMBRE DE IMAGEN / CONTADOR
+            |--------------------------------------------------------------------------
+            */
 
-                    if (
-                        progresoActual >= 85
-                    ) {
+            if (progressMessage) {
 
-                        return;
-
-                    }
-
-
-                    let incremento =
-                        Math.floor(
-                            Math.random() * 3
-                        )
-                        + 1;
-
-
-                    progresoActual +=
-                        incremento;
-
-
-                    if (
-                        progresoActual > 85
-                    ) {
-
-                        progresoActual = 85;
-
-                    }
-
-
-                    actualizarProgreso(
-                        progresoActual
+                const actual =
+                    Number(
+                        datos.actual
+                        || 0
                     );
 
-                },
-                600
-            );
+
+                const total =
+                    Number(
+                        datos.total
+                        || 0
+                    );
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | NOMBRE DEL ZIP
-        |--------------------------------------------------------------------------
-        */
-
-        function obtenerNombreZip() {
-
-            const curso =
-                datosDescarga.curso
-                || 'Curso';
+                const archivo =
+                    datos.archivo_actual
+                    || '';
 
 
-            const grupo =
-                datosDescarga.grupo
-                || 'Todos_los_grupos';
+                /*
+                 * Cuando estamos descargando
+                 * imágenes mostramos:
+                 *
+                 * Imagen 248 de 2,708 · webcam-....png
+                 */
+                if (
+                    fase ===
+                        'Descargando imágenes...'
+                    &&
+                    total > 0
+                ) {
+
+                    let texto =
+                        'Imagen '
+                        +
+                        actual.toLocaleString(
+                            'es-MX'
+                        )
+                        +
+                        ' de '
+                        +
+                        total.toLocaleString(
+                            'es-MX'
+                        );
 
 
-            const examen =
-                datosDescarga.examen
-                || 'Examen';
+                    if (archivo) {
+
+                        texto +=
+                            ' · '
+                            +
+                            archivo;
+                    }
 
 
-            return (
-                'Evidencias_'
-                +
-                curso
-                +
-                '_'
-                +
-                grupo
-                +
-                '_'
-                +
-                examen
-                +
-                '.zip'
-            );
+                    progressMessage.textContent =
+                        texto;
 
+                    return;
+                }
+
+
+                /*
+                 * Mientras busca las evidencias.
+                 */
+                if (
+                    fase ===
+                    'Buscando evidencias...'
+                ) {
+
+                    progressMessage.textContent =
+                        'Localizando las capturas del examen...';
+
+                    return;
+                }
+
+
+                /*
+                 * Cuando genera/cierra el ZIP.
+                 */
+                if (archivo) {
+
+                    progressMessage.textContent =
+                        archivo;
+
+                    return;
+                }
+
+
+                progressMessage.textContent =
+                    'Espere mientras se prepara la descarga.';
+            }
         }
 
 
         /*
         |--------------------------------------------------------------------------
-        | DESCARGA REAL
+        | CONSULTAR PROGRESO DEL JOB
+        |--------------------------------------------------------------------------
+        */
+
+        async function consultarProgreso(
+            jobId
+        ) {
+
+            try {
+
+                const url =
+                    '/evidencias/descarga/progreso/'
+                    +
+                    encodeURIComponent(
+                        jobId
+                    );
+
+
+                const response =
+                    await fetch(
+                        url,
+                        {
+                            method:
+                                'GET',
+
+                            headers: {
+                                'Accept':
+                                    'application/json',
+
+                                'X-Requested-With':
+                                    'XMLHttpRequest',
+                            },
+
+                            credentials:
+                                'same-origin',
+
+                            cache:
+                                'no-store',
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        'No fue posible consultar el progreso de la descarga.'
+                    );
+                }
+
+
+                const datos =
+                    await response.json();
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | ACTUALIZAR BARRA REAL
+                |--------------------------------------------------------------------------
+                */
+
+                actualizarProgreso(
+                    datos.porcentaje
+                    || 0
+                );
+
+
+                mostrarEstado(
+                    datos
+                );
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | ERROR DEL JOB
+                |--------------------------------------------------------------------------
+                */
+
+                if (
+                    datos.estado ===
+                    'error'
+                ) {
+
+                    throw new Error(
+                        datos.mensaje
+                        ||
+                        'Ocurrió un error durante la descarga.'
+                    );
+                }
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | TERMINADO
+                |--------------------------------------------------------------------------
+                */
+
+                if (
+                    datos.estado ===
+                    'completado'
+                ) {
+
+                    actualizarProgreso(
+                        100
+                    );
+
+
+                    if (progressTitle) {
+
+                        progressTitle.textContent =
+                            'Descarga preparada';
+                    }
+
+
+                    if (progressMessage) {
+
+                        progressMessage.textContent =
+                            datos.nombre_zip
+                            ||
+                            'Archivo ZIP preparado.';
+                    }
+
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | DESCARGAR ZIP DIRECTAMENTE
+                    |--------------------------------------------------------------------------
+                    |
+                    | Ya NO usamos response.blob().
+                    |
+                    | El navegador recibe directamente
+                    | el ZIP desde Laravel.
+                    |
+                    */
+
+                    const archivoUrl =
+                        '/evidencias/descarga/archivo/'
+                        +
+                        encodeURIComponent(
+                            jobId
+                        );
+
+
+                    const enlace =
+                        document.createElement(
+                            'a'
+                        );
+
+
+                    enlace.href =
+                        archivoUrl;
+
+
+                    enlace.style.display =
+                        'none';
+
+
+                    document.body.appendChild(
+                        enlace
+                    );
+
+
+                    enlace.click();
+
+
+                    enlace.remove();
+
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | MOSTRAR "DESCARGA COMPLETADA"
+                    |--------------------------------------------------------------------------
+                    */
+
+                    setTimeout(
+                        function () {
+
+                            progressState.hidden =
+                                true;
+
+
+                            completeState.hidden =
+                                false;
+
+                        },
+                        700
+                    );
+
+
+                    return;
+                }
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | VOLVER A CONSULTAR
+                |--------------------------------------------------------------------------
+                */
+
+                setTimeout(
+                    function () {
+
+                        consultarProgreso(
+                            jobId
+                        );
+
+                    },
+                    500
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    'Error consultando descarga:',
+                    error
+                );
+
+
+                if (progressTitle) {
+
+                    progressTitle.textContent =
+                        'No fue posible completar la descarga';
+                }
+
+
+                if (progressMessage) {
+
+                    progressMessage.textContent =
+                        error.message;
+                }
+
+
+                alert(
+                    error.message
+                    ||
+                    'No fue posible completar la descarga.'
+                );
+            }
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | INICIAR JOB
         |--------------------------------------------------------------------------
         */
 
         async function ejecutarDescarga() {
 
             try {
+
+                /*
+                |--------------------------------------------------------------------------
+                | INICIAR EN 0 %
+                |--------------------------------------------------------------------------
+                */
+
+                actualizarProgreso(
+                    0
+                );
+
+
+                if (progressTitle) {
+
+                    progressTitle.textContent =
+                        'Preparando descarga...';
+                }
+
+
+                if (progressMessage) {
+
+                    progressMessage.textContent =
+                        'Consultando la información del examen.';
+                }
+
 
                 /*
                 |--------------------------------------------------------------------------
@@ -543,10 +856,6 @@ if (summaryImages) {
                 );
 
 
-                /*
-                 * Solo se envía groupid si
-                 * seleccionaron un grupo específico.
-                 */
                 if (
                     datosDescarga.groupid
                 ) {
@@ -555,13 +864,12 @@ if (summaryImages) {
                         'groupid',
                         datosDescarga.groupid
                     );
-
                 }
 
 
                 /*
                 |--------------------------------------------------------------------------
-                | SOLICITAR ZIP
+                | CREAR JOB
                 |--------------------------------------------------------------------------
                 */
 
@@ -569,7 +877,6 @@ if (summaryImages) {
                     await fetch(
                         datosDescarga.downloadUrl,
                         {
-
                             method:
                                 'POST',
 
@@ -582,7 +889,7 @@ if (summaryImages) {
                                     'XMLHttpRequest',
 
                                 'Accept':
-                                    'application/zip, application/json',
+                                    'application/json',
 
                             },
 
@@ -591,235 +898,107 @@ if (summaryImages) {
 
                             credentials:
                                 'same-origin',
-
                         }
                     );
 
 
-                /*
-                |--------------------------------------------------------------------------
-                | MANEJAR ERROR
-                |--------------------------------------------------------------------------
-                */
+                let respuesta =
+                    null;
 
-                if (!response.ok) {
 
-                    clearInterval(
-                        intervaloProgreso
+                try {
+
+                    respuesta =
+                        await response.json();
+
+                } catch (errorJson) {
+
+                    console.error(
+                        'Respuesta inválida:',
+                        errorJson
                     );
+                }
 
 
-                    let mensaje =
-                        'No fue posible descargar las evidencias.';
-
-
-                    const contentType =
-                        response.headers.get(
-                            'Content-Type'
-                        )
-                        || '';
-
-
-                    if (
-                        contentType.includes(
-                            'application/json'
-                        )
-                    ) {
-
-                        try {
-
-                            const data =
-                                await response.json();
-
-
-                            if (
-                                data.message
-                            ) {
-
-                                mensaje =
-                                    data.message;
-
-                            }
-
-                        } catch (
-                            errorJson
-                        ) {
-
-                            console.error(
-                                'Error leyendo respuesta:',
-                                errorJson
-                            );
-
-                        }
-
-                    }
-
+                if (
+                    !response.ok
+                    ||
+                    !respuesta
+                    ||
+                    !respuesta.ok
+                ) {
 
                     throw new Error(
-                        mensaje
+                        (
+                            respuesta
+                            &&
+                            respuesta.message
+                        )
+                            ?
+                            respuesta.message
+                            :
+                            'No fue posible iniciar la descarga.'
                     );
-
                 }
 
 
                 /*
                 |--------------------------------------------------------------------------
-                | LARAVEL TERMINÓ DE CREAR EL ZIP
+                | JOB ID
                 |--------------------------------------------------------------------------
                 */
 
-                progresoActual =
-                    90;
+                const jobId =
+                    respuesta.job_id;
 
 
-                actualizarProgreso(
-                    progresoActual
-                );
+                if (!jobId) {
 
-
-                /*
-                |--------------------------------------------------------------------------
-                | RECIBIR ARCHIVO
-                |--------------------------------------------------------------------------
-                */
-
-                const blob =
-                    await response.blob();
-
-
-                progresoActual =
-                    97;
-
-
-                actualizarProgreso(
-                    progresoActual
-                );
-
-
-                /*
-                |--------------------------------------------------------------------------
-                | DESCARGAR CON EL NAVEGADOR
-                |--------------------------------------------------------------------------
-                */
-
-                const blobUrl =
-                    URL.createObjectURL(
-                        blob
+                    throw new Error(
+                        'Laravel no devolvió el identificador de la descarga.'
                     );
-
-
-                const enlace =
-                    document.createElement(
-                        'a'
-                    );
-
-
-                enlace.href =
-                    blobUrl;
-
-
-                enlace.download =
-                    obtenerNombreZip();
-
-
-                enlace.style.display =
-                    'none';
-
-
-                document.body.appendChild(
-                    enlace
-                );
-
-
-                /*
-                 * Chrome descargará el ZIP
-                 * usando su carpeta de
-                 * descargas predeterminada.
-                 */
-                enlace.click();
-
-
-                enlace.remove();
+                }
 
 
                 /*
                 |--------------------------------------------------------------------------
-                | LIBERAR MEMORIA
+                | COMENZAR POLLING
                 |--------------------------------------------------------------------------
                 */
 
-                setTimeout(
-                    function () {
-
-                        URL.revokeObjectURL(
-                            blobUrl
-                        );
-
-                    },
-                    1000
-                );
-
-
-                /*
-                |--------------------------------------------------------------------------
-                | DESCARGA TERMINADA
-                |--------------------------------------------------------------------------
-                */
-
-                clearInterval(
-                    intervaloProgreso
-                );
-
-
-                progresoActual =
-                    100;
-
-
-                actualizarProgreso(
-                    progresoActual
-                );
-
-
-                /*
-                 * Dejamos unos milisegundos
-                 * mostrando el 100 %.
-                 */
-                setTimeout(
-                    function () {
-
-                        progressState.hidden =
-                            true;
-
-
-                        completeState.hidden =
-                            false;
-
-                    },
-                    500
+                consultarProgreso(
+                    jobId
                 );
 
 
             } catch (error) {
 
-                clearInterval(
-                    intervaloProgreso
-                );
-
-
                 console.error(
-                    'Error descargando evidencias:',
+                    'Error iniciando descarga:',
                     error
                 );
+
+
+                if (progressTitle) {
+
+                    progressTitle.textContent =
+                        'No fue posible iniciar la descarga';
+                }
+
+
+                if (progressMessage) {
+
+                    progressMessage.textContent =
+                        error.message;
+                }
 
 
                 alert(
                     error.message
                     ||
-                    'No fue posible descargar las evidencias.'
+                    'No fue posible iniciar la descarga.'
                 );
-
             }
-
         }
 
 
@@ -833,7 +1012,6 @@ if (summaryImages) {
 
     }
 );
-
 /*
 |--------------------------------------------------------------------------
 | PROGRESO REAL DEL ANÁLISIS DE EVIDENCIAS
