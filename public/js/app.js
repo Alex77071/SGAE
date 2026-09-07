@@ -5146,6 +5146,25 @@ if (evidenceClose) {
 
 }
 
+/* ==========================================================
+   CERRAR CON BOTÓN "CERRAR"
+========================================================== */
+
+if (evidenceGalleryCloseButton) {
+
+    evidenceGalleryCloseButton.addEventListener(
+        'click',
+        function (event) {
+
+            event.preventDefault();
+
+            cerrarModalEvidencias();
+
+        }
+    );
+
+}
+
 
 /*
 |--------------------------------------------------------------------------
