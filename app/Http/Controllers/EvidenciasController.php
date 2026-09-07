@@ -1111,6 +1111,146 @@ public function probarCapturas(Request $request)
     ]);
 }
 
+/*
+|--------------------------------------------------------------------------
+| MOSTRAR IMAGEN DE EVIDENCIA EN EL NAVEGADOR
+|--------------------------------------------------------------------------
+*/
+
+public function imagen(Request $request)
+{
+    /*
+    |--------------------------------------------------------------------------
+    | VALIDAR SESIÓN
+    |--------------------------------------------------------------------------
+    */
+
+    if (!session('moodle_authenticated')) {
+
+        abort(401);
+    }
+
+
+    $token =
+        session('moodle_token');
+
+
+    if (!$token) {
+
+        abort(401);
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | OBTENER URL ORIGINAL
+    |--------------------------------------------------------------------------
+    */
+
+    $url =
+        trim(
+            (string) $request->query(
+                'url',
+                ''
+            )
+        );
+
+
+    if (
+        $url === ''
+        ||
+        !filter_var(
+            $url,
+            FILTER_VALIDATE_URL
+        )
+    ) {
+
+        abort(400);
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | SEGURIDAD
+    |--------------------------------------------------------------------------
+    |
+    | Solo permitimos imágenes provenientes
+    | del Moodle de la UTM.
+    |
+    */
+
+    $host =
+        strtolower(
+            (string) parse_url(
+                $url,
+                PHP_URL_HOST
+            )
+        );
+
+
+    $path =
+        (string) parse_url(
+            $url,
+            PHP_URL_PATH
+        );
+
+
+    if (
+        $host !== 'cv.utm.mx'
+        ||
+        strpos(
+            $path,
+            '/pluginfile.php/'
+        ) !== 0
+    ) {
+
+        abort(403);
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | OBTENER IMAGEN DESDE MOODLE
+    |--------------------------------------------------------------------------
+    */
+
+    $archivo =
+        $this->obtenerArchivoMoodle(
+            $url,
+            $token
+        );
+
+
+    if (!$archivo['ok']) {
+
+        abort(
+            502,
+            $archivo['message']
+            ?? 'No fue posible obtener la evidencia.'
+        );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | DEVOLVER IMAGEN AL NAVEGADOR
+    |--------------------------------------------------------------------------
+    */
+
+    return response(
+        $archivo['body'],
+        200
+    )
+    ->header(
+        'Content-Type',
+        $archivo['content_type']
+    )
+    ->header(
+        'Cache-Control',
+        'private, max-age=300'
+    );
+}
+
 
 /*
 |--------------------------------------------------------------------------

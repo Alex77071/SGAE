@@ -15,7 +15,8 @@
     data-download-url="{{ route('evidencias.descargar.ejecutar') }}"
     data-csrf-token="{{ csrf_token() }}"
     data-download-progress-url="{{ route('evidencias.descarga') }}"
->
+    data-image-url="{{ route('evidencias.imagen', [], false) }}"
+    >
 
     {{-- =====================================================
          TÍTULO
@@ -527,6 +528,39 @@
             id="evidenceGallery"
         >
         </div>
+
+
+
+    {{-- =====================================================
+     PROGRESO DE CARGA DE EVIDENCIAS
+====================================================== --}}
+
+<div
+    class="evidence-gallery-progress"
+    id="evidenceGalleryProgress"
+>
+    <div class="evidence-gallery-progress__info">
+
+        <span id="evidenceGalleryProgressLabel">
+            Cargando evidencias
+        </span>
+
+        <span id="evidenceGalleryProgressPercentage">
+            0%
+        </span>
+
+    </div>
+
+    <div class="evidence-gallery-progress__track">
+
+        <div
+            class="evidence-gallery-progress__bar"
+            id="evidenceGalleryProgressBar"
+            style="width: 0%;"
+        ></div>
+
+    </div>
+</div>
 
 
 
