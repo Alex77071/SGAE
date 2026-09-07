@@ -301,7 +301,7 @@
         </span>
 
         <span id="downloadSelectedButtonText">
-            Descargar seleccionados
+            Descargar carpeta
         </span>
 
     </button>
