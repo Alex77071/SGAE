@@ -104,34 +104,6 @@
         que deseas analizar.
     </p>
 
-@if($zipDisponible)
-
-    <div
-        style="
-            padding: 14px 18px;
-            margin-bottom: 18px;
-            background: #ffffff;
-            border: 1px solid #d9d9d9;
-            border-radius: 8px;
-        "
-    >
-
-        <strong>
-            Evidencias listas para analizar
-        </strong>
-
-        <div
-            style="
-                margin-top: 6px;
-                font-size: 14px;
-            "
-        >
-            {{ $nombreZip }}
-        </div>
-
-    </div>
-
-@endif
 
 <input
     type="file"
