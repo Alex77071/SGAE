@@ -35,14 +35,21 @@ return [
 
     'connections' => [
 
-        'queue_sqlite' => [
-    'driver' => 'sqlite',
-    'database' => database_path('queue.sqlite'),
-    'prefix' => '',
-    'foreign_key_constraints' => true,
-],
+    'queue_sqlite' => [
+        'driver' => 'sqlite',
+        'database' => database_path('queue.sqlite'),
+        'prefix' => '',
+        'foreign_key_constraints' => true,
+    ],
 
-        'mysql' => [
+    'sgae_sqlite' => [
+        'driver' => 'sqlite',
+        'database' => database_path('database.sqlite'),
+        'prefix' => '',
+        'foreign_key_constraints' => true,
+    ],
+
+    'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
             'host' => env('DB_HOST', '127.0.0.1'),

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class AnalisisHistorial extends Model
 {
+    protected $connection = 'sgae_sqlite';
     protected $fillable = [
     'job_id',
     'moodle_username',
