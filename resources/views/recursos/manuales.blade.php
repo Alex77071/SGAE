@@ -358,15 +358,41 @@
                 </div>
 
 
-                <div class="manual-preview-card__viewer">
+                <div
+    class="manual-preview-card__viewer"
+    id="manualViewer"
+>
 
-                    <iframe
-                        id="manualPreview"
-                        src="{{ asset('documentos/Introducción a Moodle.pdf') }}#page=1&zoom=page-width&toolbar=0&navpanes=0"
-                        title="Vista previa del manual"
-                    ></iframe>
+    <iframe
+        id="manualPreview"
+        src="{{ asset('documentos/Introducción a Moodle.pdf') }}#page=1&zoom=page-width&toolbar=0&navpanes=0"
+        title="Vista previa del manual"
+    ></iframe>
 
-                </div>
+
+    <button
+        type="button"
+        class="manual-fullscreen-button"
+        id="manualFullscreenButton"
+        aria-label="Ver manual en pantalla completa"
+    >
+        <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+        >
+            <path d="M8 3H3v5"></path>
+            <path d="M16 3h5v5"></path>
+            <path d="M8 21H3v-5"></path>
+            <path d="M16 21h5v-5"></path>
+        </svg>
+    </button>
+
+</div>
 
             </section>
 
