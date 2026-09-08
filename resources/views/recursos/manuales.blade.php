@@ -346,7 +346,7 @@
                         </span>
 
                         <span class="manual-item__description">
-                            Guía para alumnos sobre el uso y funcionamiento de la plataforma.
+                            Guía para personalizar el manual de acceso del alumno a Moodle.
                         </span>
 
                     </span>
