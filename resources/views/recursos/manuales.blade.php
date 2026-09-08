@@ -36,7 +36,7 @@
                 <div>
 
                     <h2 class="manuals-heading__title">
-                        Manuales del sistema
+                        Manuales
                     </h2>
 
                     <p class="manuals-heading__description">
