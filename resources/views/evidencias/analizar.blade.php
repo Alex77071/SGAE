@@ -20,45 +20,48 @@
 @endphp
 
 <section class="analyze-evidence-page">
-    <nav
-        class="download-evidence-breadcrumb"
-        aria-label="Navegación"
-    >
-
-        <a
-            href="{{ route('inicio') }}"
-            class="download-evidence-breadcrumb__link"
-        >
-            Inicio
-        </a>
-
-        <span
-            class="download-evidence-breadcrumb__separator"
-            aria-hidden="true"
-        >
-            ›
-        </span>
-
-        <span class="download-evidence-breadcrumb__current">
-            Analizar evidencias
-        </span>
-
-    </nav>
-
-
     {{-- =====================================================
          TÍTULO
     ====================================================== --}}
 
-    <div class="analyze-evidence-heading">
+   <div class="analyze-evidence-heading">
 
-        <div class="analyze-evidence-heading__line"></div>
+    <div class="analyze-evidence-heading__line"></div>
 
-        <h2 class="analyze-evidence-heading__title">
-            Analizar evidencias
-        </h2>
+    <h2 class="analyze-evidence-heading__title">
+        Analizar evidencias
+    </h2>
 
-    </div>
+    <a
+        href="{{ route('inicio') }}"
+        class="analysis-result-back"
+        style="margin-left: auto;"
+    >
+        <span
+            class="analysis-result-back__icon"
+            aria-hidden="true"
+        >
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            >
+                <path d="M3 11.5L12 4l9 7.5"></path>
+                <path d="M5.5 10v10h13V10"></path>
+                <path d="M9.5 20v-6h5v6"></path>
+            </svg>
+        </span>
+
+        <span>
+            Volver al inicio
+        </span>
+    </a>
+
+</div>
+    
 
 
     {{-- =====================================================
