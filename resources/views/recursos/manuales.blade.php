@@ -358,7 +358,51 @@
                 </div>
 
 
-                <div class="manual-preview-card__viewer">
+                <div
+                    class="manual-preview-card__viewer"
+                    id="manualPreviewViewer"
+                >
+
+                    {{-- BOTÓN PARA EXPANDIR LA VISTA PREVIA --}}
+                    <button
+                        type="button"
+                        class="manual-preview-fullscreen"
+                        id="manualPreviewFullscreen"
+                        aria-label="Ver manual en pantalla completa"
+                        title="Pantalla completa"
+                    >
+                        <svg
+                            class="manual-preview-fullscreen__icon manual-preview-fullscreen__icon--expand"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                        >
+                            <path d="M8 3H5a2 2 0 0 0-2 2v3"></path>
+                            <path d="M16 3h3a2 2 0 0 1 2 2v3"></path>
+                            <path d="M8 21H5a2 2 0 0 1-2-2v-3"></path>
+                            <path d="M16 21h3a2 2 0 0 0 2-2v-3"></path>
+                        </svg>
+
+                        <svg
+                            class="manual-preview-fullscreen__icon manual-preview-fullscreen__icon--collapse"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                        >
+                            <path d="M8 3v3a2 2 0 0 1-2 2H3"></path>
+                            <path d="M16 3v3a2 2 0 0 0 2 2h3"></path>
+                            <path d="M8 21v-3a2 2 0 0 0-2-2H3"></path>
+                            <path d="M16 21v-3a2 2 0 0 1 2-2h3"></path>
+                        </svg>
+                    </button>
 
                     <iframe
                         id="manualPreview"
@@ -406,5 +450,133 @@
     </div>
 
 </section>
+
+<style>
+    .manual-preview-card__viewer {
+        position: relative;
+    }
+
+    .manual-preview-fullscreen {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 20;
+        width: 38px;
+        height: 38px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #d8d8d8;
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.96);
+        color: #343747;
+        cursor: pointer;
+        box-shadow: 0 2px 7px rgba(0, 0, 0, 0.14);
+        transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .manual-preview-fullscreen:hover {
+        background: #ffffff;
+        transform: scale(1.05);
+        box-shadow: 0 3px 9px rgba(0, 0, 0, 0.18);
+    }
+
+    .manual-preview-fullscreen__icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    .manual-preview-fullscreen__icon--collapse {
+        display: none;
+    }
+
+    .manual-preview-card__viewer:fullscreen {
+        width: 100%;
+        height: 100%;
+        background: #ffffff;
+        border-radius: 0;
+    }
+
+    .manual-preview-card__viewer:fullscreen iframe {
+        width: 100%;
+        height: 100%;
+        border: 0;
+    }
+
+    .manual-preview-card__viewer:fullscreen .manual-preview-fullscreen {
+        top: 14px;
+        right: 14px;
+    }
+
+    .manual-preview-card__viewer:fullscreen .manual-preview-fullscreen__icon--expand {
+        display: none;
+    }
+
+    .manual-preview-card__viewer:fullscreen .manual-preview-fullscreen__icon--collapse {
+        display: block;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const manualPreviewViewer =
+            document.getElementById('manualPreviewViewer');
+
+        const manualPreviewFullscreen =
+            document.getElementById('manualPreviewFullscreen');
+
+        if (!manualPreviewViewer || !manualPreviewFullscreen) {
+            return;
+        }
+
+        manualPreviewFullscreen.addEventListener('click', async function () {
+
+            try {
+
+                if (document.fullscreenElement === manualPreviewViewer) {
+                    await document.exitFullscreen();
+                    return;
+                }
+
+                if (!document.fullscreenElement) {
+                    await manualPreviewViewer.requestFullscreen();
+                }
+
+            } catch (error) {
+
+                console.error(
+                    'No fue posible cambiar la vista a pantalla completa:',
+                    error
+                );
+
+            }
+
+        });
+
+        document.addEventListener('fullscreenchange', function () {
+
+            const isFullscreen =
+                document.fullscreenElement === manualPreviewViewer;
+
+            manualPreviewFullscreen.setAttribute(
+                'aria-label',
+                isFullscreen
+                    ? 'Salir de pantalla completa'
+                    : 'Ver manual en pantalla completa'
+            );
+
+            manualPreviewFullscreen.setAttribute(
+                'title',
+                isFullscreen
+                    ? 'Salir de pantalla completa'
+                    : 'Pantalla completa'
+            );
+
+        });
+
+    });
+</script>
 
 @endsection
