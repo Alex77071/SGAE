@@ -13402,3 +13402,125 @@ body.app-body {
 .manuals-list::-webkit-scrollbar-thumb:hover {
     background: rgba(130, 50, 51, 0.72);
 }
+/* ==========================================================
+   DESCARGAR EVIDENCIAS - ENCABEZADO Y VOLVER AL INICIO
+========================================================== */
+
+.download-page__header {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 30px;
+
+    margin-bottom: 20px;
+}
+
+
+/* Mantener el título del lado izquierdo */
+
+.download-page__title {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+}
+
+
+.download-page__title-line {
+    width: 4px;
+    height: 32px;
+
+    border-radius: 4px;
+
+    background: #923536;
+}
+
+
+.download-page__title h2 {
+    margin: 0;
+
+    color: #923536;
+
+    font-size: 28px;
+    font-weight: 700;
+}
+
+
+/* ==========================================================
+   BOTÓN VOLVER AL INICIO
+========================================================== */
+
+.download-home-button {
+    width: 358px;
+    height: 48px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 14px;
+
+    border: 1.5px solid #a23c3d;
+    border-radius: 12px;
+
+    background: transparent;
+
+    color: #923536;
+
+    font-size: 18px;
+    font-weight: 400;
+
+    text-decoration: none;
+
+    box-sizing: border-box;
+
+    transition:
+        background-color .2s ease,
+        color .2s ease;
+}
+
+
+.download-home-button__icon {
+    width: 23px;
+    height: 23px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.download-home-button__icon svg {
+    width: 23px;
+    height: 23px;
+}
+
+
+.download-home-button:hover {
+    background: rgba(146, 53, 54, 0.06);
+
+    color: #923536;
+
+    text-decoration: none;
+}
+
+
+/* Responsive */
+
+@media (max-width: 850px) {
+
+    .download-page__header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .download-home-button {
+        width: 100%;
+    }
+
+}

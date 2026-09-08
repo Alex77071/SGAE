@@ -18,21 +18,53 @@
     data-image-url="{{ route('evidencias.imagen', [], false) }}"
     >
 
-    {{-- =====================================================
-         TÍTULO
-    ====================================================== --}}
+  {{-- =====================================================
+     TÍTULO
+    ===================================================== --}}
 
-    <div class="download-evidence-heading">
+    <div class="download-page__header">
 
-        <div class="download-evidence-heading__line"></div>
+        {{-- TÍTULO DE LA PANTALLA --}}
+        <div class="download-page__title">
 
-        <div>
+            <div class="download-page__title-line"></div>
 
-            <h2 class="download-evidence-heading__title">
+            <h2>
                 Descargar evidencias
             </h2>
 
         </div>
+
+
+        {{-- BOTÓN VOLVER AL INICIO --}}
+        <a
+            href="{{ route('inicio') }}"
+            class="download-home-button"
+        >
+
+            <span
+                class="download-home-button__icon"
+                aria-hidden="true"
+            >
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <path d="M3 11.5 12 4l9 7.5"></path>
+                    <path d="M5.5 10.5V20h13v-9.5"></path>
+                    <path d="M9.5 20v-6h5v6"></path>
+                </svg>
+            </span>
+
+            <span>
+                Volver al inicio
+            </span>
+
+        </a>
 
     </div>
 
