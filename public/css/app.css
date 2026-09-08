@@ -4745,18 +4745,76 @@ body.app-body {
    CORRECCIÓN - LISTA DE MANUALES
 ========================================================== */
 
-.manuals-list {
-    display: grid;
+/* ==========================================================
+   MANUALES - LISTA CON SCROLL
+========================================================== */
 
-    /*
-     * Los 5 manuales se reparten exactamente
-     * dentro de la altura disponible.
-     */
-    grid-template-rows: repeat(5, minmax(0, 1fr));
+.manuals-list {
+    display: flex;
+    flex-direction: column;
 
     gap: 9px;
 
-    overflow: hidden;
+    /*
+     * Conservamos aproximadamente la misma altura
+     * que tenía la lista de 5 manuales.
+     */
+    max-height: 372px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    /*
+     * Espacio pequeño para que el scrollbar
+     * no quede encima de las tarjetas.
+     */
+    padding-right: 6px;
+
+    /*
+     * Firefox
+     */
+    scrollbar-width: thin;
+
+    scrollbar-color:
+        rgba(130, 50, 51, 0.50)
+        transparent;
+}
+
+
+/* Los manuales NO se hacen pequeños */
+
+.manuals-list .manual-item {
+    flex: 0 0 auto;
+
+    min-height: 66px;
+}
+
+
+/* ==========================================================
+   SCROLL DELGADO - CHROME / EDGE
+========================================================== */
+
+.manuals-list::-webkit-scrollbar {
+    width: 5px;
+}
+
+
+.manuals-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+
+.manuals-list::-webkit-scrollbar-thumb {
+    background:
+        rgba(130, 50, 51, 0.42);
+
+    border-radius: 999px;
+}
+
+
+.manuals-list::-webkit-scrollbar-thumb:hover {
+    background:
+        rgba(130, 50, 51, 0.75);
 }
 
 .manual-item {
@@ -13202,4 +13260,145 @@ body.app-body {
     border-radius: inherit;
 
     transition: width 0.35s ease;
+}
+
+
+/* ==========================================================
+   MANUALES - VIDEO GENERAL
+========================================================== */
+
+.manual-preview-video {
+    width: 100%;
+    height: 100%;
+
+    border: none;
+
+    background: #000000;
+
+    object-fit: contain;
+
+    border-radius: inherit;
+}
+
+
+/* Pantalla completa */
+
+.manual-preview-card__viewer:fullscreen
+.manual-preview-video {
+    width: 100%;
+    height: 100%;
+
+    border-radius: 0;
+}
+
+/* ==========================================================
+   MANUALES - CORRECCIÓN LISTA DE 7 RECURSOS CON SCROLL
+   Mantiene el tamaño original de cada tarjeta
+========================================================== */
+
+
+/* Contenedor de los manuales */
+.manuals-list {
+    display: flex !important;
+    flex-direction: column !important;
+
+    /*
+     * Altura aproximada que ocupaban los 5 manuales originales.
+     * Los manuales 6 y 7 quedan accesibles mediante scroll.
+     */
+    height: 372px !important;
+    max-height: 372px !important;
+
+    gap: 9px !important;
+
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+
+    padding-right: 6px !important;
+
+    box-sizing: border-box;
+
+    /* Firefox */
+    scrollbar-width: thin;
+    scrollbar-color:
+        rgba(130, 50, 51, 0.50)
+        transparent;
+}
+
+
+/* ==========================================================
+   TAMAÑO DE CADA MANUAL
+========================================================== */
+
+/*
+ * IMPORTANTE:
+ * Esto evita que cada tarjeta intente ocupar el 100%
+ * de la altura del contenedor.
+ */
+.manuals-list .manual-item {
+    width: 100% !important;
+
+    height: 66px !important;
+    min-height: 66px !important;
+    max-height: 66px !important;
+
+    flex: 0 0 66px !important;
+
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
+
+    box-sizing: border-box;
+}
+
+
+/*
+ * La tarjeta seleccionada conserva exactamente
+ * el mismo tamaño que las demás.
+ */
+.manuals-list .manual-item--active {
+    height: 66px !important;
+    min-height: 66px !important;
+    max-height: 66px !important;
+
+    flex: 0 0 66px !important;
+}
+
+
+/* ==========================================================
+   CONTENIDO INTERNO
+========================================================== */
+
+.manuals-list .manual-item__icon {
+    flex-shrink: 0;
+}
+
+
+.manuals-list .manual-item__content {
+    min-width: 0;
+}
+
+
+/* ==========================================================
+   SCROLL DELGADO - EDGE / CHROME
+========================================================== */
+
+.manuals-list::-webkit-scrollbar {
+    width: 5px;
+}
+
+
+.manuals-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+
+.manuals-list::-webkit-scrollbar-thumb {
+    background: rgba(130, 50, 51, 0.42);
+
+    border-radius: 999px;
+}
+
+
+.manuals-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(130, 50, 51, 0.72);
 }

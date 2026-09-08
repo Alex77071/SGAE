@@ -1665,9 +1665,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    const manualItems = document.querySelectorAll('[data-manual]');
-    const manualPreview = document.getElementById('manualPreview');
-    const manualDownload = document.getElementById('manualDownload');
+    const manualItems =
+        document.querySelectorAll('[data-manual]');
+
+    const manualPreview =
+        document.getElementById('manualPreview');
+
+    const manualVideo =
+        document.getElementById('manualVideo');
+
+    const manualDownload =
+        document.getElementById('manualDownload');
+
+    const manualVersion =
+        document.getElementById('manualVersion');
+
 
     if (
         !manualItems.length ||
@@ -1682,7 +1694,105 @@ document.addEventListener('DOMContentLoaded', function () {
 
         item.addEventListener('click', function () {
 
-            const pdf = item.dataset.pdf;
+            /*
+             * Quitar selección anterior.
+             */
+            manualItems.forEach(function (manual) {
+
+                manual.classList.remove(
+                    'manual-item--active'
+                );
+
+            });
+
+
+            /*
+             * Seleccionar recurso actual.
+             */
+            item.classList.add(
+                'manual-item--active'
+            );
+
+
+            const type =
+                item.dataset.type || 'pdf';
+
+
+            /*
+             * =====================================================
+             * VIDEO
+             * =====================================================
+             */
+            if (type === 'video') {
+
+                const videoUrl =
+                    item.dataset.video;
+
+
+                if (!videoUrl) {
+                    return;
+                }
+
+
+                /*
+                 * Ocultar PDF.
+                 */
+                manualPreview.style.display =
+                    'none';
+
+
+                /*
+                 * Mostrar video.
+                 */
+                if (manualVideo) {
+
+                    manualVideo.style.display =
+                        'block';
+
+                    manualVideo.src =
+                        videoUrl;
+
+                    manualVideo.load();
+
+                }
+
+
+                /*
+                 * Actualizar descarga.
+                 */
+                manualDownload.href =
+                    videoUrl;
+
+                manualDownload.setAttribute(
+                    'download',
+                    'video_manual.mp4'
+                );
+
+
+                /*
+                 * Cambiar indicador superior.
+                 */
+                if (manualVersion) {
+
+                    manualVersion.textContent =
+                        'Video';
+
+                }
+
+
+                return;
+            }
+
+
+            /*
+             * =====================================================
+             * PDF
+             * =====================================================
+             */
+
+            const pdf =
+                item.dataset.pdf;
+
 
             if (!pdf) {
                 return;
@@ -1690,24 +1800,31 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
             /*
-             * Quitar selección anterior.
+             * Detener y ocultar video.
              */
-            manualItems.forEach(function (manual) {
+            if (manualVideo) {
 
-                manual.classList.remove('manual-item--active');
+                manualVideo.pause();
 
-            });
+                manualVideo.removeAttribute(
+                    'src'
+                );
+
+                manualVideo.load();
+
+                manualVideo.style.display =
+                    'none';
+
+            }
 
 
             /*
-             * Seleccionar nuevo manual.
+             * Mostrar PDF.
              */
-            item.classList.add('manual-item--active');
+            manualPreview.style.display =
+                'block';
 
 
-            /*
-             * Actualizar vista previa.
-             */
             manualPreview.src =
                 pdf +
                 '#page=1&zoom=page-width&toolbar=0&navpanes=0';
@@ -1716,7 +1833,24 @@ document.addEventListener('DOMContentLoaded', function () {
             /*
              * Actualizar descarga.
              */
-            manualDownload.href = pdf;
+            manualDownload.href =
+                pdf;
+
+            manualDownload.setAttribute(
+                'download',
+                ''
+            );
+
+
+            /*
+             * Recuperar versión.
+             */
+            if (manualVersion) {
+
+                manualVersion.textContent =
+                    'Versión 1.0';
+
+            }
 
         });
 

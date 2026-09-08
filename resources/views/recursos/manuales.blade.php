@@ -303,6 +303,104 @@
                     </span>
 
                 </button>
+                {{-- =========================================================
+                    MANUAL 6 - MANUAL PARA ALUMNOS
+                ========================================================= --}}
+
+                <button
+                    type="button"
+                    class="manual-item"
+                    data-manual
+                    data-type="pdf"
+                    data-pdf="{{ asset('documentos/Manual para alumnos.pdf') }}"
+                    data-name="Manual para alumnos"
+                >
+
+                    <span class="manual-item__icon">
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <circle cx="12" cy="8" r="3"></circle>
+
+                            <path
+                                d="M6 20v-1.5A5.5 5.5 0 0 1 11.5 13h1A5.5 5.5 0 0 1 18 18.5V20"
+                            ></path>
+
+                            <path d="M4 4h5"></path>
+                            <path d="M4 7h4"></path>
+                        </svg>
+
+                    </span>
+
+
+                    <span class="manual-item__content">
+
+                        <span class="manual-item__title">
+                            06 — Manual para alumnos
+                        </span>
+
+                        <span class="manual-item__description">
+                            Guía para alumnos sobre el uso y funcionamiento de la plataforma.
+                        </span>
+
+                    </span>
+
+                </button>
+
+
+
+
+          {{-- =========================================================
+                    MANUAL 7 - MANUAL DEL USO DEL SISTEMA
+                ========================================================= --}}
+
+                <button
+                    type="button"
+                    class="manual-item"
+                    data-manual
+                    data-type="pdf"
+                    data-pdf="{{ asset('documentos/Manual del uso del sistema.pdf') }}"
+                    data-name="Manual del uso del sistema"
+                >
+
+                    <span class="manual-item__icon">
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <path d="M6 2h8l4 4v16H6Z"></path>
+                            <path d="M14 2v5h5"></path>
+                            <path d="M9 12h6"></path>
+                            <path d="M9 16h6"></path>
+                        </svg>
+
+                    </span>
+
+
+                    <span class="manual-item__content">
+
+                        <span class="manual-item__title">
+                            07 — Manual del uso del sistema
+                        </span>
+
+                        <span class="manual-item__description">
+                            Guía general para conocer el uso y funcionamiento del sistema.
+                        </span>
+
+                    </span>
+
+                </button>
 
             </div>
 
@@ -351,7 +449,10 @@
                         Vista previa del manual
                     </h3>
 
-                    <span class="manual-version">
+                   <span
+                        class="manual-version"
+                        id="manualVersion"
+                    >
                         Versión 1.0
                     </span>
 
@@ -409,6 +510,19 @@
                         src="{{ asset('documentos/Introducción a Moodle.pdf') }}#page=1&zoom=page-width&toolbar=0&navpanes=0"
                         title="Vista previa del manual"
                     ></iframe>
+                    {{-- =========================================================
+                         REPRODUCTOR DEL VIDEO GENERAL
+                        ========================================================= --}}
+
+                        <video
+                            id="manualVideo"
+                            class="manual-preview-video"
+                            controls
+                            preload="metadata"
+                            style="display: none;"
+                        >
+                            Tu navegador no soporta la reproducción de video.
+                        </video>
 
                 </div>
 
