@@ -17,6 +17,10 @@ return [
 
     'default' => env('DB_CONNECTION', 'mysql'),
 
+    'evidencias_connection' => env(
+    'EVIDENCIAS_DB_CONNECTION',
+    'queue_sqlite'
+),
     /*
     |--------------------------------------------------------------------------
     | Database Connections

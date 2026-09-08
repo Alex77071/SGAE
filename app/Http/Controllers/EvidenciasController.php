@@ -10,6 +10,7 @@ use App\Jobs\PrepararDescargaEvidencias;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
+use App\EvidenciaDescarga;
 use App\AnalisisHistorial;
 use Illuminate\Support\Facades\Storage;
 
@@ -2541,6 +2542,7 @@ public function progresoDescarga(
 
             session([
 
+
                 'evidencias_zip_actual' =>
                     basename(
                         $rutaZip
@@ -2570,6 +2572,77 @@ public function progresoDescarga(
             ]);
 
 
+            /*
+|--------------------------------------------------------------------------
+| REGISTRAR CARPETA DESCARGADA
+|--------------------------------------------------------------------------
+|
+| Solo se registra cuando el ZIP ya fue generado correctamente.
+| updateOrCreate evita duplicar el registro porque este método
+| puede consultarse varias veces desde JavaScript.
+|
+*/
+
+try {
+
+    EvidenciaDescarga::updateOrCreate(
+        [
+            'job_id' => $jobId,
+        ],
+        [
+            'moodle_user_id' =>
+                $profesorId,
+
+            'course_id' =>
+                (int) (
+                    $meta['courseid']
+                    ?? 0
+                ),
+
+            'quiz_id' =>
+                (int) (
+                    $meta['quizid']
+                    ?? 0
+                ),
+
+            'cmid' =>
+                (int) (
+                    $meta['cmid']
+                    ?? 0
+                ),
+
+            'nombre_examen' =>
+                $meta['nombre_examen']
+                ??
+                pathinfo(
+                    $nombreZip,
+                    PATHINFO_FILENAME
+                ),
+
+            'nombre_zip' =>
+                $nombreZip,
+
+            'ruta_zip' =>
+                $rutaZip,
+
+            'estado' =>
+                'pendiente',
+        ]
+    );
+
+} catch (\Throwable $e) {
+
+    \Log::error(
+        'No fue posible registrar la descarga de evidencias.',
+        [
+            'job_id' =>
+                $jobId,
+
+            'error' =>
+                $e->getMessage(),
+        ]
+    );
+}
             $progreso[
                 'archivo_disponible'
             ] =

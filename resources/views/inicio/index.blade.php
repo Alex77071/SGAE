@@ -322,17 +322,22 @@
 
             <div class="status-summary">
 
-                <strong>
+             <strong>
+    {{ $carpetasPendientes }}
+    {{ $carpetasPendientes === 1 ? 'carpeta pendiente' : 'carpetas pendientes' }}
+    de un total de
+    {{ $totalCarpetas }}
+</strong>
 
-                    12 carpetas pendientes de un total de 25
-
-                </strong>
-
-                <span>
-
-                    Listas para ser analizadas
-
-                </span>
+<span>
+    @if ($carpetasPendientes === 1)
+        Lista para ser analizada
+    @elseif ($carpetasPendientes > 1)
+        Listas para ser analizadas
+    @else
+        No hay carpetas pendientes por analizar
+    @endif
+</span>
 
             </div>
 

@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MoodleAuthController;
 use App\Http\Controllers\EvidenciasController;
 
+use App\EvidenciaDescarga;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -314,8 +316,23 @@ Route::get('/inicio', function (Request $request) {
 
     }
 
+    $totalCarpetas = EvidenciaDescarga::where(
+    'moodle_user_id',
+    $userId
+)->count();
 
-    return view('inicio.index');
+$carpetasPendientes = EvidenciaDescarga::where(
+    'moodle_user_id',
+    $userId
+)
+->where('estado', 'pendiente')
+->count();
+
+
+   return view('inicio.index', [
+    'totalCarpetas' => $totalCarpetas,
+    'carpetasPendientes' => $carpetasPendientes,
+]);
 
 })->name('inicio');
 
