@@ -671,7 +671,7 @@
 </div>
 {{-- FIN TARJETA SUPERVISADO POR --}}
 
->
+
                
                 {{-- DESARROLLADO POR --}}
                 <article
