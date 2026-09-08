@@ -175,6 +175,55 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
+/*
+|--------------------------------------------------------------------------
+| MANUALES DE USUARIO
+| Pantalla completa
+|--------------------------------------------------------------------------
+*/
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const manualViewer =
+        document.getElementById('manualViewer');
+
+    const manualFullscreenButton =
+        document.getElementById('manualFullscreenButton');
+
+
+    /*
+     * Este código solo se ejecuta
+     * si estamos en la pantalla de manuales.
+     */
+    if (!manualViewer || !manualFullscreenButton) {
+        return;
+    }
+
+
+    manualFullscreenButton.addEventListener('click', function () {
+
+        if (!document.fullscreenElement) {
+
+            if (manualViewer.requestFullscreen) {
+
+                manualViewer.requestFullscreen();
+
+            }
+
+        } else {
+
+            if (document.exitFullscreen) {
+
+                document.exitFullscreen();
+
+            }
+
+        }
+
+    });
+
+});
+
 
 /*
 |--------------------------------------------------------------------------
