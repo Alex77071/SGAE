@@ -290,9 +290,9 @@
                 </a>
 
 
-                {{-- OLVIDÉ MI CONTRASEÑA --}}
+             {{-- OLVIDÉ MI CONTRASEÑA --}}
                 <a
-                    href="#"
+                    href="https://cv.utm.mx/login/forgot_password.php"
                     class="forgot-link"
                 >
                     ¿Olvidaste tu contraseña?
