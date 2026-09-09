@@ -520,25 +520,22 @@
             Coordinador I. C. Carlos Alberto Martínez Sandoval
         </p>
 
-        <div class="logout-modal__actions">
-
-            <button
-                type="button"
-                id="closeAnalysisContactModal"
-                class="logout-modal__button logout-modal__button--cancel"
-            >
-                Cancelar
-            </button>
-
-            <button
-                type="button"
-                id="confirmAnalysisContactModal"
-                class="logout-modal__button logout-modal__button--confirm"
-            >
-                Entendido
-            </button>
-
-        </div>
+        <div
+    class="logout-modal__actions"
+    style="
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    "
+>
+    <button
+        type="button"
+        id="confirmAnalysisContactModal"
+        class="logout-modal__button logout-modal__button--confirm"
+    >
+        Entendido
+    </button>
+</div>
 
     </div>
 
