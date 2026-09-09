@@ -13535,3 +13535,11 @@ body.app-body {
     }
 
 }
+
+.diagram-top__left {
+    padding-top: 0 !important;
+}
+
+.diagram-heading {
+    margin-top: 0 !important;
+}

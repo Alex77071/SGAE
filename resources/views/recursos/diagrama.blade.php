@@ -6,65 +6,6 @@
 
 <section class="diagram-page">
 
-  {{-- =====================================================
-     ENCABEZADO DE LA PÁGINA
-===================================================== --}}
-
-<div class="diagram-page__header">
-
-    {{-- TÍTULO --}}
-    <div class="diagram-heading">
-
-        <div class="diagram-heading__line"></div>
-
-        <div>
-
-            <h2 class="diagram-heading__title">
-                Diagrama del proceso
-            </h2>
-
-            <p class="diagram-heading__description">
-                Consulta el flujo general para la gestión y análisis de evidencias.
-            </p>
-
-        </div>
-
-    </div>
-
-
-    {{-- BOTÓN VOLVER AL INICIO --}}
-    <a
-        href="{{ route('inicio') }}"
-        class="diagram-home-button"
-    >
-
-        <span
-            class="diagram-home-button__icon"
-            aria-hidden="true"
-        >
-            <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.8"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-            >
-                <path d="M3 11.5 12 4l9 7.5"></path>
-                <path d="M5.5 10.5V20h13v-9.5"></path>
-                <path d="M9.5 20v-6h5v6"></path>
-            </svg>
-        </span>
-
-        <span>
-            Volver al inicio
-        </span>
-
-    </a>
-
-</div>
-
-
     {{-- =====================================================
          ENCABEZADO DE LA PÁGINA
     ====================================================== --}}
