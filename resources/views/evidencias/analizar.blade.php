@@ -158,10 +158,163 @@
 </section>
 </form>
 
+{{-- =====================================================
+     MODAL - CONTACTAR AL ENCARGADO
+===================================================== --}}
+
+<div
+    class="logout-modal"
+    id="analysisContactModal"
+    aria-hidden="true"
+>
+
+    <div
+        class="logout-modal__dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="analysisContactModalTitle"
+    >
+
+        {{-- ICONO --}}
+        <div class="logout-modal__icon" aria-hidden="true">
+
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            >
+                <circle cx="12" cy="8" r="4"></circle>
+                <path d="M4 21v-2a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v2"></path>
+                <path d="M18 8h3"></path>
+                <path d="M19.5 6.5v3"></path>
+            </svg>
+
+        </div>
+
+
+        {{-- TÍTULO --}}
+        <h2
+            class="logout-modal__title"
+            id="analysisContactModalTitle"
+        >
+            Contacta al encargado
+        </h2>
+
+
+        {{-- MENSAJE --}}
+        <p
+            style="
+                margin: -15px 0 30px;
+                max-width: 390px;
+                text-align: center;
+                font-size: 17px;
+                line-height: 1.5;
+                color: #555555;
+            "
+        >
+            Para realizar el análisis de evidencias,
+            es necesario contactar al encargado del sistema.
+        </p>
+
+
+        {{-- BOTONES --}}
+        <div class="logout-modal__actions">
+
+            <a
+                href="{{ route('inicio') }}"
+                class="logout-modal__button logout-modal__button--cancel"
+                style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    text-decoration: none;
+                "
+            >
+                Volver al inicio
+            </a>
+
+
+            <button
+                type="button"
+                id="closeAnalysisContactModal"
+                class="logout-modal__button logout-modal__button--confirm"
+            >
+                Entendido
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
 
 <script>
 
 document.addEventListener('DOMContentLoaded', function () {
+
+    /*
+|--------------------------------------------------------------------------
+| MODAL - CONTACTAR AL ENCARGADO
+|--------------------------------------------------------------------------
+*/
+
+const analysisContactModal =
+    document.getElementById(
+        'analysisContactModal'
+    );
+
+const closeAnalysisContactModal =
+    document.getElementById(
+        'closeAnalysisContactModal'
+    );
+
+
+/*
+ * Mostrar automáticamente el modal
+ * al entrar a Analizar evidencias.
+ */
+if (analysisContactModal) {
+
+    analysisContactModal.classList.add(
+        'logout-modal--open'
+    );
+
+    analysisContactModal.setAttribute(
+        'aria-hidden',
+        'false'
+    );
+
+}
+
+
+/*
+ * Cerrar modal al presionar Entendido.
+ */
+if (
+    analysisContactModal &&
+    closeAnalysisContactModal
+) {
+
+    closeAnalysisContactModal.addEventListener(
+        'click',
+        function () {
+
+            analysisContactModal.classList.remove(
+                'logout-modal--open'
+            );
+
+            analysisContactModal.setAttribute(
+                'aria-hidden',
+                'true'
+            );
+
+        }
+    );
+
+}
 
     const fileInput =
         document.getElementById('analysisFileInput');
