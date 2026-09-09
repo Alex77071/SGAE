@@ -13543,3 +13543,57 @@ body.app-body {
 .diagram-heading {
     margin-top: 0 !important;
 }
+
+/* ==========================================================
+   DIAGRAMA - DISTRIBUCIÓN VERTICAL EQUILIBRADA
+   Iguala visualmente el espacio superior e inferior
+========================================================== */
+
+@media (min-width: 993px) {
+
+    /*
+     * La página utiliza toda la altura disponible.
+     */
+    .diagram-page {
+        height: 100% !important;
+        min-height: 0 !important;
+    }
+
+
+    /*
+     * El área de las dos tarjetas crece para aprovechar
+     * el espacio que antes quedaba vacío debajo.
+     */
+    .diagram-grid {
+        flex: 1 1 auto !important;
+
+        min-height: 0 !important;
+
+        align-items: stretch !important;
+    }
+
+
+    /*
+     * Las dos tarjetas toman toda la altura disponible
+     * dentro del grid.
+     */
+    .diagram-info-card,
+    .diagram-view-card {
+        height: 100% !important;
+
+        min-height: 0 !important;
+        max-height: none !important;
+    }
+
+
+    /*
+     * Mantiene el aviso gris cerca de las tarjetas.
+     */
+    .diagram-notice {
+        flex-shrink: 0 !important;
+
+        margin-top: 10px !important;
+        margin-bottom: 0 !important;
+    }
+
+}
