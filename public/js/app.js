@@ -175,10 +175,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
-
 /*
 |--------------------------------------------------------------------------
-| PROGRESO REAL DE DESCARGA DE EVIDENCIAS
+| PROGRESO DE DESCARGA DE EVIDENCIAS
 |--------------------------------------------------------------------------
 */
 
@@ -188,7 +187,7 @@ document.addEventListener(
 
         /*
         |--------------------------------------------------------------------------
-        | ELEMENTOS
+        | ELEMENTOS DE LA PANTALLA
         |--------------------------------------------------------------------------
         */
 
@@ -197,15 +196,18 @@ document.addEventListener(
                 'downloadProgressState'
             );
 
+
         const completeState =
             document.getElementById(
                 'downloadCompleteState'
             );
 
+
         const progressBar =
             document.getElementById(
                 'downloadProgressBar'
             );
+
 
         const progressPercentage =
             document.getElementById(
@@ -213,72 +215,51 @@ document.addEventListener(
             );
 
 
-        const summaryExam =
-            document.getElementById(
-                'downloadSummaryExam'
-            );
+            const summaryExam =
+    document.getElementById(
+        'downloadSummaryExam'
+    );
 
-        const summaryCourseGroup =
-            document.getElementById(
-                'downloadSummaryCourseGroup'
-            );
 
-        const summaryStudents =
-            document.getElementById(
-                'downloadSummaryStudents'
-            );
+const summaryCourseGroup =
+    document.getElementById(
+        'downloadSummaryCourseGroup'
+    );
 
-        const summaryImages =
-            document.getElementById(
-                'downloadSummaryImages'
-            );
+
+const summaryStudents =
+    document.getElementById(
+        'downloadSummaryStudents'
+    );
+
+
+const summaryImages =
+    document.getElementById(
+        'downloadSummaryImages'
+    );
 
 
         /*
-         * Título y texto que YA existen
-         * en tu cuadro de progreso.
+         * Este código solamente debe ejecutarse
+         * dentro de la pantalla:
          *
-         * No agregamos otra barra.
+         * /evidencias/descarga
          */
-
-        const progressTitle =
-            progressState
-                ? progressState.querySelector(
-                    'h2'
-                )
-                : null;
-
-        const progressMessage =
-            progressState
-                ? progressState.querySelector(
-                    'p'
-                )
-                : null;
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | SOLO EN /evidencias/descarga
-        |--------------------------------------------------------------------------
-        */
-
         if (
-            !progressState
-            ||
-            !completeState
-            ||
-            !progressBar
-            ||
+            !progressState ||
+            !completeState ||
+            !progressBar ||
             !progressPercentage
         ) {
 
             return;
+
         }
 
 
         /*
         |--------------------------------------------------------------------------
-        | ACTUALIZAR BARRA EXISTENTE
+        | ACTUALIZAR PORCENTAJE
         |--------------------------------------------------------------------------
         */
 
@@ -286,31 +267,19 @@ document.addEventListener(
             porcentaje
         ) {
 
-            const valor =
-                Math.max(
-                    0,
-                    Math.min(
-                        100,
-                        Number(
-                            porcentaje
-                            || 0
-                        )
-                    )
-                );
-
-
             progressBar.style.width =
-                valor + '%';
+                porcentaje + '%';
 
 
             progressPercentage.textContent =
-                valor + '%';
+                porcentaje + '%';
+
         }
 
 
         /*
         |--------------------------------------------------------------------------
-        | LEER DATOS GUARDADOS
+        | LEER DATOS GUARDADOS EN LA PANTALLA ANTERIOR
         |--------------------------------------------------------------------------
         */
 
@@ -327,6 +296,7 @@ document.addEventListener(
             );
 
             return;
+
         }
 
 
@@ -353,73 +323,70 @@ document.addEventListener(
             );
 
             return;
+
         }
+
+        /*
+|--------------------------------------------------------------------------
+| MOSTRAR DATOS REALES DEL EXAMEN
+|--------------------------------------------------------------------------
+*/
+
+if (summaryExam) {
+
+    summaryExam.textContent =
+        datosDescarga.examenNombre
+        || 'Examen';
+}
+
+
+if (summaryCourseGroup) {
+
+    const curso =
+        datosDescarga.cursoNombre
+        || 'Curso';
+
+
+    const grupo =
+        datosDescarga.grupoNombre
+        || 'Todos los grupos';
+
+
+    summaryCourseGroup.textContent =
+        curso
+        +
+        ' | '
+        +
+        grupo;
+}
+
+
+if (summaryStudents) {
+
+    summaryStudents.textContent =
+        datosDescarga.alumnos
+        || '0';
+}
+
+
+if (summaryImages) {
+
+    summaryImages.textContent =
+        datosDescarga.imagenes
+        || '0';
+}
 
 
         /*
         |--------------------------------------------------------------------------
-        | MOSTRAR RESUMEN
-        |--------------------------------------------------------------------------
-        */
-
-        if (summaryExam) {
-
-            summaryExam.textContent =
-                datosDescarga.examenNombre
-                || 'Examen';
-        }
-
-
-        if (summaryCourseGroup) {
-
-            const curso =
-                datosDescarga.cursoNombre
-                || 'Curso';
-
-
-            const grupo =
-                datosDescarga.grupoNombre
-                || 'Todos los grupos';
-
-
-            summaryCourseGroup.textContent =
-                curso
-                +
-                ' | '
-                +
-                grupo;
-        }
-
-
-        if (summaryStudents) {
-
-            summaryStudents.textContent =
-                datosDescarga.alumnos
-                || '0';
-        }
-
-
-        if (summaryImages) {
-
-            summaryImages.textContent =
-                datosDescarga.imagenes
-                || '0';
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | VALIDAR DATOS
+        | VALIDAR INFORMACIÓN
         |--------------------------------------------------------------------------
         */
 
         if (
-            !datosDescarga.courseid
-            ||
-            !datosDescarga.quizid
-            ||
-            !datosDescarga.downloadUrl
-            ||
+            !datosDescarga.courseid ||
+            !datosDescarga.quizid ||
+            !datosDescarga.downloadUrl ||
             !datosDescarga.csrfToken
         ) {
 
@@ -428,411 +395,131 @@ document.addEventListener(
             );
 
             return;
+
         }
 
 
         /*
         |--------------------------------------------------------------------------
-        | MOSTRAR ESTADO
+        | INDICADOR DE ACTIVIDAD
         |--------------------------------------------------------------------------
+        |
+        | Laravel primero tiene que:
+        |
+        | 1. Consultar Moodle.
+        | 2. Descargar las imágenes.
+        | 3. Construir el ZIP.
+        |
+        | Mientras eso ocurre no conocemos todavía
+        | el porcentaje exacto.
+        |
+        | Por eso avanzamos lentamente hasta 85 %.
+        | Solamente llegará a 100 % cuando Laravel
+        | haya terminado realmente.
+        |
         */
 
-        function mostrarEstado(
-            datos
-        ) {
-
-            const fase =
-                datos.fase
-                || 'Descargando evidencias...';
+        let progresoActual = 0;
 
 
-            if (progressTitle) {
-
-                progressTitle.textContent =
-                    fase;
-            }
+        actualizarProgreso(
+            progresoActual
+        );
 
 
-            /*
-            |--------------------------------------------------------------------------
-            | NOMBRE DE IMAGEN / CONTADOR
-            |--------------------------------------------------------------------------
-            */
+        const intervaloProgreso =
+            setInterval(
+                function () {
 
-            if (progressMessage) {
+                    if (
+                        progresoActual >= 85
+                    ) {
 
-                const actual =
-                    Number(
-                        datos.actual
-                        || 0
-                    );
+                        return;
 
-
-                const total =
-                    Number(
-                        datos.total
-                        || 0
-                    );
-
-
-                const archivo =
-                    datos.archivo_actual
-                    || '';
-
-
-                /*
-                 * Cuando estamos descargando
-                 * imágenes mostramos:
-                 *
-                 * Imagen 248 de 2,708 · webcam-....png
-                 */
-                if (
-                    fase ===
-                        'Descargando imágenes...'
-                    &&
-                    total > 0
-                ) {
-
-                    let texto =
-                        'Imagen '
-                        +
-                        actual.toLocaleString(
-                            'es-MX'
-                        )
-                        +
-                        ' de '
-                        +
-                        total.toLocaleString(
-                            'es-MX'
-                        );
-
-
-                    if (archivo) {
-
-                        texto +=
-                            ' · '
-                            +
-                            archivo;
                     }
 
 
-                    progressMessage.textContent =
-                        texto;
-
-                    return;
-                }
-
-
-                /*
-                 * Mientras busca las evidencias.
-                 */
-                if (
-                    fase ===
-                    'Buscando evidencias...'
-                ) {
-
-                    progressMessage.textContent =
-                        'Localizando las capturas del examen...';
-
-                    return;
-                }
+                    let incremento =
+                        Math.floor(
+                            Math.random() * 3
+                        )
+                        + 1;
 
 
-                /*
-                 * Cuando genera/cierra el ZIP.
-                 */
-                if (archivo) {
-
-                    progressMessage.textContent =
-                        archivo;
-
-                    return;
-                }
+                    progresoActual +=
+                        incremento;
 
 
-                progressMessage.textContent =
-                    'Espere mientras se prepara la descarga.';
-            }
-        }
+                    if (
+                        progresoActual > 85
+                    ) {
 
+                        progresoActual = 85;
 
-        /*
-        |--------------------------------------------------------------------------
-        | CONSULTAR PROGRESO DEL JOB
-        |--------------------------------------------------------------------------
-        */
+                    }
 
-        async function consultarProgreso(
-            jobId
-        ) {
-
-            try {
-
-                const url =
-                    '/evidencias/descarga/progreso/'
-                    +
-                    encodeURIComponent(
-                        jobId
-                    );
-
-
-                const response =
-                    await fetch(
-                        url,
-                        {
-                            method:
-                                'GET',
-
-                            headers: {
-                                'Accept':
-                                    'application/json',
-
-                                'X-Requested-With':
-                                    'XMLHttpRequest',
-                            },
-
-                            credentials:
-                                'same-origin',
-
-                            cache:
-                                'no-store',
-                        }
-                    );
-
-
-                if (!response.ok) {
-
-                    throw new Error(
-                        'No fue posible consultar el progreso de la descarga.'
-                    );
-                }
-
-
-                const datos =
-                    await response.json();
-
-
-                /*
-                |--------------------------------------------------------------------------
-                | ACTUALIZAR BARRA REAL
-                |--------------------------------------------------------------------------
-                */
-
-                actualizarProgreso(
-                    datos.porcentaje
-                    || 0
-                );
-
-
-                mostrarEstado(
-                    datos
-                );
-
-
-                /*
-                |--------------------------------------------------------------------------
-                | ERROR DEL JOB
-                |--------------------------------------------------------------------------
-                */
-
-                if (
-                    datos.estado ===
-                    'error'
-                ) {
-
-                    throw new Error(
-                        datos.mensaje
-                        ||
-                        'Ocurrió un error durante la descarga.'
-                    );
-                }
-
-
-                /*
-                |--------------------------------------------------------------------------
-                | TERMINADO
-                |--------------------------------------------------------------------------
-                */
-
-                if (
-                    datos.estado ===
-                    'completado'
-                ) {
 
                     actualizarProgreso(
-                        100
+                        progresoActual
                     );
 
-
-                    if (progressTitle) {
-
-                        progressTitle.textContent =
-                            'Descarga preparada';
-                    }
+                },
+                600
+            );
 
 
-                    if (progressMessage) {
+        /*
+        |--------------------------------------------------------------------------
+        | NOMBRE DEL ZIP
+        |--------------------------------------------------------------------------
+        */
 
-                        progressMessage.textContent =
-                            datos.nombre_zip
-                            ||
-                            'Archivo ZIP preparado.';
-                    }
+        function obtenerNombreZip() {
 
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | DESCARGAR ZIP DIRECTAMENTE
-                    |--------------------------------------------------------------------------
-                    |
-                    | Ya NO usamos response.blob().
-                    |
-                    | El navegador recibe directamente
-                    | el ZIP desde Laravel.
-                    |
-                    */
-
-                    const archivoUrl =
-                        '/evidencias/descarga/archivo/'
-                        +
-                        encodeURIComponent(
-                            jobId
-                        );
+            const curso =
+                datosDescarga.curso
+                || 'Curso';
 
 
-                    const enlace =
-                        document.createElement(
-                            'a'
-                        );
+            const grupo =
+                datosDescarga.grupo
+                || 'Todos_los_grupos';
 
 
-                    enlace.href =
-                        archivoUrl;
+            const examen =
+                datosDescarga.examen
+                || 'Examen';
 
 
-                    enlace.style.display =
-                        'none';
+            return (
+                'Evidencias_'
+                +
+                curso
+                +
+                '_'
+                +
+                grupo
+                +
+                '_'
+                +
+                examen
+                +
+                '.zip'
+            );
 
-
-                    document.body.appendChild(
-                        enlace
-                    );
-
-
-                    enlace.click();
-
-
-                    enlace.remove();
-
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | MOSTRAR "DESCARGA COMPLETADA"
-                    |--------------------------------------------------------------------------
-                    */
-
-                    setTimeout(
-                        function () {
-
-                            progressState.hidden =
-                                true;
-
-
-                            completeState.hidden =
-                                false;
-
-                        },
-                        700
-                    );
-
-
-                    return;
-                }
-
-
-                /*
-                |--------------------------------------------------------------------------
-                | VOLVER A CONSULTAR
-                |--------------------------------------------------------------------------
-                */
-
-                setTimeout(
-                    function () {
-
-                        consultarProgreso(
-                            jobId
-                        );
-
-                    },
-                    500
-                );
-
-
-            } catch (error) {
-
-                console.error(
-                    'Error consultando descarga:',
-                    error
-                );
-
-
-                if (progressTitle) {
-
-                    progressTitle.textContent =
-                        'No fue posible completar la descarga';
-                }
-
-
-                if (progressMessage) {
-
-                    progressMessage.textContent =
-                        error.message;
-                }
-
-
-                alert(
-                    error.message
-                    ||
-                    'No fue posible completar la descarga.'
-                );
-            }
         }
 
 
         /*
         |--------------------------------------------------------------------------
-        | INICIAR JOB
+        | DESCARGA REAL
         |--------------------------------------------------------------------------
         */
 
         async function ejecutarDescarga() {
 
             try {
-
-                /*
-                |--------------------------------------------------------------------------
-                | INICIAR EN 0 %
-                |--------------------------------------------------------------------------
-                */
-
-                actualizarProgreso(
-                    0
-                );
-
-
-                if (progressTitle) {
-
-                    progressTitle.textContent =
-                        'Preparando descarga...';
-                }
-
-
-                if (progressMessage) {
-
-                    progressMessage.textContent =
-                        'Consultando la información del examen.';
-                }
-
 
                 /*
                 |--------------------------------------------------------------------------
@@ -856,6 +543,10 @@ document.addEventListener(
                 );
 
 
+                /*
+                 * Solo se envía groupid si
+                 * seleccionaron un grupo específico.
+                 */
                 if (
                     datosDescarga.groupid
                 ) {
@@ -864,12 +555,13 @@ document.addEventListener(
                         'groupid',
                         datosDescarga.groupid
                     );
+
                 }
 
 
                 /*
                 |--------------------------------------------------------------------------
-                | CREAR JOB
+                | SOLICITAR ZIP
                 |--------------------------------------------------------------------------
                 */
 
@@ -877,6 +569,7 @@ document.addEventListener(
                     await fetch(
                         datosDescarga.downloadUrl,
                         {
+
                             method:
                                 'POST',
 
@@ -889,7 +582,7 @@ document.addEventListener(
                                     'XMLHttpRequest',
 
                                 'Accept':
-                                    'application/json',
+                                    'application/zip, application/json',
 
                             },
 
@@ -898,107 +591,235 @@ document.addEventListener(
 
                             credentials:
                                 'same-origin',
+
                         }
                     );
 
 
-                let respuesta =
-                    null;
+                /*
+                |--------------------------------------------------------------------------
+                | MANEJAR ERROR
+                |--------------------------------------------------------------------------
+                */
 
+                if (!response.ok) {
 
-                try {
-
-                    respuesta =
-                        await response.json();
-
-                } catch (errorJson) {
-
-                    console.error(
-                        'Respuesta inválida:',
-                        errorJson
+                    clearInterval(
+                        intervaloProgreso
                     );
-                }
 
 
-                if (
-                    !response.ok
-                    ||
-                    !respuesta
-                    ||
-                    !respuesta.ok
-                ) {
+                    let mensaje =
+                        'No fue posible descargar las evidencias.';
 
-                    throw new Error(
-                        (
-                            respuesta
-                            &&
-                            respuesta.message
+
+                    const contentType =
+                        response.headers.get(
+                            'Content-Type'
                         )
-                            ?
-                            respuesta.message
-                            :
-                            'No fue posible iniciar la descarga.'
-                    );
-                }
+                        || '';
 
 
-                /*
-                |--------------------------------------------------------------------------
-                | JOB ID
-                |--------------------------------------------------------------------------
-                */
+                    if (
+                        contentType.includes(
+                            'application/json'
+                        )
+                    ) {
 
-                const jobId =
-                    respuesta.job_id;
+                        try {
+
+                            const data =
+                                await response.json();
 
 
-                if (!jobId) {
+                            if (
+                                data.message
+                            ) {
+
+                                mensaje =
+                                    data.message;
+
+                            }
+
+                        } catch (
+                            errorJson
+                        ) {
+
+                            console.error(
+                                'Error leyendo respuesta:',
+                                errorJson
+                            );
+
+                        }
+
+                    }
+
 
                     throw new Error(
-                        'Laravel no devolvió el identificador de la descarga.'
+                        mensaje
                     );
+
                 }
 
 
                 /*
                 |--------------------------------------------------------------------------
-                | COMENZAR POLLING
+                | LARAVEL TERMINÓ DE CREAR EL ZIP
                 |--------------------------------------------------------------------------
                 */
 
-                consultarProgreso(
-                    jobId
+                progresoActual =
+                    90;
+
+
+                actualizarProgreso(
+                    progresoActual
+                );
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | RECIBIR ARCHIVO
+                |--------------------------------------------------------------------------
+                */
+
+                const blob =
+                    await response.blob();
+
+
+                progresoActual =
+                    97;
+
+
+                actualizarProgreso(
+                    progresoActual
+                );
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | DESCARGAR CON EL NAVEGADOR
+                |--------------------------------------------------------------------------
+                */
+
+                const blobUrl =
+                    URL.createObjectURL(
+                        blob
+                    );
+
+
+                const enlace =
+                    document.createElement(
+                        'a'
+                    );
+
+
+                enlace.href =
+                    blobUrl;
+
+
+                enlace.download =
+                    obtenerNombreZip();
+
+
+                enlace.style.display =
+                    'none';
+
+
+                document.body.appendChild(
+                    enlace
+                );
+
+
+                /*
+                 * Chrome descargará el ZIP
+                 * usando su carpeta de
+                 * descargas predeterminada.
+                 */
+                enlace.click();
+
+
+                enlace.remove();
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | LIBERAR MEMORIA
+                |--------------------------------------------------------------------------
+                */
+
+                setTimeout(
+                    function () {
+
+                        URL.revokeObjectURL(
+                            blobUrl
+                        );
+
+                    },
+                    1000
+                );
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | DESCARGA TERMINADA
+                |--------------------------------------------------------------------------
+                */
+
+                clearInterval(
+                    intervaloProgreso
+                );
+
+
+                progresoActual =
+                    100;
+
+
+                actualizarProgreso(
+                    progresoActual
+                );
+
+
+                /*
+                 * Dejamos unos milisegundos
+                 * mostrando el 100 %.
+                 */
+                setTimeout(
+                    function () {
+
+                        progressState.hidden =
+                            true;
+
+
+                        completeState.hidden =
+                            false;
+
+                    },
+                    500
                 );
 
 
             } catch (error) {
 
-                console.error(
-                    'Error iniciando descarga:',
-                    error
+                clearInterval(
+                    intervaloProgreso
                 );
 
 
-                if (progressTitle) {
-
-                    progressTitle.textContent =
-                        'No fue posible iniciar la descarga';
-                }
-
-
-                if (progressMessage) {
-
-                    progressMessage.textContent =
-                        error.message;
-                }
+                console.error(
+                    'Error descargando evidencias:',
+                    error
+                );
 
 
                 alert(
                     error.message
                     ||
-                    'No fue posible iniciar la descarga.'
+                    'No fue posible descargar las evidencias.'
                 );
+
             }
+
         }
 
 
@@ -1012,6 +833,7 @@ document.addEventListener(
 
     }
 );
+
 /*
 |--------------------------------------------------------------------------
 | PROGRESO REAL DEL ANÁLISIS DE EVIDENCIAS
@@ -1665,21 +1487,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    const manualItems =
-        document.querySelectorAll('[data-manual]');
-
-    const manualPreview =
-        document.getElementById('manualPreview');
-
-    const manualVideo =
-        document.getElementById('manualVideo');
-
-    const manualDownload =
-        document.getElementById('manualDownload');
-
-    const manualVersion =
-        document.getElementById('manualVersion');
-
+    const manualItems = document.querySelectorAll('[data-manual]');
+    const manualPreview = document.getElementById('manualPreview');
+    const manualDownload = document.getElementById('manualDownload');
 
     if (
         !manualItems.length ||
@@ -1694,105 +1504,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         item.addEventListener('click', function () {
 
-            /*
-             * Quitar selección anterior.
-             */
-            manualItems.forEach(function (manual) {
-
-                manual.classList.remove(
-                    'manual-item--active'
-                );
-
-            });
-
-
-            /*
-             * Seleccionar recurso actual.
-             */
-            item.classList.add(
-                'manual-item--active'
-            );
-
-
-            const type =
-                item.dataset.type || 'pdf';
-
-
-            /*
-             * =====================================================
-             * VIDEO
-             * =====================================================
-             */
-            if (type === 'video') {
-
-                const videoUrl =
-                    item.dataset.video;
-
-
-                if (!videoUrl) {
-                    return;
-                }
-
-
-                /*
-                 * Ocultar PDF.
-                 */
-                manualPreview.style.display =
-                    'none';
-
-
-                /*
-                 * Mostrar video.
-                 */
-                if (manualVideo) {
-
-                    manualVideo.style.display =
-                        'block';
-
-                    manualVideo.src =
-                        videoUrl;
-
-                    manualVideo.load();
-
-                }
-
-
-                /*
-                 * Actualizar descarga.
-                 */
-                manualDownload.href =
-                    videoUrl;
-
-                manualDownload.setAttribute(
-                    'download',
-                    'video_manual.mp4'
-                );
-
-
-                /*
-                 * Cambiar indicador superior.
-                 */
-                if (manualVersion) {
-
-                    manualVersion.textContent =
-                        'Video';
-
-                }
-
-
-                return;
-            }
-
-
-            /*
-             * =====================================================
-             * PDF
-             * =====================================================
-             */
-
-            const pdf =
-                item.dataset.pdf;
-
+            const pdf = item.dataset.pdf;
 
             if (!pdf) {
                 return;
@@ -1800,31 +1512,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
             /*
-             * Detener y ocultar video.
+             * Quitar selección anterior.
              */
-            if (manualVideo) {
+            manualItems.forEach(function (manual) {
 
-                manualVideo.pause();
+                manual.classList.remove('manual-item--active');
 
-                manualVideo.removeAttribute(
-                    'src'
-                );
-
-                manualVideo.load();
-
-                manualVideo.style.display =
-                    'none';
-
-            }
+            });
 
 
             /*
-             * Mostrar PDF.
+             * Seleccionar nuevo manual.
              */
-            manualPreview.style.display =
-                'block';
+            item.classList.add('manual-item--active');
 
 
+            /*
+             * Actualizar vista previa.
+             */
             manualPreview.src =
                 pdf +
                 '#page=1&zoom=page-width&toolbar=0&navpanes=0';
@@ -1833,24 +1538,7 @@ document.addEventListener('DOMContentLoaded', function () {
             /*
              * Actualizar descarga.
              */
-            manualDownload.href =
-                pdf;
-
-            manualDownload.setAttribute(
-                'download',
-                ''
-            );
-
-
-            /*
-             * Recuperar versión.
-             */
-            if (manualVersion) {
-
-                manualVersion.textContent =
-                    'Versión 1.0';
-
-            }
+            manualDownload.href = pdf;
 
         });
 
@@ -3323,25 +3011,15 @@ const evidenceModalShown =
         'evidenceGalleryShown'
     );
 
-    const evidenceProgressBar =
+const evidenceModalMore =
     document.getElementById(
-        'evidenceGalleryProgressBar'
+        'evidenceGalleryMore'
     );
 
-
-const evidenceProgressPercentage =
+const evidenceLoadMore =
     document.getElementById(
-        'evidenceGalleryProgressPercentage'
+        'evidenceGalleryLoadMore'
     );
-
-
-const evidenceProgressLabel =
-    document.getElementById(
-        'evidenceGalleryProgressLabel'
-    );
-
-const evidenceScrollContainer =
-    evidenceGallery;
 
 const evidenceClose =
     document.getElementById(
@@ -3423,9 +3101,6 @@ const evidenceImageViewerNext =
     const capturesUrl =
     page.dataset.capturesUrl;
 
-    const evidenceImageUrl =
-    page.dataset.imageUrl;
-
     const downloadUrl =
     page.dataset.downloadUrl;
 
@@ -3470,247 +3145,53 @@ const evidenceImageViewerNext =
         return await response.json();
     }
 
-/*
-|--------------------------------------------------------------------------
-| CARGAR SOLO CURSOS QUE TENGAN EXÁMENES CON CÁMARA
-|--------------------------------------------------------------------------
-*/
 
-async function cargarCursos() {
+    /*
+    |--------------------------------------------------------------------------
+    | CARGAR CURSOS DEL PROFESOR
+    |--------------------------------------------------------------------------
+    */
 
-    courseSelect.disabled = true;
+    async function cargarCursos() {
 
-    courseSelect.innerHTML = `
-        <option value="">
-            Cargando cursos...
-        </option>
-    `;
-
-    try {
-
-        /*
-        |--------------------------------------------------------------------------
-        | 1. OBTENER TODOS LOS CURSOS DEL PROFESOR
-        |--------------------------------------------------------------------------
-        */
-
-        const data =
-            await obtenerJson(
-                coursesUrl
-            );
-
-
-        if (!data.ok) {
-
-            throw new Error(
-                data.message ||
-                'No fue posible obtener los cursos.'
-            );
-        }
-
-
-        const cursos =
-            Array.isArray(data.cursos)
-                ? data.cursos
-                : [];
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | 2. PREPARAR SELECT
-        |--------------------------------------------------------------------------
-        */
+        courseSelect.disabled = true;
 
         courseSelect.innerHTML = `
             <option value="">
-                Buscando cursos con evidencias...
+                Cargando cursos...
             </option>
         `;
 
 
-        const cursosConCamara = [];
+        try {
 
-sessionStorage.setItem(
-    'sgae_cursos_con_camara',
-    JSON.stringify(
-        cursosConCamara
-    )
-);
-
-sessionStorage.setItem(
-    'sgae_cursos_con_camara_tiempo',
-    Date.now().toString()
-);
-        /*
-        |--------------------------------------------------------------------------
-        | 3. REVISAR CURSOS EN GRUPOS DE 3
-        |--------------------------------------------------------------------------
-        |
-        | No revisamos todos al mismo tiempo para no saturar Moodle.
-        |
-        */
-
-        const concurrencia = 5;
-
-
-        for (
-            let i = 0;
-            i < cursos.length;
-            i += concurrencia
-        ) {
-
-            const lote =
-                cursos.slice(
-                    i,
-                    i + concurrencia
+            const data =
+                await obtenerJson(
+                    coursesUrl
                 );
 
 
-            const resultados =
-                await Promise.all(
-                    lote.map(
-                        async function (curso) {
+            if (!data.ok) {
 
-                            try {
-
-                                /*
-                                |--------------------------------------------------------------------------
-                                | CONSULTAR LOS EXÁMENES DEL CURSO
-                                |--------------------------------------------------------------------------
-                                |
-                                | El endpoint /examenes ya devuelve únicamente
-                                | los exámenes que tienen evidencias de cámara.
-                                |
-                                */
-
-                                const url =
-                                    new URL(
-                                        examsUrl,
-                                        window.location.origin
-                                    );
-
-
-                                url.searchParams.set(
-                                    'courseid',
-                                    curso.id
-                                );
-
-
-                                const dataExamenes =
-                                    await obtenerJson(
-                                        url.toString()
-                                    );
-
-
-                                if (
-                                    !dataExamenes.ok
-                                ) {
-
-                                    return null;
-                                }
-
-
-                                const examenes =
-                                    Array.isArray(
-                                        dataExamenes.examenes
-                                    )
-                                        ? dataExamenes.examenes
-                                        : [];
-
-
-                                /*
-                                 * Si tiene al menos un examen
-                                 * con cámara, conservamos el curso.
-                                 */
-                                if (
-                                    examenes.length > 0
-                                ) {
-
-                                    return curso;
-                                }
-
-
-                                /*
-                                 * Sin exámenes con cámara:
-                                 * no mostrar curso.
-                                 */
-                                return null;
-
-
-                            } catch (error) {
-
-                                console.error(
-                                    'Error revisando curso:',
-                                    curso.id,
-                                    error
-                                );
-
-
-                                /*
-                                 * Si un curso falla,
-                                 * no detenemos todos los demás.
-                                 */
-                                return null;
-                            }
-                        }
-                    )
+                throw new Error(
+                    data.message ||
+                    'No fue posible obtener los cursos.'
                 );
 
-
-            resultados.forEach(
-                function (curso) {
-
-                    if (curso) {
-
-                        cursosConCamara.push(
-                            curso
-                        );
-                    }
-                }
-            );
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | MOSTRAR PROGRESO
-            |--------------------------------------------------------------------------
-            */
-
-            const revisados =
-                Math.min(
-                    i + concurrencia,
-                    cursos.length
-                );
+            }
 
 
             courseSelect.innerHTML = `
-                <option value="">
-                    Revisando cursos... ${revisados} de ${cursos.length}
+                <option value="" selected disabled>
+                    Selecciona un curso
                 </option>
             `;
-        }
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | 4. MOSTRAR RESULTADO
-        |--------------------------------------------------------------------------
-        */
-
-        courseSelect.innerHTML = `
-            <option value="" selected disabled>
-                Selecciona un curso
-            </option>
-        `;
-
-
-        cursosConCamara.forEach(
-            function (curso) {
+            data.cursos.forEach(function (curso) {
 
                 const option =
-                    document.createElement(
-                        'option'
-                    );
+                    document.createElement('option');
 
 
                 option.value =
@@ -3724,56 +3205,32 @@ sessionStorage.setItem(
                 courseSelect.appendChild(
                     option
                 );
-            }
-        );
+
+            });
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | 5. SI NINGÚN CURSO TIENE EVIDENCIAS
-        |--------------------------------------------------------------------------
-        */
+            courseSelect.disabled =
+                false;
 
-        if (
-            cursosConCamara.length === 0
-        ) {
+
+        } catch (error) {
+
+            console.error(
+                'Error cargando cursos:',
+                error
+            );
+
 
             courseSelect.innerHTML = `
                 <option value="">
-                    No hay cursos con evidencias de cámara
+                    No fue posible cargar los cursos
                 </option>
             `;
 
-            courseSelect.disabled =
-                true;
-
-            return;
         }
 
-
-        courseSelect.disabled =
-            false;
-
-
-    } catch (error) {
-
-        console.error(
-            'Error cargando cursos:',
-            error
-        );
-
-
-        courseSelect.innerHTML = `
-            <option value="">
-                No fue posible cargar los cursos
-            </option>
-        `;
-
-
-        courseSelect.disabled =
-            true;
     }
-}
+
 
     /*
     |--------------------------------------------------------------------------
@@ -4757,21 +4214,11 @@ function abrirImagenAmpliada(indice) {
     }
 
 
-   const proxyUrl =
-    new URL(
-        evidenceImageUrl,
-        window.location.origin
-    );
-
-
-proxyUrl.searchParams.set(
-    'url',
-    imagen.url
-);
-
-
-evidenceImageViewerImage.src =
-    proxyUrl.toString();
+    /*
+     * Mostrar imagen.
+     */
+    evidenceImageViewerImage.src =
+        imagen.url;
 
 
     /*
@@ -4959,35 +4406,34 @@ function cerrarImagenAmpliada() {
 
 function agregarImagenGaleria(imagen) {
 
-    if (
-        !imagen ||
-        !imagen.url
-    ) {
+    if (!imagen || !imagen.url) {
         return;
     }
 
 
     /*
-    |--------------------------------------------------------------------------
-    | POSICIÓN DE LA IMAGEN
-    |--------------------------------------------------------------------------
-    */
-
+     * Guardar la posición de esta fotografía.
+     *
+     * Ejemplo:
+     * primera imagen  = 0
+     * segunda imagen  = 1
+     * tercera imagen  = 2
+     */
     const indice =
         evidenceImages.length;
 
 
+    /*
+     * Guardar la fotografía en memoria.
+     */
     evidenceImages.push(
         imagen
     );
 
 
     /*
-    |--------------------------------------------------------------------------
-    | CREAR CONTENEDOR
-    |--------------------------------------------------------------------------
-    */
-
+     * Crear miniatura.
+     */
     const item =
         document.createElement(
             'div'
@@ -5002,12 +4448,6 @@ function agregarImagenGaleria(imagen) {
         indice;
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | CREAR IMAGEN
-    |--------------------------------------------------------------------------
-    */
-
     const img =
         document.createElement(
             'img'
@@ -5018,42 +4458,12 @@ function agregarImagenGaleria(imagen) {
         'evidence-gallery__image';
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | PASAR LA IMAGEN POR LARAVEL
-    |--------------------------------------------------------------------------
-    */
-
-    if (!evidenceImageUrl) {
-
-        console.error(
-            'No se encontró data-image-url.'
-        );
-
-        return;
-    }
-
-
-    const proxyUrl =
-        new URL(
-            evidenceImageUrl,
-            window.location.origin
-        );
-
-
-    proxyUrl.searchParams.set(
-        'url',
-        imagen.url
-    );
-
-
     img.src =
-        proxyUrl.toString();
+        imagen.url;
 
 
     img.alt =
-        'Evidencia '
-        +
+        'Evidencia ' +
         (
             indice + 1
         );
@@ -5064,32 +4474,23 @@ function agregarImagenGaleria(imagen) {
 
 
     /*
-    |--------------------------------------------------------------------------
-    | ERROR INDIVIDUAL
-    |--------------------------------------------------------------------------
-    */
-
+     * Si falla solamente esa imagen,
+     * ocultamos su miniatura.
+     */
     img.addEventListener(
         'error',
         function () {
 
-            console.error(
-                'No fue posible cargar la evidencia:',
-                proxyUrl.toString()
-            );
-
             item.style.display =
                 'none';
+
         }
     );
 
 
     /*
-    |--------------------------------------------------------------------------
-    | ABRIR IMAGEN EN GRANDE
-    |--------------------------------------------------------------------------
-    */
-
+     * Abrir en grande.
+     */
     item.addEventListener(
         'click',
         function () {
@@ -5097,6 +4498,7 @@ function agregarImagenGaleria(imagen) {
             abrirImagenAmpliada(
                 indice
             );
+
         }
     );
 
@@ -5109,70 +4511,9 @@ function agregarImagenGaleria(imagen) {
     evidenceGallery.appendChild(
         item
     );
+
 }
 
-
-/*
-|--------------------------------------------------------------------------
-| ACTUALIZAR PROGRESO DE CARGA DE EVIDENCIAS
-|--------------------------------------------------------------------------
-*/
-
-function actualizarProgresoEvidencias() {
-
-    if (
-        !totalImagenesSeleccionadas
-        ||
-        totalImagenesSeleccionadas <= 0
-    ) {
-        return;
-    }
-
-
-    const imagenesCargadas =
-        Math.min(
-            evidenceOffset,
-            totalImagenesSeleccionadas
-        );
-
-
-    const porcentaje =
-        Math.min(
-            100,
-            Math.round(
-                (
-                    imagenesCargadas
-                    /
-                    totalImagenesSeleccionadas
-                )
-                *
-                100
-            )
-        );
-
-
-    if (evidenceProgressBar) {
-
-        evidenceProgressBar.style.width =
-            porcentaje + '%';
-    }
-
-
-    if (evidenceProgressPercentage) {
-
-        evidenceProgressPercentage.textContent =
-            porcentaje + '%';
-    }
-
-
-    if (evidenceProgressLabel) {
-
-        evidenceProgressLabel.textContent =
-            porcentaje >= 100
-                ? 'Evidencias cargadas'
-                : 'Cargando evidencias';
-    }
-}
 
 /*
 |--------------------------------------------------------------------------
@@ -5212,33 +4553,11 @@ async function cargarCapturas(
 
         evidenceOffset = 0;
 
-        if (evidenceProgressBar) {
-
-    evidenceProgressBar.style.width =
-        '0%';
-}
-
-
-if (evidenceProgressPercentage) {
-
-    evidenceProgressPercentage.textContent =
-        '0%';
-}
-
-
-if (evidenceProgressLabel) {
-
-    evidenceProgressLabel.textContent =
-        'Cargando evidencias';
-}
         evidenceHasMore = false;
-
 
         evidenceImages =
     [];
 
-    // actualizar barra de procesos
-    actualizarProgresoEvidencias();
 
 evidenceCurrentIndex =
     -1;
@@ -5252,11 +4571,11 @@ evidenceGallery.classList.remove(
         evidenceGallery.innerHTML =
             '';
 
-   if (evidenceModalShown) {
+        if (evidenceModalShown) {
 
-    evidenceModalShown.textContent =
-        '';
-}
+            evidenceModalShown.textContent =
+                '';
+        }
 
     }
 
@@ -5280,7 +4599,43 @@ evidenceGallery.classList.remove(
     }
 
 
- 
+   if (evidenceLoadMore) {
+
+    /*
+     * Evitar doble clic mientras Moodle responde.
+     */
+    evidenceLoadMore.disabled =
+        true;
+
+
+    /*
+     * Si NO es la carga inicial,
+     * mostrar estado de carga en el botón.
+     */
+    if (!reiniciar) {
+
+        evidenceLoadMore.classList.add(
+            'is-loading'
+        );
+
+
+        const textoBoton =
+            evidenceLoadMore.querySelector(
+                'span'
+            );
+
+
+        if (textoBoton) {
+
+            textoBoton.textContent =
+                'Cargando imágenes...';
+
+        }
+
+    }
+
+}
+
 
     try {
 
@@ -5373,26 +4728,11 @@ evidenceGallery.classList.remove(
             );
 
 
+        evidenceHasMore =
+            Boolean(
+                data.has_more
+            );
 
-            /*
-|--------------------------------------------------------------------------
-| SABER SI TODAVÍA EXISTEN MÁS IMÁGENES
-|--------------------------------------------------------------------------
-*/
-
-evidenceHasMore =
-    Boolean(
-        data.has_more
-    );
-
-
-/*
-|--------------------------------------------------------------------------
-| ACTUALIZAR PROGRESO DE CARGA
-|--------------------------------------------------------------------------
-*/
-
-actualizarProgresoEvidencias();
 
         /*
          * Texto inferior.
@@ -5410,6 +4750,17 @@ actualizarProgresoEvidencias();
                         'es-MX'
                     ) +
                 ' imágenes';
+
+        }
+
+
+        /*
+         * Mostrar u ocultar "Cargar más".
+         */
+        if (evidenceModalMore) {
+
+            evidenceModalMore.hidden =
+                !evidenceHasMore;
 
         }
 
@@ -5451,47 +4802,46 @@ actualizarProgresoEvidencias();
 
     evidenceLoading =
         false;
-    }
-}
-/*
-|--------------------------------------------------------------------------
-| CARGA AUTOMÁTICA AL HACER SCROLL
-|--------------------------------------------------------------------------
-*/
-
-if (evidenceScrollContainer) {
-
-    evidenceScrollContainer.addEventListener(
-        'scroll',
-        function () {
-
-            const distanciaAlFinal =
-                evidenceScrollContainer.scrollHeight
-                -
-                evidenceScrollContainer.scrollTop
-                -
-                evidenceScrollContainer.clientHeight;
 
 
-            /*
-             * Antes de llegar completamente abajo,
-             * solicitamos las siguientes 24.
-             */
-            if (
-                distanciaAlFinal <= 250
-                &&
-                evidenceHasMore
-                &&
-                !evidenceLoading
-            ) {
+    if (evidenceLoadMore) {
 
-                cargarCapturas(
-                    false
-                );
-            }
+        /*
+         * Volver a habilitar.
+         */
+        evidenceLoadMore.disabled =
+            false;
+
+
+        /*
+         * Quitar estado visual.
+         */
+        evidenceLoadMore.classList.remove(
+            'is-loading'
+        );
+
+
+        /*
+         * Restaurar texto.
+         */
+        const textoBoton =
+            evidenceLoadMore.querySelector(
+                'span'
+            );
+
+
+        if (textoBoton) {
+
+            textoBoton.textContent =
+                'Cargar más imágenes';
+
         }
-    );
+
+    }
+
 }
+}
+
 
 /*
 |--------------------------------------------------------------------------
@@ -5564,6 +4914,12 @@ function abrirModalEvidencias() {
             '';
     }
 
+
+    if (evidenceModalMore) {
+
+        evidenceModalMore.hidden =
+            true;
+    }
 
 
     /*
@@ -5676,21 +5032,41 @@ if (evidenceClose) {
 
 }
 
-/* ==========================================================
-   CERRAR CON BOTÓN "CERRAR"
-========================================================== */
+/*
+|--------------------------------------------------------------------------
+| CARGAR MÁS EVIDENCIAS
+|--------------------------------------------------------------------------
+*/
 
-if (evidenceGalleryCloseButton) {
+if (evidenceLoadMore) {
 
-    evidenceGalleryCloseButton.addEventListener(
+    evidenceLoadMore.addEventListener(
         'click',
-        function (event) {
+        function () {
 
-            event.preventDefault();
+            if (!evidenceHasMore) {
+                return;
+            }
 
-            cerrarModalEvidencias();
+
+            cargarCapturas(false);
 
         }
+    );
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| BOTÓN CERRAR
+|--------------------------------------------------------------------------
+*/
+
+if (evidenceCloseButton) {
+
+    evidenceCloseButton.addEventListener(
+        'click',
+        cerrarModalEvidencias
     );
 
 }
@@ -5820,64 +5196,7 @@ groupSelect.addEventListener(
     */
 
     cargarCursos();
-    const cacheCursos =
-    sessionStorage.getItem(
-        'sgae_cursos_con_camara'
-    );
 
-const cacheTiempo =
-    sessionStorage.getItem(
-        'sgae_cursos_con_camara_tiempo'
-    );
-
-const ahora = Date.now();
-
-const tiempoCache =
-    15 * 60 * 1000;
-
-    if (
-    cacheCursos &&
-    cacheTiempo &&
-    (
-        ahora -
-        parseInt(cacheTiempo, 10)
-    ) < tiempoCache
-) {
-
-    const cursosGuardados =
-        JSON.parse(cacheCursos);
-
-    courseSelect.innerHTML = `
-        <option value="" selected disabled>
-            Selecciona un curso
-        </option>
-    `;
-
-    cursosGuardados.forEach(
-        function (curso) {
-
-            const option =
-                document.createElement(
-                    'option'
-                );
-
-            option.value =
-                curso.id;
-
-            option.textContent =
-                curso.nombre;
-
-            courseSelect.appendChild(
-                option
-            );
-        }
-    );
-
-    courseSelect.disabled =
-        false;
-
-    return;
-}
     /*
 |--------------------------------------------------------------------------
 | CERRAR IMAGEN AMPLIADA CON X
