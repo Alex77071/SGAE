@@ -209,41 +209,36 @@
                    <button
     type="button"
     class="outline-action"
-    id="goToHistoryButton"
-    data-url="{{ route('evidencias.historial') }}"
+    id="openHistoryUnavailableModal"
 >
+    <span class="outline-action__icon" aria-hidden="true">
 
-                       <span class="outline-action__icon" aria-hidden="true">
+        <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        >
+            <path d="M4 20L15 9"></path>
 
-                            <svg
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="1.7"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                            >
+            <path d="M13.5 7.5l3 3"></path>
 
-                                <path d="M4 20L15 9"></path>
+            <path d="M7 3v4"></path>
+            <path d="M5 5h4"></path>
 
-                                <path d="M13.5 7.5l3 3"></path>
+            <path d="M18 3v4"></path>
+            <path d="M16 5h4"></path>
 
-                                <path d="M7 3v4"></path>
-                                <path d="M5 5h4"></path>
+            <path d="M19 13v4"></path>
+            <path d="M17 15h4"></path>
+        </svg>
 
-                                <path d="M18 3v4"></path>
-                                <path d="M16 5h4"></path>
+    </span>
 
-                                <path d="M19 13v4"></path>
-                                <path d="M17 15h4"></path>
-
-                            </svg>
-
-                        </span>
-
-                        Historial de análisis
-
-                    </button>
+    Historial de análisis
+</button>
 
 
                     <p>
@@ -549,6 +544,86 @@
 
 </div>
 
+{{-- =====================================================
+     MODAL - HISTORIAL NO DISPONIBLE
+===================================================== --}}
+
+<div
+    class="logout-modal"
+    id="historyUnavailableModal"
+    aria-hidden="true"
+>
+
+    <div
+        class="logout-modal__dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="historyUnavailableModalTitle"
+    >
+
+        <div class="logout-modal__icon" aria-hidden="true">
+
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            >
+                <circle cx="12" cy="12" r="9"></circle>
+                <path d="M12 8v5"></path>
+                <path d="M12 17h.01"></path>
+            </svg>
+
+        </div>
+
+
+        <h2
+            class="logout-modal__title"
+            id="historyUnavailableModalTitle"
+        >
+            Funcionalidad no disponible
+        </h2>
+
+
+        <p
+            style="
+                margin: -15px 0 30px;
+                max-width: 390px;
+                text-align: center;
+                font-size: 17px;
+                line-height: 1.5;
+                color: #555555;
+            "
+        >
+            Esta funcionalidad no se encuentra disponible actualmente.
+        </p>
+
+
+        <div
+    class="logout-modal__actions"
+    style="
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    "
+>
+
+    <button
+        type="button"
+        id="closeHistoryUnavailableModal"
+        class="logout-modal__button logout-modal__button--confirm"
+    >
+        Entendido
+    </button>
+
+</div>
+
+    </div>
+
+</div>
+
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -630,6 +705,75 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
     }
+
+    /*
+|--------------------------------------------------------------------------
+| MODAL - HISTORIAL NO DISPONIBLE
+|--------------------------------------------------------------------------
+*/
+
+const openHistoryUnavailableModal =
+    document.getElementById(
+        'openHistoryUnavailableModal'
+    );
+
+const historyUnavailableModal =
+    document.getElementById(
+        'historyUnavailableModal'
+    );
+
+const closeHistoryUnavailableModal =
+    document.getElementById(
+        'closeHistoryUnavailableModal'
+    );
+
+
+if (
+    openHistoryUnavailableModal &&
+    historyUnavailableModal
+) {
+
+    openHistoryUnavailableModal.addEventListener(
+        'click',
+        function () {
+
+            historyUnavailableModal.classList.add(
+                'logout-modal--open'
+            );
+
+            historyUnavailableModal.setAttribute(
+                'aria-hidden',
+                'false'
+            );
+
+        }
+    );
+
+}
+
+
+if (
+    closeHistoryUnavailableModal &&
+    historyUnavailableModal
+) {
+
+    closeHistoryUnavailableModal.addEventListener(
+        'click',
+        function () {
+
+            historyUnavailableModal.classList.remove(
+                'logout-modal--open'
+            );
+
+            historyUnavailableModal.setAttribute(
+                'aria-hidden',
+                'true'
+            );
+
+        }
+    );
+
+}
 
 });
 </script>
