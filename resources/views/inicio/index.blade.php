@@ -522,8 +522,7 @@
                 color: #555555;
             "
         >
-            Para realizar el análisis de evidencias,
-            es necesario contactar al encargado del sistema.
+            Coordinador I. C. Carlos Alberto Martínez Sandoval
         </p>
 
         <div class="logout-modal__actions">
