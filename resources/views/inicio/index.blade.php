@@ -149,8 +149,9 @@
     <div class="evidence-step__content">
 
         <a
-            href="{{ route('evidencias.analizar') }}"
-            class="outline-action"
+            href="#"
+    id="openAnalysisContactModal"
+    class="outline-action"
         >
 
             <span class="outline-action__icon" aria-hidden="true">
@@ -179,7 +180,7 @@
 
             Analizar carpetas
 
-        </a>
+</a>
 
 
         <p>
@@ -468,5 +469,170 @@
     </div>
 
 </section>
+
+{{-- =====================================================
+     MODAL - CONTACTAR AL ENCARGADO
+===================================================== --}}
+
+<div
+    class="logout-modal"
+    id="analysisContactModal"
+    aria-hidden="true"
+>
+
+    <div
+        class="logout-modal__dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="analysisContactModalTitle"
+    >
+
+        <div class="logout-modal__icon" aria-hidden="true">
+
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            >
+                <circle cx="12" cy="8" r="4"></circle>
+                <path d="M4 21v-2a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v2"></path>
+                <path d="M18 8h3"></path>
+                <path d="M19.5 6.5v3"></path>
+            </svg>
+
+        </div>
+
+        <h2
+            class="logout-modal__title"
+            id="analysisContactModalTitle"
+        >
+            Contacta al encargado
+        </h2>
+
+        <p
+            style="
+                margin: -15px 0 30px;
+                max-width: 390px;
+                text-align: center;
+                font-size: 17px;
+                line-height: 1.5;
+                color: #555555;
+            "
+        >
+            Para realizar el análisis de evidencias,
+            es necesario contactar al encargado del sistema.
+        </p>
+
+        <div class="logout-modal__actions">
+
+            <button
+                type="button"
+                id="closeAnalysisContactModal"
+                class="logout-modal__button logout-modal__button--cancel"
+            >
+                Cancelar
+            </button>
+
+            <button
+                type="button"
+                id="confirmAnalysisContactModal"
+                class="logout-modal__button logout-modal__button--confirm"
+            >
+                Entendido
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const openButton =
+        document.getElementById('openAnalysisContactModal');
+
+    const modal =
+        document.getElementById('analysisContactModal');
+
+    const closeButton =
+        document.getElementById('closeAnalysisContactModal');
+
+    const confirmButton =
+        document.getElementById('confirmAnalysisContactModal');
+
+
+    if (!openButton || !modal) {
+        return;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | ABRIR MODAL
+    |--------------------------------------------------------------------------
+    */
+
+    openButton.addEventListener('click', function () {
+
+        modal.classList.add('logout-modal--open');
+
+        modal.setAttribute(
+            'aria-hidden',
+            'false'
+        );
+
+    });
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | CERRAR CON CANCELAR
+    |--------------------------------------------------------------------------
+    */
+
+    if (closeButton) {
+
+        closeButton.addEventListener('click', function () {
+
+            modal.classList.remove('logout-modal--open');
+
+            modal.setAttribute(
+                'aria-hidden',
+                'true'
+            );
+
+        });
+
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | CERRAR CON ENTENDIDO
+    |--------------------------------------------------------------------------
+    */
+
+    if (confirmButton) {
+
+        confirmButton.addEventListener('click', function () {
+
+            modal.classList.remove('logout-modal--open');
+
+            modal.setAttribute(
+                'aria-hidden',
+                'true'
+            );
+
+        });
+
+    }
+
+});
+</script>
 
 @endsection
