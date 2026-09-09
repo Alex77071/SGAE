@@ -6,10 +6,12 @@ use Illuminate\Http\Request;
 use Symfony\Component\Process\Process;
 use App\Services\MoodleService;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
+use App\AnalisisHistorial;
 
 class EvidenciasController extends Controller
 {
-        private $moodleService;
+        private MoodleService $moodleService;
 
 
     public function __construct(
@@ -2452,6 +2454,8 @@ public function iniciarAnalisis(Request $request)
     |--------------------------------------------------------------------------
     */
 
+    $respuesta = null;
+
     try {
 
         $respuesta =
@@ -2499,6 +2503,8 @@ public function iniciarAnalisis(Request $request)
     */
 
     if (
+        !$respuesta
+        ||
         !$respuesta->successful()
     ) {
 
@@ -2609,12 +2615,14 @@ public function progresoAnalisis()
     |--------------------------------------------------------------------------
     */
 
+    $respuesta = null;
+
     try {
 
         $respuesta =
             Http::timeout(15)
                 ->get(
-                    'http://127.0.0.1:8001'
+                    'http://127.0.0.1:8000'
                     .
                     '/analizar/progreso/'
                     .
@@ -2644,6 +2652,8 @@ public function progresoAnalisis()
     */
 
     if (
+        !$respuesta
+        ||
         !$respuesta->successful()
     ) {
 
@@ -2704,13 +2714,21 @@ public function progresoAnalisis()
                     ->successful()
             ) {
 
+                $resultado =
+                    $respuestaResultado
+                        ->json();
+
                 session([
 
                     'analisis_resultado' =>
-                        $respuestaResultado
-                            ->json(),
+                        $resultado,
 
                 ]);
+
+                $this->guardarAnalisisHistorial(
+                    $jobId,
+                    $resultado
+                );
             }
 
 
@@ -2773,6 +2791,8 @@ public function reporteActual(Request $request)
     |--------------------------------------------------------------------------
     */
 
+    $respuesta = null;
+
     try {
 
         $respuesta =
@@ -2802,6 +2822,8 @@ public function reporteActual(Request $request)
     */
 
     if (
+        !$respuesta
+        ||
         !$respuesta->successful()
     ) {
 
@@ -2868,6 +2890,296 @@ public function reporteActual(Request $request)
                 '; filename="'
                 .
                 $nombrePdf
+                .
+                '"',
+        ]
+    );
+}
+
+
+
+/*
+|--------------------------------------------------------------------------
+| GUARDAR ANÁLISIS EN EL HISTORIAL
+|--------------------------------------------------------------------------
+*/
+private function guardarAnalisisHistorial(
+    string $jobId,
+    array $resultado
+): void {
+
+    /*
+    |--------------------------------------------------------------------------
+    | EVITAR REGISTROS DUPLICADOS
+    |--------------------------------------------------------------------------
+    */
+    if (
+        AnalisisHistorial::where(
+            'job_id',
+            $jobId
+        )->exists()
+    ) {
+        return;
+    }
+
+
+    try {
+
+        /*
+        |--------------------------------------------------------------------------
+        | OBTENER PDF DESDE FASTAPI
+        |--------------------------------------------------------------------------
+        */
+        $respuestaPdf =
+            Http::timeout(60)
+                ->get(
+                    'http://127.0.0.1:8000'
+                    .
+                    '/analizar/reporte/'
+                    .
+                    $jobId
+                );
+
+
+        if (!$respuestaPdf->successful()) {
+            return;
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | DATOS DEL ANÁLISIS
+        |--------------------------------------------------------------------------
+        */
+        $nombreArchivo =
+            session(
+                'analisis_archivo',
+                $resultado['archivo']
+                    ?? 'Analisis.zip'
+            );
+
+
+        $nombreCarpeta =
+            pathinfo(
+                $nombreArchivo,
+                PATHINFO_FILENAME
+            );
+
+
+        $nombrePdf =
+            $resultado['reporte']['nombre']
+            ??
+            (
+                'Reporte_'
+                .
+                $jobId
+                .
+                '.pdf'
+            );
+
+        /*
+         * Nos quedamos únicamente con el nombre del archivo
+         * para evitar que una ruta externa modifique el destino.
+         */
+        $nombrePdf =
+            basename(
+                (string) $nombrePdf
+            );
+
+
+        $rutaPdf =
+            'reportes/historial/'
+            .
+            $jobId
+            .
+            '/'
+            .
+            $nombrePdf;
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | GUARDAR PDF EN STORAGE/APP
+        |--------------------------------------------------------------------------
+        */
+        Storage::disk('local')->put(
+            $rutaPdf,
+            $respuestaPdf->body()
+        );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | GUARDAR METADATOS EN SQLITE
+        |--------------------------------------------------------------------------
+        */
+        AnalisisHistorial::create([
+
+            'job_id' =>
+                $jobId,
+
+            'moodle_username' =>
+                session('moodle_username'),
+
+            'nombre_archivo' =>
+                $nombreArchivo,
+
+            'nombre_carpeta' =>
+                $nombreCarpeta,
+
+            'fecha_analisis' =>
+                $resultado['fecha_analisis']
+                ?? now(),
+
+            'total_imagenes' =>
+                $resultado['total_imagenes']
+                ?? 0,
+
+            'total_carpetas' =>
+                $resultado['total_alumnos']
+                ?? 0,
+
+            'nivel_confianza' =>
+                $resultado['nivel_confianza_general']
+                ?? null,
+
+            'porcentaje_confianza' =>
+                $resultado['porcentaje_confianza_general']
+                ?? null,
+
+            'ruta_pdf' =>
+                $rutaPdf,
+        ]);
+
+
+    } catch (\Throwable $error) {
+
+        /*
+         * Un error al guardar el historial no debe
+         * detener ni invalidar un análisis ya terminado.
+         */
+
+    }
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| HISTORIAL DE ANÁLISIS
+|--------------------------------------------------------------------------
+*/
+public function historial()
+{
+    if (!session('moodle_authenticated')) {
+        return redirect()->route('login');
+    }
+
+
+    $username =
+        session(
+            'moodle_username'
+        );
+
+
+    $registros =
+        AnalisisHistorial::where(
+            'moodle_username',
+            $username
+        )
+        ->orderBy(
+            'fecha_analisis',
+            'desc'
+        )
+        ->get();
+
+
+    $analisis =
+        $registros
+            ->map(function ($item) {
+
+                return [
+
+                    'id' =>
+                        $item->id,
+
+                    'nombre' =>
+                        $item->nombre_carpeta,
+
+                    'fecha' =>
+                        $item->fecha_analisis
+                            ? $item->fecha_analisis
+                                ->format('d/m/Y H:i')
+                            : '',
+
+                    'imagenes' =>
+                        $item->total_imagenes,
+
+                    'carpetas' =>
+                        $item->total_carpetas,
+                ];
+
+            })
+            ->all();
+
+
+    return view(
+        'evidencias.historial',
+        compact('analisis')
+    );
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| MOSTRAR REPORTE GUARDADO EN EL HISTORIAL
+|--------------------------------------------------------------------------
+*/
+public function reporteHistorial(int $id)
+{
+    if (!session('moodle_authenticated')) {
+        return redirect()->route('login');
+    }
+
+
+    $registro =
+        AnalisisHistorial::where(
+            'id',
+            $id
+        )
+        ->where(
+            'moodle_username',
+            session('moodle_username')
+        )
+        ->firstOrFail();
+
+
+    $archivo =
+        storage_path(
+            'app/'
+            .
+            $registro->ruta_pdf
+        );
+
+
+    if (!is_file($archivo)) {
+
+        abort(
+            404,
+            'No se encontró el reporte PDF.'
+        );
+    }
+
+
+    return response()->file(
+        $archivo,
+        [
+            'Content-Type' =>
+                'application/pdf',
+
+            'Content-Disposition' =>
+                'inline; filename="'
+                .
+                basename($archivo)
                 .
                 '"',
         ]
