@@ -6,77 +6,67 @@
 
 <section class="manuals-page">
 
-    {{-- =====================================================
-         ENCABEZADO DE LA PANTALLA
-    ====================================================== --}}
+{{-- =====================================================
+     ENCABEZADO DE LA PANTALLA
+===================================================== --}}
 
-    <div class="manuals-top">
+<div class="manuals-top">
 
-        <div class="manuals-top__left">
+    {{-- TÍTULO --}}
+    <div class="manuals-top__left">
 
-            <nav class="manuals-breadcrumb" aria-label="Navegación">
+        <div class="manuals-heading">
 
-                <span>Recursos</span>
+            <div class="manuals-heading__line"></div>
 
-                <span class="manuals-breadcrumb__separator">
-                    &gt;
-                </span>
+            <div>
 
-                <span class="manuals-breadcrumb__current">
+                <h2 class="manuals-heading__title">
                     Manuales
-                </span>
+                </h2>
 
-            </nav>
-
-
-            <div class="manuals-heading">
-
-                <div class="manuals-heading__line"></div>
-
-                <div>
-
-                    <h2 class="manuals-heading__title">
-                        Manuales
-                    </h2>
-
-                    <p class="manuals-heading__description">
-                        Consulte los manuales disponibles para comprender y utilizar la plataforma.
-                    </p>
-
-                </div>
+                <p class="manuals-heading__description">
+                    Consulte los manuales disponibles para comprender y utilizar la plataforma.
+                </p>
 
             </div>
 
         </div>
 
-
-        <a
-            href="{{ route('inicio') }}"
-            class="manuals-home-button"
-        >
-
-            <span class="manuals-home-button__icon" aria-hidden="true">
-
-                <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.8"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                >
-                    <path d="M3 11.5 12 4l9 7.5"></path>
-                    <path d="M5.5 10.5V20h13v-9.5"></path>
-                    <path d="M9.5 20v-6h5v6"></path>
-                </svg>
-
-            </span>
-
-            <span>Volver al inicio</span>
-
-        </a>
-
     </div>
+
+
+    {{-- BOTÓN VOLVER AL INICIO --}}
+    <a
+        href="{{ route('inicio') }}"
+        class="manuals-home-button"
+    >
+
+        <span
+            class="manuals-home-button__icon"
+            aria-hidden="true"
+        >
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            >
+                <path d="M3 11.5 12 4l9 7.5"></path>
+                <path d="M5.5 10.5V20h13v-9.5"></path>
+                <path d="M9.5 20v-6h5v6"></path>
+            </svg>
+        </span>
+
+        <span>
+            Volver al inicio
+        </span>
+
+    </a>
+
+</div>
 
 
     {{-- =====================================================

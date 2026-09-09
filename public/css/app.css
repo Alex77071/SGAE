@@ -13597,3 +13597,97 @@ body.app-body {
     }
 
 }
+
+/* ==========================================================
+   MANUALES - ENCABEZADO SIN BREADCRUMB
+   Alineación igual a Diagrama del proceso
+========================================================== */
+
+.manuals-top {
+    align-items: center !important;
+}
+
+
+.manuals-top__left {
+    gap: 0 !important;
+}
+
+
+.manuals-home-button {
+    margin-bottom: 0 !important;
+}
+
+/* ==========================================================
+   MANUALES - ALINEACIÓN UNIFORME DE LAS DOS COLUMNAS
+========================================================== */
+
+@media (min-width: 993px) {
+
+    /* Ambas columnas ocupan exactamente la misma altura */
+    .manuals-left,
+    .manuals-right {
+        height: 100% !important;
+        min-height: 0 !important;
+
+        display: flex !important;
+        flex-direction: column !important;
+
+        gap: 12px !important;
+    }
+
+
+    /* ======================================================
+       CUADROS PRINCIPALES
+       Lista izquierda = Vista previa derecha
+    ====================================================== */
+
+    .manuals-list,
+    .manual-preview-card {
+        flex: 1 1 0 !important;
+
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+
+        box-sizing: border-box;
+    }
+
+
+    /*
+     * La lista sigue teniendo scroll.
+     * No cambia el tamaño de cada manual.
+     */
+    .manuals-list {
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+    }
+
+
+    /* ======================================================
+       ELEMENTOS INFERIORES
+       Aviso gris = Botón Descargar
+    ====================================================== */
+
+    .manuals-info,
+    .manual-download {
+        flex: 0 0 48px !important;
+
+        height: 48px !important;
+        min-height: 48px !important;
+        max-height: 48px !important;
+
+        box-sizing: border-box;
+    }
+
+
+    .manuals-info {
+        margin: 0 !important;
+    }
+
+
+    .manual-download {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+    }
+
+}
