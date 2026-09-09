@@ -3470,53 +3470,247 @@ const evidenceImageViewerNext =
         return await response.json();
     }
 
+/*
+|--------------------------------------------------------------------------
+| CARGAR SOLO CURSOS QUE TENGAN EXÁMENES CON CÁMARA
+|--------------------------------------------------------------------------
+*/
 
-    /*
-    |--------------------------------------------------------------------------
-    | CARGAR CURSOS DEL PROFESOR
-    |--------------------------------------------------------------------------
-    */
+async function cargarCursos() {
 
-    async function cargarCursos() {
+    courseSelect.disabled = true;
 
-        courseSelect.disabled = true;
+    courseSelect.innerHTML = `
+        <option value="">
+            Cargando cursos...
+        </option>
+    `;
+
+    try {
+
+        /*
+        |--------------------------------------------------------------------------
+        | 1. OBTENER TODOS LOS CURSOS DEL PROFESOR
+        |--------------------------------------------------------------------------
+        */
+
+        const data =
+            await obtenerJson(
+                coursesUrl
+            );
+
+
+        if (!data.ok) {
+
+            throw new Error(
+                data.message ||
+                'No fue posible obtener los cursos.'
+            );
+        }
+
+
+        const cursos =
+            Array.isArray(data.cursos)
+                ? data.cursos
+                : [];
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | 2. PREPARAR SELECT
+        |--------------------------------------------------------------------------
+        */
 
         courseSelect.innerHTML = `
             <option value="">
-                Cargando cursos...
+                Buscando cursos con evidencias...
             </option>
         `;
 
 
-        try {
+        const cursosConCamara = [];
 
-            const data =
-                await obtenerJson(
-                    coursesUrl
+sessionStorage.setItem(
+    'sgae_cursos_con_camara',
+    JSON.stringify(
+        cursosConCamara
+    )
+);
+
+sessionStorage.setItem(
+    'sgae_cursos_con_camara_tiempo',
+    Date.now().toString()
+);
+        /*
+        |--------------------------------------------------------------------------
+        | 3. REVISAR CURSOS EN GRUPOS DE 3
+        |--------------------------------------------------------------------------
+        |
+        | No revisamos todos al mismo tiempo para no saturar Moodle.
+        |
+        */
+
+        const concurrencia = 5;
+
+
+        for (
+            let i = 0;
+            i < cursos.length;
+            i += concurrencia
+        ) {
+
+            const lote =
+                cursos.slice(
+                    i,
+                    i + concurrencia
                 );
 
 
-            if (!data.ok) {
+            const resultados =
+                await Promise.all(
+                    lote.map(
+                        async function (curso) {
 
-                throw new Error(
-                    data.message ||
-                    'No fue posible obtener los cursos.'
+                            try {
+
+                                /*
+                                |--------------------------------------------------------------------------
+                                | CONSULTAR LOS EXÁMENES DEL CURSO
+                                |--------------------------------------------------------------------------
+                                |
+                                | El endpoint /examenes ya devuelve únicamente
+                                | los exámenes que tienen evidencias de cámara.
+                                |
+                                */
+
+                                const url =
+                                    new URL(
+                                        examsUrl,
+                                        window.location.origin
+                                    );
+
+
+                                url.searchParams.set(
+                                    'courseid',
+                                    curso.id
+                                );
+
+
+                                const dataExamenes =
+                                    await obtenerJson(
+                                        url.toString()
+                                    );
+
+
+                                if (
+                                    !dataExamenes.ok
+                                ) {
+
+                                    return null;
+                                }
+
+
+                                const examenes =
+                                    Array.isArray(
+                                        dataExamenes.examenes
+                                    )
+                                        ? dataExamenes.examenes
+                                        : [];
+
+
+                                /*
+                                 * Si tiene al menos un examen
+                                 * con cámara, conservamos el curso.
+                                 */
+                                if (
+                                    examenes.length > 0
+                                ) {
+
+                                    return curso;
+                                }
+
+
+                                /*
+                                 * Sin exámenes con cámara:
+                                 * no mostrar curso.
+                                 */
+                                return null;
+
+
+                            } catch (error) {
+
+                                console.error(
+                                    'Error revisando curso:',
+                                    curso.id,
+                                    error
+                                );
+
+
+                                /*
+                                 * Si un curso falla,
+                                 * no detenemos todos los demás.
+                                 */
+                                return null;
+                            }
+                        }
+                    )
                 );
 
-            }
+
+            resultados.forEach(
+                function (curso) {
+
+                    if (curso) {
+
+                        cursosConCamara.push(
+                            curso
+                        );
+                    }
+                }
+            );
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | MOSTRAR PROGRESO
+            |--------------------------------------------------------------------------
+            */
+
+            const revisados =
+                Math.min(
+                    i + concurrencia,
+                    cursos.length
+                );
 
 
             courseSelect.innerHTML = `
-                <option value="" selected disabled>
-                    Selecciona un curso
+                <option value="">
+                    Revisando cursos... ${revisados} de ${cursos.length}
                 </option>
             `;
+        }
 
 
-            data.cursos.forEach(function (curso) {
+        /*
+        |--------------------------------------------------------------------------
+        | 4. MOSTRAR RESULTADO
+        |--------------------------------------------------------------------------
+        */
+
+        courseSelect.innerHTML = `
+            <option value="" selected disabled>
+                Selecciona un curso
+            </option>
+        `;
+
+
+        cursosConCamara.forEach(
+            function (curso) {
 
                 const option =
-                    document.createElement('option');
+                    document.createElement(
+                        'option'
+                    );
 
 
                 option.value =
@@ -3530,32 +3724,56 @@ const evidenceImageViewerNext =
                 courseSelect.appendChild(
                     option
                 );
-
-            });
-
-
-            courseSelect.disabled =
-                false;
+            }
+        );
 
 
-        } catch (error) {
+        /*
+        |--------------------------------------------------------------------------
+        | 5. SI NINGÚN CURSO TIENE EVIDENCIAS
+        |--------------------------------------------------------------------------
+        */
 
-            console.error(
-                'Error cargando cursos:',
-                error
-            );
-
+        if (
+            cursosConCamara.length === 0
+        ) {
 
             courseSelect.innerHTML = `
                 <option value="">
-                    No fue posible cargar los cursos
+                    No hay cursos con evidencias de cámara
                 </option>
             `;
 
+            courseSelect.disabled =
+                true;
+
+            return;
         }
 
-    }
 
+        courseSelect.disabled =
+            false;
+
+
+    } catch (error) {
+
+        console.error(
+            'Error cargando cursos:',
+            error
+        );
+
+
+        courseSelect.innerHTML = `
+            <option value="">
+                No fue posible cargar los cursos
+            </option>
+        `;
+
+
+        courseSelect.disabled =
+            true;
+    }
+}
 
     /*
     |--------------------------------------------------------------------------
@@ -5602,7 +5820,64 @@ groupSelect.addEventListener(
     */
 
     cargarCursos();
+    const cacheCursos =
+    sessionStorage.getItem(
+        'sgae_cursos_con_camara'
+    );
 
+const cacheTiempo =
+    sessionStorage.getItem(
+        'sgae_cursos_con_camara_tiempo'
+    );
+
+const ahora = Date.now();
+
+const tiempoCache =
+    15 * 60 * 1000;
+
+    if (
+    cacheCursos &&
+    cacheTiempo &&
+    (
+        ahora -
+        parseInt(cacheTiempo, 10)
+    ) < tiempoCache
+) {
+
+    const cursosGuardados =
+        JSON.parse(cacheCursos);
+
+    courseSelect.innerHTML = `
+        <option value="" selected disabled>
+            Selecciona un curso
+        </option>
+    `;
+
+    cursosGuardados.forEach(
+        function (curso) {
+
+            const option =
+                document.createElement(
+                    'option'
+                );
+
+            option.value =
+                curso.id;
+
+            option.textContent =
+                curso.nombre;
+
+            courseSelect.appendChild(
+                option
+            );
+        }
+    );
+
+    courseSelect.disabled =
+        false;
+
+    return;
+}
     /*
 |--------------------------------------------------------------------------
 | CERRAR IMAGEN AMPLIADA CON X
