@@ -3,13 +3,15 @@
 @section('title', 'SGAE - Inicio')
 
 
+
+
 @section('content')
 
 <section class="dashboard">
 
 
     {{-- =====================================================
-         BIENVENIDA
+         BIENVENIDA holi
     ====================================================== --}}
 
     <div class="dashboard-welcome">
