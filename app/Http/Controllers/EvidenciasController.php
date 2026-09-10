@@ -381,93 +381,244 @@ private function ejecutarPython(array $argumentos): array
     | OBTENER EXÁMENES
     |--------------------------------------------------------------------------
     */
-    public function examenes(Request $request)
-    {
-        if (!session('moodle_authenticated')) {
+   public function examenes(Request $request)
+{
+    /*
+    |--------------------------------------------------------------------------
+    | VALIDAR SESIÓN
+    |--------------------------------------------------------------------------
+    */
 
-            return response()->json(
-                [
-                    'ok' => false,
-                    'message' => 'Sesión no válida.',
-                ],
-                401
-            );
+    if (!session('moodle_authenticated')) {
 
-        }
-
-
-        $request->validate([
-            'courseid' =>
-                'required|integer',
-        ]);
-
-
-        $token =
-            session('moodle_token');
-
-        $userId =
-            (int) session('moodle_user_id');
-
-        $courseId =
-            (int) $request->courseid;
-
-
-        if (!$token || !$userId) {
-
-            return response()->json([
+        return response()->json(
+            [
                 'ok' => false,
-                'message' =>
-                    'No se encontró la sesión de Moodle.',
-            ]);
-
-        }
-
-
-        if (
-            !$this->profesorTieneCurso(
-                $token,
-                $userId,
-                $courseId
-            )
-        ) {
-
-            return response()->json([
-                'ok' => false,
-                'message' =>
-                    'No tienes acceso a este curso.',
-            ]);
-
-        }
+                'message' => 'Sesión no válida.',
+            ],
+            401
+        );
+    }
 
 
-        $resultado =
-            $this->moodleService
-                ->getCourseQuizzes(
-                    $token,
-                    $courseId
-                );
+    /*
+    |--------------------------------------------------------------------------
+    | VALIDAR CURSO
+    |--------------------------------------------------------------------------
+    */
+
+    $request->validate([
+        'courseid' =>
+            'required|integer',
+    ]);
 
 
-        if (!$resultado['success']) {
+    /*
+    |--------------------------------------------------------------------------
+    | DATOS
+    |--------------------------------------------------------------------------
+    */
 
-            return response()->json([
-                'ok' => false,
-                'message' =>
-                    $resultado['message']
-                    ?? 'No fue posible obtener los exámenes.',
-            ]);
+    $token =
+        session('moodle_token');
 
-        }
+    $userId =
+        (int) session('moodle_user_id');
 
+    $courseId =
+        (int) $request->courseid;
+
+
+    if (!$token || !$userId) {
 
         return response()->json([
-            'ok' => true,
+            'ok' => false,
 
-            'examenes' =>
-                $resultado['data'] ?? [],
+            'message' =>
+                'No se encontró la sesión de Moodle.',
         ]);
     }
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | VALIDAR ACCESO AL CURSO
+    |--------------------------------------------------------------------------
+    */
+
+    if (
+        !$this->profesorTieneCurso(
+            $token,
+            $userId,
+            $courseId
+        )
+    ) {
+
+        return response()->json([
+            'ok' => false,
+
+            'message' =>
+                'No tienes acceso a este curso.',
+        ]);
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | OBTENER EXÁMENES DEL CURSO
+    |--------------------------------------------------------------------------
+    */
+
+    $resultado =
+        $this->moodleService
+            ->getCourseQuizzes(
+                $token,
+                $courseId
+            );
+
+
+    if (!$resultado['success']) {
+
+        return response()->json([
+            'ok' => false,
+
+            'message' =>
+                $resultado['message']
+                ??
+                'No fue posible obtener los exámenes.',
+        ]);
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | FILTRAR EXÁMENES SIN IMÁGENES DE CÁMARA
+    |--------------------------------------------------------------------------
+    */
+
+    $examenesConCamara = [];
+
+
+    foreach (
+        $resultado['data'] ?? []
+        as $examen
+    ) {
+
+        $quizId =
+            (int) (
+                $examen['id']
+                ?? 0
+            );
+
+        $cmid =
+            (int) (
+                $examen['cmid']
+                ?? 0
+            );
+
+
+        if (
+            $quizId <= 0
+            ||
+            $cmid <= 0
+        ) {
+            continue;
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | OBTENER ALUMNOS QUE REALIZARON EL EXAMEN
+        |--------------------------------------------------------------------------
+        */
+
+        $alumnos =
+            $this->moodleService
+                ->getQuizStudents(
+                    $token,
+                    $courseId,
+                    $quizId
+                );
+
+
+        if (!$alumnos['success']) {
+            continue;
+        }
+
+
+        $alumnosIds =
+            $alumnos['data']['alumnos_ids']
+            ?? [];
+
+
+        if (empty($alumnosIds)) {
+            continue;
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | BUSCAR SOLO UNA IMAGEN
+        |--------------------------------------------------------------------------
+        |
+        | No necesitamos contar todas.
+        | Si encontramos una, sabemos que el examen sí tiene cámara.
+        |
+        */
+
+        $capturas =
+            $this->moodleService
+                ->getProctoringImages(
+                    $token,
+                    $courseId,
+                    $cmid,
+                    $alumnosIds,
+                    0,
+                    1
+                );
+
+
+        if (!$capturas['success']) {
+            continue;
+        }
+
+
+        $imagenes =
+            $capturas['data']['imagenes']
+            ?? [];
+
+
+        /*
+         * No tiene imágenes:
+         * no mostrar el examen.
+         */
+        if (empty($imagenes)) {
+            continue;
+        }
+
+
+        /*
+         * Sí tiene al menos una imagen:
+         * mostrar el examen.
+         */
+        $examenesConCamara[] =
+            $examen;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | RESPUESTA
+    |--------------------------------------------------------------------------
+    */
+
+    return response()->json([
+        'ok' => true,
+
+        'examenes' =>
+            $examenesConCamara,
+    ]);
+}
 
     public function datosExamen(Request $request)
 {
