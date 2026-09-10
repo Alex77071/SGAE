@@ -179,109 +179,144 @@ private function ejecutarPython(array $argumentos): array
     | OBTENER CURSOS
     |--------------------------------------------------------------------------
     */
-    public function cursos()
-    {
-        if (!session('moodle_authenticated')) {
+ public function cursos()
+{
+    if (!session('moodle_authenticated')) {
 
-            return response()->json(
-                [
-                    'ok' => false,
-                    'message' => 'Sesión no válida.',
-                ],
-                401
-            );
-
-        }
-
-
-        $token =
-            session('moodle_token');
-
-        $userId =
-            (int) session('moodle_user_id');
-
-
-        if (!$token || !$userId) {
-
-            return response()->json([
+        return response()->json(
+            [
                 'ok' => false,
-                'message' =>
-                    'No se encontró la sesión de Moodle.',
-            ]);
-
-        }
-
-
-        $resultado =
-            $this->moodleService
-                ->getTeacherCourses(
-                    $token,
-                    $userId
-                );
+                'message' => 'Sesión no válida.',
+            ],
+            401
+        );
+    }
 
 
-        if (!$resultado['success']) {
+    $token =
+        session('moodle_token');
 
-            return response()->json([
-                'ok' => false,
-                'message' =>
-                    $resultado['message']
-                    ?? 'No fue posible obtener los cursos.',
-            ]);
+    $userId =
+        (int) session(
+            'moodle_user_id'
+        );
 
-        }
 
+    if (!$token || !$userId) {
 
         return response()->json([
-            'ok' => true,
+            'ok' => false,
 
-            'cursos' =>
-                $resultado['data'] ?? [],
+            'message' =>
+                'No se encontró la sesión de Moodle.',
         ]);
     }
-    
-
-        private function profesorTieneCurso(
-        string $token,
-        int $userId,
-        int $courseId
-    ): bool {
-
-        $resultado =
-            $this->moodleService
-                ->getTeacherCourses(
-                    $token,
-                    $userId
-                );
 
 
-        if (!$resultado['success']) {
-            return false;
-        }
+    /*
+    |--------------------------------------------------------------------------
+    | OBTENER CURSOS DEL PROFESOR
+    |--------------------------------------------------------------------------
+    */
+
+    $resultado =
+        $this->moodleService
+            ->getTeacherCourses(
+                $token,
+                $userId
+            );
 
 
-        $cursos =
-            $resultado['data']
-            ?? [];
+    if (!$resultado['success']) {
 
+        return response()->json([
+            'ok' => false,
 
-        foreach ($cursos as $curso) {
-
-            if (
-                (int) ($curso['id'] ?? 0)
-                ===
-                $courseId
-            ) {
-
-                return true;
-
-            }
-
-        }
-
-
-        return false;
+            'message' =>
+                $resultado['message']
+                ??
+                'No fue posible obtener los cursos.',
+        ]);
     }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | DEJAR SOLO CURSOS QUE TENGAN ALGÚN EXAMEN CON IMÁGENES
+    |--------------------------------------------------------------------------
+    */
+
+    $cursosConEvidencias = [];
+
+
+    foreach (
+        $resultado['data'] ?? []
+        as $curso
+    ) {
+
+        $courseId =
+            (int) (
+                $curso['id']
+                ?? 0
+            );
+
+
+        if ($courseId <= 0) {
+            continue;
+        }
+
+
+        /*
+         * Guardamos temporalmente el resultado.
+         *
+         * De esta manera no revisamos Moodle
+         * cada vez que se abre la pantalla.
+         */
+        $cacheKey =
+            'sgae_curso_con_evidencias_'
+            .
+            $userId
+            .
+            '_'
+            .
+            $courseId;
+
+
+        $tieneEvidencias =
+            Cache::remember(
+                $cacheKey,
+                now()->addMinutes(30),
+                function () use (
+                    $token,
+                    $courseId
+                ) {
+
+                    return
+                        $this->cursoTieneExamenConCamara(
+                            $token,
+                            $courseId
+                        );
+                }
+            );
+
+
+        if (!$tieneEvidencias) {
+            continue;
+        }
+
+
+        $cursosConEvidencias[] =
+            $curso;
+    }
+
+
+    return response()->json([
+        'ok' => true,
+
+        'cursos' =>
+            $cursosConEvidencias,
+    ]);
+}
 
     /*
     |--------------------------------------------------------------------------
